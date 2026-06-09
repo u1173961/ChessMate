@@ -14,10 +14,7 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        },
-        "files": [
-            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
-        ]
+        }
     },
     "repositories": [
 		{
@@ -35,24 +32,38 @@
 		}
 	],
     "require": {
-        "php": ">=5.5.9",
-        "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/orm": "^2.5",
-        "doctrine/doctrine-fixtures-bundle": "3.0.1",
+        "php": "^8.2",
+        "doctrine/doctrine-bundle": "^2.4",
+        "doctrine/orm": "^2.13",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "incenteev/composer-parameter-handler": "^2.0",
-        "sensio/framework-extra-bundle": "^5.0.0",
-        "symfony/monolog-bundle": "^3.1.0",
+        "sensio/framework-extra-bundle": "^5.6",
+        "symfony/monolog-bundle": "^3.8",
         "symfony/polyfill-apcu": "^1.0",
-        "symfony/swiftmailer-bundle": "^2.6.4",
-        "symfony/symfony": "3.4.*",
-        "twig/twig": "^1.0||^2.0",
-        "friendsofsymfony/user-bundle": "~2.0",
-		"friendsofsymfony/jsrouting-bundle": ">2",
+        "symfony/asset": "^4.4",
+        "symfony/console": "^4.4",
+        "symfony/dependency-injection": "^4.4",
+        "symfony/form": "^4.4",
+        "symfony/framework-bundle": "^4.4",
+        "symfony/http-foundation": "^4.4",
+        "symfony/http-kernel": "^4.4",
+        "symfony/security-bundle": "^4.4",
+        "symfony/serializer": "^4.4",
+        "symfony/swiftmailer-bundle": "^3.5",
+        "symfony/translation": "^4.4",
+        "symfony/twig-bundle": "^4.4",
+        "symfony/validator": "^4.4",
+        "symfony/yaml": "^4.4",
+        "twig/twig": "^2.16",
+        "friendsofsymfony/user-bundle": "^2.1",
+		"friendsofsymfony/jsrouting-bundle": "^2.8",
 		"exercise/htmlpurifier-bundle" : "*"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^3.0",
-        "phpunit/phpunit": "~6.5"
+        "symfony/debug-bundle": "^4.4",
+        "symfony/phpunit-bridge": "^4.4",
+        "symfony/web-profiler-bundle": "^4.4",
+        "phpunit/phpunit": "^9.6"
     },
     "scripts": {
         "symfony-scripts": [
@@ -66,6 +77,9 @@
         ]
     },
     "config": {
+        "platform": {
+            "php": "8.2.0"
+        },
         "sort-packages": true
     },
     "extra": {

@@ -6,9 +6,13 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         git \
         libicu-dev \
+        libonig-dev \
+        libxml2-dev \
         libzip-dev \
         unzip \
     && docker-php-ext-install \
+        mbstring \
+        xml \
         intl \
         pdo_mysql \
         zip \
