@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Chess Mate{% endblock %}</title>
+        {% block stylesheets %}
+        	<link href="{{ asset('bundles/cmapp/css/general.css') }}" rel="stylesheet" type="text/css" />
+        	<link href="{{ asset('bundles/cmapp/css/bootstrap.css') }}" rel="stylesheet" type="text/css" />
+        {% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('bundles/cmapp/images/favicon.ico') }}" />
+    </head>
+    <body>
+		<div class="wrapper container-fluid">
+    		{% if app.user %}
+    			{% set subtitle = 'Welcome ' ~ app.user.currUsername ~ '!'%}
+    			{% set subConn = ': ' %}
+    		{%  else %}
+    			{% set subtitle = '' %}
+    			{% set subConn = '' %}
+    		{% endif %}
+	    	<div id="header" class="row">
+			   	<div class="col-md-9 col-sm-12 col-xs-12">
+				   	<table>
+					   	<tr>
+						   	<td id="logo_td">
+				    			<a href="{{ path('cm_start', {}) }}"><img id="logo" src="{{ asset('bundles/cmapp/images/logo.png') }}"/></a>
+						   	</td>
+						   	<td class="sideTitle">
+				    			<span><span class="nonMobile">Chess Mate{{ subConn }}</span>{{ subtitle }}</span>
+						   	</td>
+	    			  	</tr>
+				   	</table>
+	    		</div>
+			   	<div class="col-md-3 col-sm-6 col-xs-12">
+    			{% if app.user and app.user.registered %}
+				    	<div id="userOptions" class="row">
+						   	<div class="col-md-12">
+    	    					{% if game is defined %}
+    				    			<a  href="{{ path('cm_start', {}) }}" class="btn btn-success" target="_blank">Play Another</a>
+    			    			{% endif %}
+    			    			<a  href="{{ path('fos_user_security_logout', {}) }}" class="btn btn-warning">Log-out</a>
+    		    			</div>
+		    			</div>
+	    			{% endif %}
+    			</div>
+	    	</div>
+        {% block body %}{% endblock %}
+	    </div>
+        {% block javascripts %}
+			<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+			<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+    		<script type="text/javascript" src="{{ asset('bundles/cmapp/js/prototype.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

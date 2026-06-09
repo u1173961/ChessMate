@@ -8,6 +8,6 @@ class JSTestsController extends AbstractController
 {    
     public function testJSAction()
     {    	
-        return $this->render('CMAppBundle:JSTests:tests.html.twig', array());
+        return $this->render('JSTests/tests.html.twig', array());
     }
 }

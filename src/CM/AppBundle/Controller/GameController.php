@@ -79,7 +79,7 @@ class GameController extends AbstractController
 	    $user = $this->getUser();	
     	$games = $user->getCurrentGames();
     	
-        return $this->render('CMAppBundle:Game:main.html.twig', array('games' => $games, 'player' => 'x'));
+        return $this->render('Game/main.html.twig', array('games' => $games, 'player' => 'x'));
     }
     
 	/**
@@ -115,7 +115,7 @@ class GameController extends AbstractController
     	//disconnect session
     	$this->get('session')->save();
 	    $em = $this->getDoctrine()->getManager();
-	    $search = $em->getRepository('CMAppBundle:GameSearch')->find($searchID);
+	    $search = $em->getRepository(\CM\AppBundle\Entity\GameSearch::class)->find($searchID);
 	    $gameID = false;
 	    if ($search) {
 	    	$user = $this->getUser();
@@ -126,7 +126,7 @@ class GameController extends AbstractController
 	    	$length = $search->getLength();
 	    	$minRank = $search->getMinRank();
 	    	$maxRank = $search->getMaxRank();
-	    	$repo = $em->getRepository('CMAppBundle:GameSearch');
+	    	$repo = $em->getRepository(\CM\AppBundle\Entity\GameSearch::class);
 	    	$match = null;
 	    	$waited = 0;
 	    	while ($search && $waited < 45) {
@@ -195,7 +195,7 @@ class GameController extends AbstractController
     	$cancelled = false;
     	if ($searchID != 0) {
 		    $em = $this->getDoctrine()->getManager();
-		    $search = $em->getRepository('CMAppBundle:GameSearch')->find($searchID);
+		    $search = $em->getRepository(\CM\AppBundle\Entity\GameSearch::class)->find($searchID);
 		    if ($search) {
 		    	$user = $this->getUser();
 		    	if ($search->getSearcher() != $user) {
@@ -221,7 +221,7 @@ class GameController extends AbstractController
     {
 	    $user = $this->getUser();	
     	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
 	    //get player colour
@@ -239,7 +239,7 @@ class GameController extends AbstractController
 	    //get taken pieces
     	$taken = $this->get('html_helper')->getUnicodeTakenPieces($game->getBoard()->getTaken());
 
-	    return $this->render('CMAppBundle:Game:main.html.twig', 
+	    return $this->render('Game/main.html.twig', 
 	    		array('game' => $game,
 	    			'player' => $colour, 
 	    			'opponent' => $opponent,
@@ -263,7 +263,7 @@ class GameController extends AbstractController
     			'P' => 0, 'R' => 0, 'N' => 0, 'B' => 0, 'Q' => 0,
     			'p' => 0, 'r' => 0, 'n' => 0, 'b' => 0, 'q' => 0
     	));
-	    return $this->render('CMAppBundle:Game:playComputer.html.twig', 
+	    return $this->render('Game/playComputer.html.twig', 
 	    		array('skillLevel' => $skill, 'player' => 'w', 'taken' => $taken));
     }
     
@@ -290,7 +290,7 @@ class GameController extends AbstractController
     public function joinGameAction($gameID) {
 	    $user = $this->getUser();	
     	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
 	    //join game
@@ -329,7 +329,7 @@ class GameController extends AbstractController
 	    	$em->remove($game);
 	    }
     	//remove searches
-    	$em->getRepository('CMAppBundle:GameSearch')->removeGameSearches($game);
+    	$em->getRepository(\CM\AppBundle\Entity\GameSearch::class)->removeGameSearches($game);
 	    $em->flush();
 	    
     	return $joined;    	
@@ -355,7 +355,7 @@ class GameController extends AbstractController
 		} else {
 		    $user = $this->getUser();	
 	    	$em = $this->getDoctrine()->getManager();
-	    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 		    //authenticate user/game
 		    $this->checkGameValidity($game, $user);
 		    //get player colour
@@ -365,7 +365,7 @@ class GameController extends AbstractController
     		$pieces = $this->get('html_helper')->getUnicodePieces($board);
 		}
 
-        return $this->render('CMAppBundle:Game:board.html.twig', 
+        return $this->render('Game/board.html.twig', 
         		array('gameID' => $gameID, 'pieces' => $pieces, 'player' => $colour));	
 	}
     
@@ -413,7 +413,7 @@ class GameController extends AbstractController
     {
 	    $user = $this->getUser();	
     	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
     	$players = $game->getPlayers();
@@ -438,7 +438,7 @@ class GameController extends AbstractController
 	    $user = $this->getUser();
     	
     	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
     	if ($player == 'w') {
     		$pIndex = 0;
     	} else {
@@ -463,7 +463,7 @@ class GameController extends AbstractController
         $msg = $this->get('exercise_html_purifier.default')->purify($request->request->get('msg'));
     	$em = $this->getDoctrine()->getManager();
     	$user = $this->getUser();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    $this->checkGameValidity($game, $user);
     	//add username to message
     	$msg = '<label>'.$user->getUsername().': </label> '.$msg;
@@ -483,7 +483,7 @@ class GameController extends AbstractController
     {
 	    $user = $this->getUser();	
     	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
 	    //offer draw
@@ -499,7 +499,7 @@ class GameController extends AbstractController
     public function acceptDrawAction($gameID) {
     	$em = $this->getDoctrine()->getManager();
     	$user = $this->getUser();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    $this->checkGameValidity($game, $user);
 	    $players = $game->getPlayers();
 	    $pIndex = $players->indexOf($user);
@@ -532,7 +532,7 @@ class GameController extends AbstractController
 	    //check if game over already received
 	    $overReceived = $content->overReceived;  
     	$opChatty = $content->opChatty;
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    $players = $game->getPlayers();
     	$pIndex = $players->indexOf($user);
     	$opIndex = 1 - $pIndex;
@@ -548,9 +548,9 @@ class GameController extends AbstractController
     	//get all chat on reloads
 	    if ($game->getPlayerIsChatty($pIndex)) {
 	    	if ($lastSeen == 0) {
-	    		$chatMsgs = $em->getRepository('CMAppBundle:ChatMessage')->findAllGameChat($game);	    		
+	    		$chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findAllGameChat($game);	    		
 	    	} else {
-	    		$chatMsgs = $em->getRepository('CMAppBundle:ChatMessage')->findGamePlayerChat($opponent, $game, $lastSeen);
+	    		$chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
 	    	}
 	    } else {
 	    	$chatMsgs = array($lastSeen, array());
@@ -565,7 +565,7 @@ class GameController extends AbstractController
 	    	$em->refresh($game);
 	    	if ($game->getPlayerIsChatty($pIndex)) {
 	    		//get opponent's chat - own handled client-side & on reload
-	    		$chatMsgs = $em->getRepository('CMAppBundle:ChatMessage')->findGamePlayerChat($opponent, $game, $lastSeen);
+	    		$chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
 	    	}
 	    	if (!$game->over()) {
 				if ($game->getPlayerTime($opIndex) < 200) {

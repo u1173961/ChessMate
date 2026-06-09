@@ -1,4 +1,4 @@
-{% extends '::base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -41,7 +41,7 @@
 			</center>
 		</div>
 	{% endif %}
-	{{ include('CMAppBundle:Game:newGameOptions.html.twig', {}) }}
+	{{ include('Game/newGameOptions.html.twig', {}) }}
 	<div class="row">
 	    <div class="boardHolder {{ inGame }}">
 		    {{ render(controller('CM\\AppBundle\\Controller\\GameController::showBoardAction', { 'gameID': gameID })) }}
@@ -49,12 +49,12 @@
 		<div class="gameControls">
 			{% if gameID %}
 				<div id="midGame">
-					{{ include('CMAppBundle:Game:timerAndRating.html.twig', { 'timer': '1', 'timeLeft': opTime, 'user': opponent}) }}
-					{{ include('CMAppBundle:Game:piecesWonOrLost.html.twig', { 'wonLost': 'Lost'}) }}
-					{{ include('CMAppBundle:Game:chatBox.html.twig', {}) }}
-					{{ include('CMAppBundle:Game:midGameOptions.html.twig', {}) }}
-					{{ include('CMAppBundle:Game:piecesWonOrLost.html.twig', { 'wonLost': 'Won'}) }}
-					{{ include('CMAppBundle:Game:timerAndRating.html.twig', { 'timer': '2', 'timeLeft': userTime, 'user': app.user}) }}
+					{{ include('Game/timerAndRating.html.twig', { 'timer': '1', 'timeLeft': opTime, 'user': opponent}) }}
+					{{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Lost'}) }}
+					{{ include('Game/chatBox.html.twig', {}) }}
+					{{ include('Game/midGameOptions.html.twig', {}) }}
+					{{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Won'}) }}
+					{{ include('Game/timerAndRating.html.twig', { 'timer': '2', 'timeLeft': userTime, 'user': app.user}) }}
 				</div>
 			{% else %}
 				<div id="piecesWon" class="row piecesWonLost hidden">

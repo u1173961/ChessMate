@@ -36,6 +36,10 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    default_path: '%kernel.project_dir%/src/CM/AppBundle/Resources/views'
+    paths:
+        '%kernel.project_dir%/app/Resources/views': ~
+        '%kernel.project_dir%/src/CM/AppBundle/Resources/views': ~
 
 # Doctrine Configuration
 doctrine:

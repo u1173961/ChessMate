@@ -22,7 +22,7 @@ class MoveController extends AbstractController
     	$content = json_decode($request->getContent());
     	//find game
     	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($content->gameID);
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($content->gameID);
     	if ($game->over()) {
     		return new JsonResponse(array('sent' => false));    		
     	}
@@ -75,7 +75,7 @@ class MoveController extends AbstractController
     	$user = $this->getUser();
     	//find game
     	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
     	//switch active player
 		$game->switchActivePlayer();
     	//make sure valid user for game
@@ -130,7 +130,7 @@ class MoveController extends AbstractController
     	$user = $this->getUser();
     	//find game
     	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
     	//get user
 	    $player = $game->getPlayers()->indexOf($user);
     	//get player that made move

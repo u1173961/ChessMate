@@ -36,7 +36,7 @@ class GameSearchRepository extends EntityRepository
 		$search = $this->getEntityManager()
 		->createQuery(
 				'SELECT gs, ABS(p.rating - :playerRank) AS closest 
-				FROM CMAppBundle:GameSearch gs
+				FROM CM\\AppBundle\\Entity\\GameSearch gs
 			    JOIN gs.searcher p
 				WHERE p.id != :playerID
 				AND gs.matched = 0
@@ -61,7 +61,7 @@ class GameSearchRepository extends EntityRepository
 	public function removeGameSearches($game) {
 		$this->getEntityManager()
 		->createQuery(
-				'DELETE CMAppBundle:GameSearch gs
+				'DELETE CM\\AppBundle\\Entity\\GameSearch gs
 				WHERE gs.game = :game'
 		)
 		->setParameter('game', $game)

@@ -23,7 +23,7 @@ class ChatRepository extends EntityRepository
 	{
 		$result = $this->getEntityManager()
 		->createQuery(
-				'SELECT m FROM CMAppBundle:ChatMessage m
+				'SELECT m FROM CM\\AppBundle\\Entity\\ChatMessage m
 				WHERE m.id > :lastSeen
 				AND m.user = :user
 				AND m.game = :game'
@@ -57,7 +57,7 @@ class ChatRepository extends EntityRepository
 	{
 		$result = $this->getEntityManager()
 		->createQuery(
-				'SELECT m FROM CMAppBundle:ChatMessage m
+				'SELECT m FROM CM\\AppBundle\\Entity\\ChatMessage m
 				where m.game = :game'
 		)
 		->setParameter('game', $game)
