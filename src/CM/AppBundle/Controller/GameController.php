@@ -2,19 +2,19 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken,
-    Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use CM\UserBundle\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use CM\AppBundle\Entity\Game;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use CM\AppBundle\Entity\ChatMessage;
-use Doctrine\ORM\EntityManager;
+use CM\AppBundle\Entity\Game;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-class GameController extends Controller
+class GameController extends AbstractController
 {    
     /**
      * Login as inactive guest account

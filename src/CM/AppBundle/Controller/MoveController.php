@@ -2,14 +2,13 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-	Symfony\Component\HttpFoundation\Request,
-	Symfony\Component\HttpFoundation\Response,
-	Symfony\Component\HttpFoundation\JsonResponse;
 use CM\AppBundle\Entity\Game;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class MoveController extends Controller
+class MoveController extends AbstractController
 {    
 	/**
 	 * Set last move for retrieval/validation by opponent

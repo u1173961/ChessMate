@@ -2,9 +2,9 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class JSTestsController extends Controller
+class JSTestsController extends AbstractController
 {    
     public function testJSAction()
     {    	
