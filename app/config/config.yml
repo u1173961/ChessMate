@@ -84,13 +84,12 @@ fos_user:
         address: "%mailer_user%"
         sender_name: "%mailer_user%"
     service:
-        mailer: fos_user.mailer.default
+        mailer: fos_user.mailer.twig_swift
 
 security:
     providers:
         fos_userbundle:
             id: fos_user.user_provider.username_email
 
-exercise_html_purifier:            
-    default:
-        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+exercise_html_purifier:
+    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'

@@ -422,7 +422,20 @@ class User extends BaseUser
 	 */
 	public function serialize()
 	{
-	    return serialize(array(
+	    return serialize($this->__serialize());
+	}
+	
+	/**
+	 * {@override}
+	 */
+	public function unserialize($serialized)
+	{
+	    $this->__unserialize(unserialize($serialized));
+	}
+
+	public function __serialize(): array
+	{
+	    return array(
 	        $this->password,
 	        $this->salt,
 	        $this->usernameCanonical,
@@ -432,16 +445,11 @@ class User extends BaseUser
 	        $this->email,
 	        $this->emailCanonical,
 	        $this->currUsername,
-	    ));
+	    );
 	}
-	
-	/**
-	 * {@override}
-	 */
-	public function unserialize($serialized)
+
+	public function __unserialize(array $data): void
 	{
-	    $data = unserialize($serialized);
-	    
 	    if (13 === count($data)) {
 	        // Unserializing a User object from 1.3.x
 	        unset($data[4], $data[5], $data[6], $data[9], $data[10]);
@@ -451,7 +459,7 @@ class User extends BaseUser
 	        unset($data[4], $data[7], $data[8]);
 	        $data = array_values($data);
 	    }
-	    
+
 	    list(
 	        $this->password,
 	        $this->salt,
