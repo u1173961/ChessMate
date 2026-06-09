@@ -4,12 +4,12 @@ cm_app:
     
 cm_app_home:
     path:     /
-    defaults: { _controller: "FOSUserBundle:Security:login" }
+    defaults: { _controller: "FOS\\UserBundle\\Controller\\SecurityController::loginAction" }
     prefix:   /cm/
     
 cm_app_login:
     path:     /cm
-    defaults: { _controller: "FOSUserBundle:Security:login" }
+    defaults: { _controller: "FOS\\UserBundle\\Controller\\SecurityController::loginAction" }
     prefix:   /
 
 cm_user:

@@ -55,7 +55,7 @@ class GameController extends Controller
 			$this->get("security.token_storage")->setToken($token);		
 			// fire login
 			$event = new InteractiveLoginEvent($request, $token);
-			$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+			$this->get("event_dispatcher")->dispatch($event, "security.interactive_login");
     	}
     	
     	return $this->redirect($this->generateUrl('cm_start', array()));

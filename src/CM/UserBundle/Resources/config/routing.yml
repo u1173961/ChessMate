@@ -7,5 +7,5 @@ cm_app:
 
 cm_app_guest:
     path:     /guest
-    defaults: { _controller: "CMAppBundle:Game:guest" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::guestAction" }
     

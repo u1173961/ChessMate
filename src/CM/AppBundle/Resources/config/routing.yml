@@ -1,93 +1,93 @@
 cm_start:
     path:     /start
-    defaults: { _controller: "CMAppBundle:Game:start" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::startAction" }
     options:
         expose: true
     
 cm_new_search:
     path:     /newSearch
-    defaults: { _controller: "CMAppBundle:Game:newSearch" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::newSearchAction" }
     
 cm_match_search:
     path:     /matchSearch/{searchID}
-    defaults: { _controller: "CMAppBundle:Game:matchSearch" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::matchSearchAction" }
     options:
         expose: true
     
 cm_cancel_search:
     path:     /cancelSearch/{searchID}
-    defaults: { _controller: "CMAppBundle:Game:cancelSearch", searchID : 0 }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::cancelSearchAction", searchID : 0 }
     
 cm_play_computer:
     path:     /play/computer/{skill}
-    defaults: { _controller: "CMAppBundle:Game:playComputer", skill : 2 }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::playComputerAction", skill : 2 }
     
 cm_play_game:
     path:     /play/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:play" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::playAction" }
 
 cm_show_board:
     path:     /showBoard/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:showBoard", gameID: null }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::showBoardAction", gameID: null }
     options:
         expose: true
     
 cm_join_game:
     path:     /join/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:joinGame" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::joinGameAction" }
     options:
         expose: true
     
 cm_send_move:
     path:     /sendMove
-    defaults: { _controller: "CMAppBundle:Move:sendMove" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\MoveController::sendMoveAction" }
     options:
         expose: true
     
 cm_save_move:
     path:     /saveMove/{gameID}
-    defaults: { _controller: "CMAppBundle:Move:saveMove" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\MoveController::saveMoveAction" }
     options:
         expose: true
     
 cm_offer_draw:
     path:     /offerDraw/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:offerDraw" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::offerDrawAction" }
     
 cm_accept_draw:
     path:     /acceptDraw/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:acceptDraw" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::acceptDrawAction" }
     
 cm_find_cheat:
     path:     /findCheat/{gameID}
-    defaults: { _controller: "CMAppBundle:Move:findCheat" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\MoveController::findCheatAction" }
     options:
         expose: true
     
 cm_resign_game:
     path:     /resign/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:resign" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::resignAction" }
     
 cm_toggle_chat:
     path:     /toggleChat/{gameID}/{player}
-    defaults: { _controller: "CMAppBundle:Game:toggleChat" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::toggleChatAction" }
     options:
         expose: true
     
 cm_send_chat:
     path:     /sendChat/{gameID}
-    defaults: { _controller: "CMAppBundle:Game:sendChat" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::sendChatAction" }
     options:
         expose: true
     
 cm_listen:
     path:     /listen
-    defaults: { _controller: "CMAppBundle:Game:listen" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::listenAction" }
     options:
         expose: true
     
 cm_js_tests:
     path:     /tests
-    defaults: { _controller: "CMAppBundle:JSTests:testJS" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\JSTestsController::testJSAction" }
 
     

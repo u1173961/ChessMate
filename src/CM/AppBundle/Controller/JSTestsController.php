@@ -2,9 +2,7 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken,
-    Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class JSTestsController extends Controller
 {    
