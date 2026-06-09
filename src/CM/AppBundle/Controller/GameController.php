@@ -452,7 +452,7 @@ class GameController extends Controller
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function sendChatAction($gameID, Request $request) {
-        $msg = $this->container->get('exercise_html_purifier.default')->purify($request->request->get('msg'));
+        $msg = $this->get('exercise_html_purifier.default')->purify($request->request->get('msg'));
     	$em = $this->getDoctrine()->getManager();
     	$user = $this->getUser();
 	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);

@@ -44,7 +44,7 @@
 	{{ include('CMAppBundle:Game:newGameOptions.html.twig', {}) }}
 	<div class="row">
 	    <div class="boardHolder {{ inGame }}">
-		    {{ render(controller('CMAppBundle:Game:showBoard', { 'gameID': gameID })) }}
+		    {{ render(controller('CM\\AppBundle\\Controller\\GameController::showBoardAction', { 'gameID': gameID })) }}
 		</div>
 		<div class="gameControls">
 			{% if gameID %}

@@ -39,7 +39,7 @@ services:
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
         exclude: '../../src/CM/UserBundle/{Tests}'
-        
-    #fos_userbundle:
-    #    class: FOS\UserBundle\Security\UserProvider
-    #    arguments: ["@fos_user.user_manager", "@service_container"]
+
+    CM\UserBundle\EventListener\LastActiveListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }

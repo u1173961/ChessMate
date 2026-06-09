@@ -10,7 +10,7 @@
 	{% set gameID = null %}
 	<div class="row">
 	    <div class="boardHolder inGame">
-		    {{ render(controller('CMAppBundle:Game:showBoard', { 'gameID': gameID })) }}
+		    {{ render(controller('CM\\AppBundle\\Controller\\GameController::showBoardAction', { 'gameID': gameID })) }}
 		</div>
 		<div class="gameControls">
 			<div id="midGame">
