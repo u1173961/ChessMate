@@ -48,18 +48,6 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
 
-# Assetic Configuration
-assetic:
-    debug:          "%kernel.debug%"
-    use_controller: "%kernel.debug%"
-    bundles:        [ CMAppBundle ]
-    #java: /usr/bin/java
-    filters:
-        lessphp: 
-            file: "%kernel.project_dir%/vendor/leafo/lessphp/lessc.inc.php" 
-            apply_to: ".less$"
-        cssrewrite: ~
-
 # Doctrine Configuration
 doctrine:
     dbal:
