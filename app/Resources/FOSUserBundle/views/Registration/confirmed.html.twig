@@ -12,10 +12,4 @@
     {% if targetUrl %}
     	<center><h2><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></h2></center>
     {% endif %}
-    {#% if app.session is not empty %}
-        {% set targetUrl = app.session.get('_security.' ~ app.security.token.providerKey ~ '.target_path') %}
-        {% if targetUrl is not empty %}
-        	<center><h2><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></h2></center>
-        {% endif %}
-    {% endif %#}
 {% endblock fos_user_content %}
