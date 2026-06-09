@@ -1,14 +1,8 @@
-FROM composer:2.2 AS composer
+FROM composer:2.8 AS composer
 
-FROM php:7.2-apache
+FROM php:8.2-apache
 
-RUN sed -i \
-        -e 's|deb.debian.org/debian|archive.debian.org/debian|g' \
-        -e 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' \
-        -e '/stretch-updates/d' \
-        /etc/apt/sources.list \
-    && printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99archive \
-    && apt-get update \
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         git \
         libicu-dev \
@@ -25,6 +19,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /var/www/html
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 COPY . .
 COPY docker/parameters.yml app/config/parameters.yml
@@ -43,7 +39,9 @@ ENV DATABASE_HOST=127.0.0.1 \
 RUN composer install \
         --no-interaction \
         --prefer-dist \
+        --no-progress \
         --optimize-autoloader \
+    && mkdir -p var/cache var/logs var/sessions web/bundles \
     && chown -R www-data:www-data var web/bundles
 
 COPY docker/entrypoint.sh /usr/local/bin/chessmate-entrypoint

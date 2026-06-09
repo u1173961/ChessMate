@@ -2,6 +2,17 @@
 set -eu
 
 if [ "${1:-}" = "apache2-foreground" ]; then
+    mkdir -p var/cache var/logs var/sessions web/bundles
+
+    if [ ! -f vendor/autoload.php ]; then
+        echo "Installing PHP dependencies..."
+        composer install \
+            --no-interaction \
+            --prefer-dist \
+            --no-progress \
+            --optimize-autoloader
+    fi
+
     echo "Waiting for the database..."
     attempts=0
 
