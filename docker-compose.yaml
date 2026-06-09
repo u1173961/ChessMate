@@ -1,0 +1,49 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "${APP_PORT:-8081}:80"
+    volumes:
+      - .:/var/www/html
+      - vendor:/var/www/html/vendor
+      - assets:/var/www/html/web/bundles
+      - ./docker/parameters.yml:/var/www/html/app/config/parameters.yml:ro
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_NAME: chessmate
+      DATABASE_USER: chessmate
+      DATABASE_PASSWORD: chessmate
+      MAILER_TRANSPORT: smtp
+      MAILER_HOST: localhost
+      MAILER_USER: no-reply@chessmate.local
+      MAILER_PASSWORD: ""
+      APP_SECRET: "${APP_SECRET:-change-this-development-secret}"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mariadb:10.6
+    ports:
+      - "${DB_PORT:-3307}:3306"
+    environment:
+      MARIADB_DATABASE: chessmate
+      MARIADB_USER: chessmate
+      MARIADB_PASSWORD: chessmate
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+volumes:
+  assets:
+  database:
+  vendor:

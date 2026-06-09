@@ -1,0 +1,12 @@
+.git
+.idea
+.vscode
+Dockerfile
+compose*.yaml
+compose*.yml
+docker-compose*.yaml
+docker-compose*.yml
+var/cache/*
+var/logs/*
+var/sessions/*
+vendor
