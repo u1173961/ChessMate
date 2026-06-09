@@ -33,22 +33,14 @@
 				   	</table>
 	    		</div>
 			   	<div class="col-md-3 col-sm-6 col-xs-12">
-    				{% if app.user and app.user.registered %}
+    			{% if app.user and app.user.registered %}
 				    	<div id="userOptions" class="row">
 						   	<div class="col-md-12">
-    	    					{% if games is defined %}
-    				    			<a  href="{{ path('fos_user_profile_edit', {}) }}" class="btn btn-primary">Edit Profile</a>
-    			    			{% elseif game is defined %}
+    	    					{% if game is defined %}
     				    			<a  href="{{ path('cm_start', {}) }}" class="btn btn-success" target="_blank">Play Another</a>
     			    			{% endif %}
     			    			<a  href="{{ path('fos_user_security_logout', {}) }}" class="btn btn-warning">Log-out</a>
     		    			</div>
-		    			</div>
-	    			{% elseif games is defined %}
-				    	<div class="row">
-						   	<div class="col-md-12">
-		    					<a  href="{{ path('fos_user_registration_register', {}) }}" class="btn btn-primary">Register</a>
-		    				</div>
 		    			</div>
 	    			{% endif %}
     			</div>

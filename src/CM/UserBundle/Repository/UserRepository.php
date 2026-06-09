@@ -13,7 +13,7 @@ class UserRepository extends EntityRepository
 	{
 		$guest = $this->getEntityManager()
 		->createQuery(
-				'SELECT u FROM CMUserBundle:User u
+				'SELECT u FROM CM\\UserBundle\\Entity\\User u
 				WHERE u.registered = 0
 				AND u.lastActiveTime < :active'
 		)

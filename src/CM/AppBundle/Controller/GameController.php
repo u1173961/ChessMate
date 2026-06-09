@@ -2,12 +2,12 @@
 
 namespace CM\AppBundle\Controller;
 
-use CM\UserBundle\Entity\User;
 use CM\AppBundle\Entity\ChatMessage;
 use CM\AppBundle\Entity\Game;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -15,7 +15,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class GameController extends AbstractController
-{    
+{
+    private $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * Login as inactive guest account
      * Create's a new account if none are available
@@ -27,22 +34,23 @@ class GameController extends AbstractController
     	//check user is not already logged in
     	if (!$this->getUser()) {
 	     	//get inactive guest account
-	     	$userManager = $this->get('fos_user.user_manager');
 			$em = $this->getDoctrine()->getManager();
-			$user = $em->getRepository('CMUserBundle:User')->findInactiveGuest();
+			$user = $em->getRepository(\CM\UserBundle\Entity\User::class)->findInactiveGuest();
 			if (!$user) {
 				//create new guest accounts as needed
-				$id = $em->createQuery('SELECT MAX(u.id) FROM CMUserBundle:User u')->getSingleScalarResult() + 1;
+				$id = $em->createQuery('SELECT MAX(u.id) FROM CM\\UserBundle\\Entity\\User u')->getSingleScalarResult() + 1;
 				$name = "Guest0".$id;
-				$user = $userManager->createUser();
+				$user = new \CM\UserBundle\Entity\User();
 				$user->setUsername($name);		
 				$user->setEmail($name);
 				$user->setPassword("");
 				$user->setRegistered(false);
+				$user->setEnabled(true);
 				$user->setLastActiveTime(new \DateTime());
 				//give guest average rating
 				$user->setRating(1100);
-				$userManager->updateUser($user);
+				$em->persist($user);
+				$em->flush();
 			} else {
 				$user = $user[0];
 				$name = $user->getUsername();
@@ -55,7 +63,7 @@ class GameController extends AbstractController
 			$this->get("security.token_storage")->setToken($token);		
 			// fire login
 			$event = new InteractiveLoginEvent($request, $token);
-			$this->get("event_dispatcher")->dispatch($event, "security.interactive_login");
+			$this->eventDispatcher->dispatch($event, "security.interactive_login");
     	}
     	
     	return $this->redirect($this->generateUrl('cm_start', array()));
@@ -590,7 +598,7 @@ class GameController extends AbstractController
 	    		$em->refresh($p);
 	    	}
 			//re-fetch users from database to ensure updated
-			$repo = $em->getRepository('CMUserBundle:User');
+			$repo = $em->getRepository(\CM\UserBundle\Entity\User::class);
 	    	$pRating = $repo->find($players->get($pIndex)->getId())->getRating();
 	    	$opRating = $repo->find($players->get($opIndex)->getId())->getRating();
 	    	return new JsonResponse(array('change' => true, 'gameOver' => true, 'pRating' => $pRating, 'opRating' => $opRating, 'overMsg' => $message, 'chat' => $chat));

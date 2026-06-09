@@ -2,20 +2,20 @@
 
 namespace CM\UserBundle\EventListener;
 
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
+use CM\UserBundle\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 class LastActiveListener
 {
     private $tokenStorage;
-    private $userManager;
+    private $entityManager;
 
-    public function __construct(TokenStorageInterface $tokenStorage, UserManagerInterface $userManager)
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManagerInterface $entityManager)
     {
         $this->tokenStorage = $tokenStorage;
-        $this->userManager = $userManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -36,9 +36,9 @@ class LastActiveListener
         if ($securityToken) {
             $user = $securityToken->getUser();
 
-            if ($user instanceof UserInterface && !$user->getIsOnline()) {
+            if ($user instanceof User && !$user->getIsOnline()) {
                 $user->setLastActiveTime(new \DateTime());
-                $this->userManager->updateUser($user);
+                $this->entityManager->flush();
             }
         }
     }

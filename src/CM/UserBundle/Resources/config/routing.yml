@@ -1,5 +1,12 @@
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+fos_user_security_login:
+    path: /login
+    defaults: { _controller: "CM\\AppBundle\\Controller\\SecurityController::loginAction" }
+
+fos_user_security_check:
+    path: /login_check
+
+fos_user_security_logout:
+    path: /logout
 
 cm_app:
     resource: "@CMAppBundle/Resources/config/routing.yml"

@@ -58,7 +58,6 @@
         "symfony/validator": "^4.4",
         "symfony/yaml": "^4.4",
         "twig/twig": "^2.16",
-        "friendsofsymfony/user-bundle": "^2.1",
 		"friendsofsymfony/jsrouting-bundle": "^2.8",
 		"exercise/htmlpurifier-bundle" : "*"
     },
