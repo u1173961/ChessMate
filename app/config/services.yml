@@ -42,4 +42,4 @@ services:
 
     CM\UserBundle\EventListener\LastActiveListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.controller, method: onCoreController }
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

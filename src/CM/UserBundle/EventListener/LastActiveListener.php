@@ -1,11 +1,11 @@
 <?php
+
 namespace CM\UserBundle\EventListener;
 
 use FOS\UserBundle\Model\UserInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\HttpKernel;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 class LastActiveListener
 {
@@ -19,21 +19,23 @@ class LastActiveListener
     }
 
     /**
-    * Update user on each request
-    */
-    public function onCoreController(FilterControllerEvent $event)
+     * Update the user on each main request.
+     */
+    public function onKernelController(ControllerEvent $event)
     {
-        // only listen for MASTER_REQUESTs
-        if ($event->getRequestType() !== HttpKernel::MASTER_REQUEST) {
+        if (method_exists($event, 'isMainRequest')) {
+            if (!$event->isMainRequest()) {
+                return;
+            }
+        } elseif (!$event->isMasterRequest()) {
             return;
         }
 
         $securityToken = $this->tokenStorage->getToken();
 
-        // Check if request is from user
         if ($securityToken) {
             $user = $securityToken->getUser();
-            //update last active time (every three mins) 
+
             if ($user instanceof UserInterface && !$user->getIsOnline()) {
                 $user->setLastActiveTime(new \DateTime());
                 $this->userManager->updateUser($user);
