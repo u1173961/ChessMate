@@ -24,7 +24,6 @@ security:
 
         main:
             pattern:    ^/
-            lazy: true
             form_login:
                 provider: app_user_provider
                 check_path: fos_user_security_check
