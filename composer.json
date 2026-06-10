@@ -33,7 +33,6 @@
 	],
     "require": {
         "php": "^8.2",
-        "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.13",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
