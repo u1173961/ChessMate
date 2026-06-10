@@ -43,3 +43,12 @@ services:
     CM\UserBundle\EventListener\LastActiveListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    fos_js_routing.extractor:
+        class: FOS\JsRoutingBundle\Extractor\ExposedRoutesExtractor
+        public: true
+        arguments:
+            $router: '@fos_js_routing.router'
+            $routesToExpose: []
+            $cacheDir: '/tmp'
+            $bundles: '%kernel.bundles%'
