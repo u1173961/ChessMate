@@ -9,55 +9,35 @@ use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterfac
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Glicko rated user.
- *
- * @ORM\Entity(repositoryClass="CM\UserBundle\Repository\UserRepository")
- * @ORM\Table(name="cm_user")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: 'CM\UserBundle\Repository\UserRepository')]
+#[ORM\Table(name: 'cm_user')]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=180)
-     */
+    #[ORM\Column(type: 'string', length: 180)]
     protected $username;
 
-    /**
-     * @ORM\Column(name="username_canonical", type="string", length=180, unique=true)
-     */
+    #[ORM\Column(name: 'username_canonical', type: 'string', length: 180, unique: true)]
     protected $usernameCanonical;
 
-    /**
-     * @ORM\Column(type="string", length=180)
-     */
+    #[ORM\Column(type: 'string', length: 180)]
     protected $email;
 
-    /**
-     * @ORM\Column(name="email_canonical", type="string", length=180, unique=true)
-     */
+    #[ORM\Column(name: 'email_canonical', type: 'string', length: 180, unique: true)]
     protected $emailCanonical;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $enabled = true;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     protected $salt;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     protected $password = '';
 
     /**
@@ -65,24 +45,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyP
      */
     protected $plainPassword;
 
-    /**
-     * @ORM\Column(name="last_login", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'last_login', type: 'datetime', nullable: true)]
     protected $lastLogin;
 
-    /**
-     * @ORM\Column(name="confirmation_token", type="string", length=180, unique=true, nullable=true)
-     */
+    #[ORM\Column(name: 'confirmation_token', type: 'string', length: 180, unique: true, nullable: true)]
     protected $confirmationToken;
 
-    /**
-     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'password_requested_at', type: 'datetime', nullable: true)]
     protected $passwordRequestedAt;
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: 'array')]
     protected $roles = array();
 
     /**
@@ -90,39 +62,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyP
      */
     public $currUsername;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="CM\AppBundle\Entity\Game")
-     */
+    #[ORM\ManyToMany(targetEntity: 'CM\AppBundle\Entity\Game')]
     protected $currentGames;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $registered;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     protected $rating;
 
-    /**
-     * @ORM\Column(type="decimal")
-     */
+    #[ORM\Column(type: 'decimal')]
     protected $deviation;
 
-    /**
-     * @ORM\Column(type="bigint")
-     */
+    #[ORM\Column(type: 'bigint')]
     protected $lastPlayedTime;
 
-    /**
-     * @ORM\Column(name="last_active_time", type="datetime")
-     */
+    #[ORM\Column(name: 'last_active_time', type: 'datetime')]
     protected $lastActiveTime;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     protected $chatty;
 
     /**
@@ -148,21 +106,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, LegacyP
         $this->enabled = true;
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function syncCanonicalFields()
     {
         $this->usernameCanonical = $this->canonicalize($this->username);
         $this->emailCanonical = $this->canonicalize($this->email);
     }
 
-    /**
-     * @ORM\PostLoad()
-     * @ORM\PostUpdate()
-     * @ORM\PostPersist()
-     */
+    #[ORM\PostLoad]
+    #[ORM\PostUpdate]
+    #[ORM\PostPersist]
     public function syncCurrUsername()
     {
         $this->currUsername = $this->username;

@@ -22,6 +22,7 @@ framework:
     validation:
         enable_attributes: false
         email_validation_mode: html5
+    annotations: false
     default_locale: '%locale%'
     trusted_hosts: ~
     session:
@@ -68,7 +69,20 @@ doctrine:
             auto_mapping: false
         enable_lazy_ghost_objects: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        auto_mapping: true
+        auto_mapping: false
+        mappings:
+            CMAppBundle:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/CM/AppBundle/Entity'
+                prefix: 'CM\AppBundle\Entity'
+                alias: CMApp
+            CMUserBundle:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/src/CM/UserBundle/Entity'
+                prefix: 'CM\UserBundle\Entity'
+                alias: CMUser
 
 exercise_html_purifier:
     default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'

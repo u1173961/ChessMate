@@ -6,56 +6,35 @@ use Doctrine\ORM\Mapping as ORM;
 use CM\UserBundle\Entity\User;
 use CM\AppBundle\Entity\Game;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="game_search")
- * @ORM\Entity(repositoryClass="CM\AppBundle\Repository\GameSearchRepository")
- */
+#[ORM\Entity(repositoryClass: 'CM\AppBundle\Repository\GameSearchRepository')]
+#[ORM\Table(name: 'game_search')]
 class GameSearch
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $minRank;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $maxRank;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $length;
     
-    /**
-     * Searcher
-     *
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'CM\UserBundle\Entity\User')]
     private $searcher;
     
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $matched;
     
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $cancelled;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Game")
-	 * @ORM\JoinColumn(name="game_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\OneToOne(targetEntity: 'Game')]
+    #[ORM\JoinColumn(name: 'game_id', referencedColumnName: 'id', nullable: true)]
     private $game;
     
     /**

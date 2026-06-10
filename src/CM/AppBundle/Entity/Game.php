@@ -4,99 +4,55 @@ namespace CM\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="game")
- * @ORM\Entity(repositoryClass="CM\AppBundle\Repository\GameRepository")
- */
+#[ORM\Entity(repositoryClass: 'CM\AppBundle\Repository\GameRepository')]
+#[ORM\Table(name: 'game')]
 class Game
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Board", cascade={"persist"})
-     */
+    #[ORM\OneToOne(targetEntity: 'Board', cascade: ['persist'])]
     private $board;
     
-    /**
-     * Players
-     *
-     * @ORM\ManyToMany(targetEntity="CM\UserBundle\Entity\User", cascade={"persist"})
-     * @ORM\JoinTable(name="game_players",
-     * joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")})
-     */
+    #[ORM\ManyToMany(targetEntity: 'CM\UserBundle\Entity\User', cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'game_players')]
+    #[ORM\JoinColumn(name: 'game_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private $players;
 
-    /**
-     * The index of the active player
-     * 0 = white
-     * 1 = black
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $activePlayerIndex;
     
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: 'array')]
     private $playersJoined;
     
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: 'array')]
     private $chattyPlayers;
     
-    /**
-     * @ORM\Column(type="bigint", nullable=true)
-     */
+    #[ORM\Column(type: 'bigint', nullable: true)]
     private $lastMoveTime;
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: 'array')]
     protected $lastMove;
     
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $lastMoveValidated;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private $length;
     
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: 'array')]
     private $playerTimes;
 
-    /**
-     * Index of player offering draw; null if none
-     * 0 = white
-     * 1 = black
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $drawOfferer;
 
-    /**
-     * Victor's index; null if none
-     * 0 = white
-     * 1 = black
-     * 2 = draw
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private $victorIndex;
 
-    /**
-     * Game over message
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: 'string', nullable: true)]
     private $gameOverMessage;
     
     /**
