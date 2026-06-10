@@ -21,7 +21,7 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFi
 	/**
 	 * {@inheritDoc}
 	 */
-	public function load(ObjectManager $manager)
+	public function load(ObjectManager $manager): void
 	{
 		//create users
 		$user1 = new User();
@@ -56,7 +56,7 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFi
     /**
      * {@inheritDoc}
      */
-    public function getOrder()
+    public function getOrder(): int
     {
         return 1;
     }

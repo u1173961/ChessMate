@@ -29,11 +29,6 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    CM\AppBundle\Controller\GameController:
-        public: true
-        autowire: true
-        tags: ['controller.service_arguments']
-
     # add more services, or override services that need manual wiring
     # CM\AppBundle\Service\ExampleService:
     #     arguments:
