@@ -32,7 +32,7 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFi
 		$user1->setLastActiveTime(new \DateTime());
 		$user1->setEnabled(true);
         $user1->setRoles(array('ROLE_ADMIN'));
-        $user1->setSalt(rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='));
+        $user1->setSalt(null);
         $user1->setPassword($this->passwordHasher->hashPassword($user1, $user1->getPlainPassword()));
         $user1->eraseCredentials();
         $manager->persist($user1);
@@ -45,7 +45,7 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFi
 		$user2->setLastActiveTime(new \DateTime());
 		$user2->setEnabled(true);
 		$user2->setChatty(false);
-        $user2->setSalt(rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='));
+        $user2->setSalt(null);
         $user2->setPassword($this->passwordHasher->hashPassword($user2, $user2->getPlainPassword()));
         $user2->eraseCredentials();
         $manager->persist($user2);

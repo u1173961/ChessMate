@@ -40,7 +40,7 @@ class AccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setRegistered(true);
             $user->setEnabled(true);
-            $user->setSalt($this->generateSalt());
+            $user->setSalt(null);
             $user->setPassword($this->passwordHasher->hashPassword($user, (string) $user->getPlainPassword()));
             $user->eraseCredentials();
 
@@ -75,7 +75,7 @@ class AccountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ('' !== trim((string) $user->getPlainPassword())) {
-                $user->setSalt($this->generateSalt());
+                $user->setSalt(null);
                 $user->setPassword($this->passwordHasher->hashPassword($user, (string) $user->getPlainPassword()));
             }
 
@@ -162,7 +162,7 @@ class AccountController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPlainPassword((string) $form->get('plainPassword')->getData());
-            $user->setSalt($this->generateSalt());
+            $user->setSalt(null);
             $user->setPassword($this->passwordHasher->hashPassword($user, (string) $user->getPlainPassword()));
             $user->setConfirmationToken(null);
             $user->setPasswordRequestedAt(null);
@@ -177,11 +177,6 @@ class AccountController extends AbstractController
         return $this->render('@CMUser/Account/reset.html.twig', array(
             'form' => $form->createView(),
         ));
-    }
-
-    private function generateSalt(): string
-    {
-        return rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '=');
     }
 
     private function addUniqueFieldErrors(FormInterface $form, User $user, ?User $ignoredUser = null): void
