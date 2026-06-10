@@ -2,9 +2,9 @@
 set -eu
 
 if [ "${1:-}" = "apache2-foreground" ]; then
-    mkdir -p var/cache var/logs var/sessions web/bundles
-    chown -R www-data:www-data var/cache var/logs var/sessions web/bundles
-    chmod -R u+rwX,g+rwX var/cache var/logs var/sessions web/bundles
+    mkdir -p vendor var/cache var/logs var/sessions web/bundles
+    chown -R www-data:www-data vendor var/cache var/logs var/sessions web/bundles
+    chmod -R u+rwX,g+rwX vendor var/cache var/logs var/sessions web/bundles
 
     if [ ! -f vendor/autoload.php ]; then
         echo "Installing PHP dependencies..."
@@ -61,8 +61,8 @@ if [ "${1:-}" = "apache2-foreground" ]; then
     fi
 
     php bin/console cache:clear --env=prod --no-warmup
-    chown -R www-data:www-data var/cache var/logs var/sessions
-    chmod -R u+rwX,g+rwX var/cache var/logs var/sessions
+    chown -R www-data:www-data vendor var/cache var/logs var/sessions
+    chmod -R u+rwX,g+rwX vendor var/cache var/logs var/sessions
 fi
 
 exec "$@"

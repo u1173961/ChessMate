@@ -80,14 +80,14 @@ class MoveController extends AbstractController
 	    $gameOver = $content->gameOver;
 	    //get move details
 	    $move = array(
-	    		'by' => $player,
-	    		'from' => $content->from,
-	    		'to' => $content->to,
-	    		'castling' => (array) $content->castling,
-	    		'newFEN' => $content->fen,
-	    		'enPassant' => $content->enPassant,
-	    		'newPiece' => $content->newPiece,
-	    		'gameOver' => $gameOver
+            'by' => $player,
+            'from' => $content->from,
+            'to' => $content->to,
+            'castling' => (array) $content->castling,
+            'newFEN' => $content->fen,
+            'enPassant' => $content->enPassant,
+            'newPiece' => $content->newPiece,
+            'gameOver' => $gameOver
 	    );
 		//save move for validation by opponent
 		$game->setLastMove($move);
