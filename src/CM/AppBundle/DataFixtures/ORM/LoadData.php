@@ -7,15 +7,15 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-    private $passwordEncoder;
+    private $passwordHasher;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasher = $passwordHasher;
     }
 	
 	/**
@@ -33,7 +33,7 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFi
 		$user1->setEnabled(true);
         $user1->setRoles(array('ROLE_ADMIN'));
         $user1->setSalt(rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='));
-        $user1->setPassword($this->passwordEncoder->encodePassword($user1, $user1->getPlainPassword()));
+        $user1->setPassword($this->passwordHasher->hashPassword($user1, $user1->getPlainPassword()));
         $user1->eraseCredentials();
         $manager->persist($user1);
 		
@@ -46,7 +46,7 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFi
 		$user2->setEnabled(true);
 		$user2->setChatty(false);
         $user2->setSalt(rtrim(str_replace('+', '.', base64_encode(random_bytes(32))), '='));
-        $user2->setPassword($this->passwordEncoder->encodePassword($user2, $user2->getPlainPassword()));
+        $user2->setPassword($this->passwordHasher->hashPassword($user2, $user2->getPlainPassword()));
         $user2->eraseCredentials();
         $manager->persist($user2);
 

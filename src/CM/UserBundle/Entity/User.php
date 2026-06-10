@@ -5,6 +5,7 @@ namespace CM\UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="cm_user")
  * @ORM\HasLifecycleCallbacks()
  */
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -226,7 +227,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPassword()
+    public function getPassword(): ?string
     {
         return $this->password;
     }
@@ -250,7 +251,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
@@ -262,7 +263,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
@@ -296,7 +297,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         $this->plainPassword = null;
     }
