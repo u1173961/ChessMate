@@ -1,8 +1,6 @@
 # To get started with security, check out the documentation:
 # https://symfony.com/doc/current/security.html
 security:
-    enable_authenticator_manager: true
-
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         app_user_provider:
