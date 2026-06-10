@@ -101,11 +101,11 @@ $(document).ready( function() {
         if ($('#newSearchForm').find('input[name="opponent"]:checked').val() == 1) {
         	//human opponent
             //change dialog
-    		$('#newGameOptions').dialog("close");
-    		$('#findingGameDialog').dialog("open");
-    		//reset relax search
-    		$('a#relaxSearch').show();
-    		$('#findingGameDialog p').html('');
+		$('#newGameOptions').dialog("close");
+		$('#findingGameDialog').dialog("open");
+		setSearchMessage('');
+		//reset relax search
+		$('a#relaxSearch').show();
 	    	createSearch(true);
 	    } else {
 	        //computer opponent
@@ -131,41 +131,96 @@ function createSearch(match) {
     	var search = $.post(url, {'skill': null, 'duration': null });    
     }
     search.done(function(data) {
-		var loading = 0;
-		setInterval(function() {
-		    if(loading < 3) {
-		        $('#findingGameDialog span').append('.');
-		        loading++;
-		    } else {
-		        $('#findingGameDialog span').html('');
-		        loading = 0;
-		    }
-		}, 600);
+		startLoadingDots();
 		//get search id
 		var searchID = data['searchID'];
-		//add to cancel
-		$('a#cancelSearch').attr('href', $('a#cancelSearch').attr('href') + '/' + searchID);
+		setActiveSearch(searchID);
 		//wait for search to be matched
 		checkSearchMatched(searchID);
+    });
+    search.fail(function() {
+		stopLoadingDots();
+		setSearchMessage('Unable to create a game search right now. Please try again.');
     });
 }
 
 var matchSearch;
+var activeSearchID = null;
+var loadingDotsInterval = null;
+
+function setSearchMessage(message) {
+	$('#findingGameDialog p').remove();
+	if (message) {
+		$('#findingGameDialog').append('<p>' + message + '</p>');
+	}
+}
+
+function startLoadingDots() {
+	var loading = 0;
+	stopLoadingDots();
+	loadingDotsInterval = setInterval(function() {
+	    if(loading < 3) {
+	        $('#findingGameDialog span').append('.');
+	        loading++;
+	    } else {
+	        $('#findingGameDialog span').html('');
+	        loading = 0;
+	    }
+	}, 600);
+}
+
+function stopLoadingDots() {
+	if (loadingDotsInterval) {
+		clearInterval(loadingDotsInterval);
+		loadingDotsInterval = null;
+	}
+	$('#findingGameDialog span').html('');
+}
+
+function setActiveSearch(searchID) {
+	activeSearchID = searchID;
+	$('a#cancelSearch').attr('href', getCancelSearchUrl(searchID));
+}
+
+function clearActiveSearch() {
+	activeSearchID = null;
+	$('a#cancelSearch').attr('href', $('a#cancelSearch').data('url-template').replace('SEARCH_ID', 0));
+}
+
+function getMatchSearchUrl(searchID) {
+	return $('#newSearchForm').data('match-url-template').replace('SEARCH_ID', searchID);
+}
+
+function getCancelSearchUrl(searchID) {
+	return $('a#cancelSearch').data('url-template').replace('SEARCH_ID', searchID);
+}
 /**
  * Find/create new game
  */
 function checkSearchMatched(searchID) {
-	var url = Routing.generate('cm_match_search', { searchID: searchID });
+	var url = getMatchSearchUrl(searchID);
 	matchSearch = $.post(url);
 	matchSearch.done(function(data) {
 		if(data['matched']) {
+			stopLoadingDots();
+			clearActiveSearch();
 			//load game
 			location.href = data['gameURL'];    			
+		} else if (data['cancelled']) {
+			stopLoadingDots();
+			clearActiveSearch();
 		} else {
 			//retry
 			checkSearchMatched(searchID);
 		}
     });
+	matchSearch.fail(function(xhr, status) {
+		if (status !== 'abort') {
+			stopLoadingDots();
+			clearActiveSearch();
+			setSearchMessage('The matchmaking request failed. Please try again.');
+		}
+	});
 }
 
 /**
@@ -175,13 +230,11 @@ function cancelSearch() {
 	var i = setInterval(function() {
 		if(matchSearch) {
 			matchSearch.abort();
-			var url = $('a#cancelSearch').attr('href');
+			var url = getCancelSearchUrl(activeSearchID || 0);
 	        var cancel = $.post(url);
 		    matchSearch = null;
-		    //reset url
-		    var split = url.split('/');
-		    var idLength = split[split.length - 1].length + 1;
-			$('a#cancelSearch').attr('href', url.substring(0, url.length - idLength));
+		    clearActiveSearch();
+		    stopLoadingDots();
 			clearInterval(i);
 	    }
 	}, 200);
