@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="login">
+            <div class="row">
+                <div class="col-md-12">
+                    <center><span><u>Reset password</u></span></center>
+                </div>
+            </div>
+            <p>Enter your username or email address. Email delivery is not wired up yet, so we will show the reset link on-screen for now.</p>
+            {{ form_start(form) }}
+                {{ form_row(form.identifier) }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Create reset link" />
+                    </div>
+                </div>
+            {{ form_end(form) }}
+
+            {% if app.request.method == 'POST' %}
+                {% if reset_url %}
+                    <div class="alert alert-success" role="alert">
+                        Reset link:
+                        <a href="{{ reset_url }}">{{ reset_url }}</a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        If that account exists, the reset request has been accepted.
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

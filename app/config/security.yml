@@ -38,4 +38,7 @@ security:
 
     access_control:
         - { path: ^/cm/game, roles: ROLE_USER, requires_channel: http }
+        - { path: ^/cm/profile, roles: ROLE_USER, requires_channel: http }
+        - { path: ^/cm/register, roles: PUBLIC_ACCESS, requires_channel: http }
+        - { path: ^/cm/resetting, roles: PUBLIC_ACCESS, requires_channel: http }
         - { path: ^/cm/login, roles: PUBLIC_ACCESS, requires_channel: http }

@@ -40,6 +40,11 @@ services:
         # but if a service is unused, it's removed anyway
         exclude: '../../src/CM/UserBundle/{Tests}'
 
+    CM\UserBundle\Controller\:
+        resource: '../../src/CM/UserBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
     CM\UserBundle\EventListener\LastActiveListener:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }

@@ -46,7 +46,8 @@
     <div id="loginOptions">
         <h2><u>Guest access</u></h2>
         <a href="{{ path('cm_app_guest') }}">Play as Guest (quick and easy)</a>
-        <p>Account registration, password reset, and profile editing are temporarily unavailable during the Symfony upgrade.</p>
+        <p><a href="{{ path('cm_user_register') }}">Create an account</a></p>
+        <p><a href="{{ path('cm_user_resetting_request') }}">Forgot your password?</a></p>
     </div>
 </form>
 {% endblock %}

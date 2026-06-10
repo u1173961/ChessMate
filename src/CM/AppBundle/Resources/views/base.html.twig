@@ -19,7 +19,7 @@
     			{% set subtitle = '' %}
     			{% set subConn = '' %}
     		{% endif %}
-	    	<div id="header" class="row">
+	    <div id="header" class="row">
 			   	<div class="col-md-9 col-sm-12 col-xs-12">
 				   	<table>
 					   	<tr>
@@ -39,12 +39,22 @@
     	    					{% if game is defined %}
     				    			<a  href="{{ path('cm_start', {}) }}" class="btn btn-success" target="_blank">Play Another</a>
     			    			{% endif %}
+    			    			<a  href="{{ path('cm_user_profile_edit') }}" class="btn btn-info">Profile</a>
     			    			<a  href="{{ path('fos_user_security_logout', {}) }}" class="btn btn-warning">Log-out</a>
     		    			</div>
 		    			</div>
 	    			{% endif %}
     			</div>
 	    	</div>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : label }}" role="alert">{{ message }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
         {% block body %}{% endblock %}
 	    </div>
         {% block javascripts %}
