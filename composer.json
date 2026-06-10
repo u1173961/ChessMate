@@ -33,11 +33,11 @@
 	],
     "require": {
         "php": "^8.2",
+        "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.13",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "incenteev/composer-parameter-handler": "^2.0",
-        "sensio/framework-extra-bundle": "^6.2",
         "symfony/monolog-bundle": "^3.8",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/asset": "^6.4",
