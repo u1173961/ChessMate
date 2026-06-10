@@ -2,38 +2,29 @@
 
 namespace CM\AppBundle\DataFixtures\ORM;
 
+use CM\UserBundle\Entity\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use CM\UserBundle\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class LoadData extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface, ORMFixtureInterface
+class LoadData extends AbstractFixture implements OrderedFixtureInterface, ORMFixtureInterface
 {
-	/**
-	 * @var ContainerInterface
-	 */
-	private $container;
+    private $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setContainer(ContainerInterface $container = null)
-	{
-		$this->container = $container;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public function load(ObjectManager $manager)
+	public function load(ObjectManager $manager): void
 	{
 		//create users
-		$userManager = $this->container->get('fos_user.user_manager');
-		
-		$user1 = $userManager->createUser();
+		$user1 = new User();
 		$user1->setUsername('Rex');
 		$user1->setPlainPassword('pass');
 		$user1->setRegistered(true);	
@@ -41,9 +32,12 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, Conta
 		$user1->setLastActiveTime(new \DateTime());
 		$user1->setEnabled(true);
         $user1->setRoles(array('ROLE_ADMIN'));
-        $userManager->updateUser($user1, true);
+        $user1->setSalt(null);
+        $user1->setPassword($this->passwordHasher->hashPassword($user1, $user1->getPlainPassword()));
+        $user1->eraseCredentials();
+        $manager->persist($user1);
 		
-		$user2 = $userManager->createUser();
+		$user2 = new User();
 		$user2->setUsername('Rex2');
 		$user2->setPlainPassword('pass');
 		$user2->setRegistered(true);	
@@ -51,13 +45,18 @@ class LoadData extends AbstractFixture implements OrderedFixtureInterface, Conta
 		$user2->setLastActiveTime(new \DateTime());
 		$user2->setEnabled(true);
 		$user2->setChatty(false);
-        $userManager->updateUser($user2, true);
+        $user2->setSalt(null);
+        $user2->setPassword($this->passwordHasher->hashPassword($user2, $user2->getPlainPassword()));
+        $user2->eraseCredentials();
+        $manager->persist($user2);
+
+        $manager->flush();
 	}
 
     /**
      * {@inheritDoc}
      */
-    public function getOrder()
+    public function getOrder(): int
     {
         return 1;
     }

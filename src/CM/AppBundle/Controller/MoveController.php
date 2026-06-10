@@ -2,15 +2,49 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-	Symfony\Component\HttpFoundation\Request,
-	Symfony\Component\HttpFoundation\Response,
-	Symfony\Component\HttpFoundation\JsonResponse;
 use CM\AppBundle\Entity\Game;
+use CM\AppBundle\Helpers\FENHelper;
+use CM\AppBundle\Helpers\GameOverHelper;
+use CM\AppBundle\Helpers\Validation\BishopValidator;
+use CM\AppBundle\Helpers\Validation\KingValidator;
+use CM\AppBundle\Helpers\Validation\KnightValidator;
+use CM\AppBundle\Helpers\Validation\PawnValidator;
+use CM\AppBundle\Helpers\Validation\QueenValidator;
+use CM\AppBundle\Helpers\Validation\RookValidator;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class MoveController extends Controller
-{    
+class MoveController extends AbstractController
+{
+    private $doctrine;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        $this->doctrine = $doctrine;
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            'b_validator' => BishopValidator::class,
+            'fen_helper' => FENHelper::class,
+            'game_fin_helper' => GameOverHelper::class,
+            'k_validator' => KingValidator::class,
+            'n_validator' => KnightValidator::class,
+            'p_validator' => PawnValidator::class,
+            'q_validator' => QueenValidator::class,
+            'r_validator' => RookValidator::class,
+        ]);
+    }
+
+    private function get(string $service)
+    {
+        return $this->container->get($service);
+    }
+
 	/**
 	 * Set last move for retrieval/validation by opponent
 	 * If validity is not confirmed by opponent, server-side validation is conducted in subsequent call
@@ -22,8 +56,8 @@ class MoveController extends Controller
     {
     	$content = json_decode($request->getContent());
     	//find game
-    	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($content->gameID);
+    	$em = $this->doctrine->getManager();
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($content->gameID);
     	if ($game->over()) {
     		return new JsonResponse(array('sent' => false));    		
     	}
@@ -46,14 +80,14 @@ class MoveController extends Controller
 	    $gameOver = $content->gameOver;
 	    //get move details
 	    $move = array(
-	    		'by' => $player,
-	    		'from' => $content->from,
-	    		'to' => $content->to,
-	    		'castling' => (array) $content->castling,
-	    		'newFEN' => $content->fen,
-	    		'enPassant' => $content->enPassant,
-	    		'newPiece' => $content->newPiece,
-	    		'gameOver' => $gameOver
+            'by' => $player,
+            'from' => $content->from,
+            'to' => $content->to,
+            'castling' => (array) $content->castling,
+            'newFEN' => $content->fen,
+            'enPassant' => $content->enPassant,
+            'newPiece' => $content->newPiece,
+            'gameOver' => $gameOver
 	    );
 		//save move for validation by opponent
 		$game->setLastMove($move);
@@ -75,8 +109,8 @@ class MoveController extends Controller
     	$gameOver = $content->gameOver;
     	$user = $this->getUser();
     	//find game
-    	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
     	//switch active player
 		$game->switchActivePlayer();
     	//make sure valid user for game
@@ -130,8 +164,8 @@ class MoveController extends Controller
     {
     	$user = $this->getUser();
     	//find game
-    	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
     	//get user
 	    $player = $game->getPlayers()->indexOf($user);
     	//get player that made move

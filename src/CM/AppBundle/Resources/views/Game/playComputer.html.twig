@@ -1,4 +1,4 @@
-{% extends '::base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -10,7 +10,7 @@
 	{% set gameID = null %}
 	<div class="row">
 	    <div class="boardHolder inGame">
-		    {{ render(controller('CMAppBundle:Game:showBoard', { 'gameID': gameID })) }}
+		    {{ render(controller('CM\\AppBundle\\Controller\\GameController::showBoardAction', { 'gameID': gameID })) }}
 		</div>
 		<div class="gameControls">
 			<div id="midGame">
@@ -31,7 +31,7 @@
 						<h1><span>Stockfish </span><label id="diffLabel">({{ cSkill }})</label>: &nbsp;</h1>
 					</div>
 				</div>
-				{{ include('CMAppBundle:Game:piecesWonOrLost.html.twig', { 'wonLost': 'Lost'}) }}
+				{{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Lost'}) }}
 				<div id="moveableMiddle" class="row">
     				<div id="midGameOptions" class="row">
     					<div class="col-md-4">
@@ -53,7 +53,7 @@
     				</div>
     			</div>
     			<div class="separator hidden"></div>
-				{{ include('CMAppBundle:Game:piecesWonOrLost.html.twig', { 'wonLost': 'Won'}) }}
+				{{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Won'}) }}
 				<div id="timer2" class="row timer">
 					<div class="col-md-12">
 						<h1><span>{{ app.user.username }} </span><label>({{ app.user.rating }})</label></h1>
@@ -66,10 +66,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '%kernel.root_dir%/../vendor/jquery/jquery/jquery.min.js' %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
 		var gameOver = false

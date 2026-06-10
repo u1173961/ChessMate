@@ -1,5 +1,8 @@
 <div id="newGameOptions" class="ui-dialog closeable">
-	<form id="newSearchForm" action="{{ path('cm_new_search', {})}}" method="POST">
+	<form id="newSearchForm"
+          action="{{ path('cm_new_search', {})}}"
+          method="POST"
+          data-match-url-template="{{ path('cm_match_search', {'searchID': 'SEARCH_ID'}) }}">
 		<center><h1><u>Start Game</u></h1></center>
 		<h2>Opponent:</h2>
 		<input id="op1" type="radio" name="opponent" value=1 checked>&nbsp;<label for="op1">Human</label>
@@ -34,7 +37,10 @@
 	<h2>Finding game<span id="loadingDots"></span></h2>
 	<br>
 	<center>
-		<a id="cancelSearch" href="{{ path('cm_cancel_search', {}) }}" class="btn btn-large btn-danger">Cancel</a>
+		<a id="cancelSearch"
+           href="{{ path('cm_cancel_search', {'searchID': 0}) }}"
+           data-url-template="{{ path('cm_cancel_search', {'searchID': 'SEARCH_ID'}) }}"
+           class="btn btn-large btn-danger">Cancel</a>
 		<a id="relaxSearch" class="btn btn-large btn-warning">Relax search</a>
 		<a id="playComputer" href="{{ path('cm_play_computer', {}) }}" class="btn btn-large btn-primary">Play computer</a>
 	</center>

@@ -4,12 +4,12 @@ cm_app:
     
 cm_app_home:
     path:     /
-    defaults: { _controller: "FOSUserBundle:Security:login" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\SecurityController::loginAction" }
     prefix:   /cm/
     
 cm_app_login:
     path:     /cm
-    defaults: { _controller: "FOSUserBundle:Security:login" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\SecurityController::loginAction" }
     prefix:   /
 
 cm_user:
@@ -17,5 +17,5 @@ cm_user:
     prefix:   /cm/
 
 fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
     prefix:   /cm/

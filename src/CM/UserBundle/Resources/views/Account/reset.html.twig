@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="login">
+            <div class="row">
+                <div class="col-md-12">
+                    <center><span><u>Choose a new password</u></span></center>
+                </div>
+            </div>
+            {{ form_start(form) }}
+                {{ form_row(form.plainPassword.first) }}
+                {{ form_row(form.plainPassword.second) }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Reset password" />
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

@@ -2,6 +2,19 @@
 set -eu
 
 if [ "${1:-}" = "apache2-foreground" ]; then
+    mkdir -p vendor var/cache var/logs var/sessions web/bundles
+    chown -R www-data:www-data vendor var/cache var/logs var/sessions web/bundles
+    chmod -R u+rwX,g+rwX vendor var/cache var/logs var/sessions web/bundles
+
+    if [ ! -f vendor/autoload.php ]; then
+        echo "Installing PHP dependencies..."
+        composer install \
+            --no-interaction \
+            --prefer-dist \
+            --no-progress \
+            --optimize-autoloader
+    fi
+
     echo "Waiting for the database..."
     attempts=0
 
@@ -48,7 +61,8 @@ if [ "${1:-}" = "apache2-foreground" ]; then
     fi
 
     php bin/console cache:clear --env=prod --no-warmup
-    chown -R www-data:www-data var
+    chown -R www-data:www-data vendor var/cache var/logs var/sessions
+    chmod -R u+rwX,g+rwX vendor var/cache var/logs var/sessions
 fi
 
 exec "$@"

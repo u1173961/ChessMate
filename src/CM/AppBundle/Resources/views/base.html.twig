@@ -7,19 +7,19 @@
         {% block stylesheets %}
         	<link href="{{ asset('bundles/cmapp/css/general.css') }}" rel="stylesheet" type="text/css" />
         	<link href="{{ asset('bundles/cmapp/css/bootstrap.css') }}" rel="stylesheet" type="text/css" />
-        {% endblock %}  
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('bundles/cmapp/images/favicon.ico') }}" />
     </head>
     <body>
 		<div class="wrapper container-fluid">
     		{% if app.user %}
     			{% set subtitle = 'Welcome ' ~ app.user.currUsername ~ '!'%}
-    			{% set subConn = ': ' %}  
+    			{% set subConn = ': ' %}
     		{%  else %}
     			{% set subtitle = '' %}
-    			{% set subConn = '' %}  
+    			{% set subConn = '' %}
     		{% endif %}
-	    	<div id="header" class="row">
+	    <div id="header" class="row">
 			   	<div class="col-md-9 col-sm-12 col-xs-12">
 				   	<table>
 					   	<tr>
@@ -33,18 +33,28 @@
 				   	</table>
 	    		</div>
 			   	<div class="col-md-3 col-sm-6 col-xs-12">
-    			    {% if app.user and app.user.registered %}
+    			{% if app.user and app.user.registered %}
 				    	<div id="userOptions" class="row">
 						   	<div class="col-md-12">
     	    					{% if game is defined %}
     				    			<a  href="{{ path('cm_start', {}) }}" class="btn btn-success" target="_blank">Play Another</a>
     			    			{% endif %}
+    			    			<a  href="{{ path('cm_user_profile_edit') }}" class="btn btn-info">Profile</a>
     			    			<a  href="{{ path('fos_user_security_logout', {}) }}" class="btn btn-warning">Log-out</a>
     		    			</div>
 		    			</div>
 	    			{% endif %}
     			</div>
 	    	</div>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-{{ label == 'error' ? 'danger' : label }}" role="alert">{{ message }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
         {% block body %}{% endblock %}
 	    </div>
         {% block javascripts %}

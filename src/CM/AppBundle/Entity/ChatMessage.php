@@ -5,34 +5,22 @@ namespace CM\AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use CM\UserBundle\Entity\User;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="chat_msg")
- * @ORM\Entity(repositoryClass="CM\AppBundle\Repository\ChatRepository")
- */
+#[ORM\Entity(repositoryClass: 'CM\AppBundle\Repository\ChatRepository')]
+#[ORM\Table(name: 'chat_msg')]
 class ChatMessage
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Game")
-     */
+    #[ORM\ManyToOne(targetEntity: 'Game')]
     private $game;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="CM\UserBundle\Entity\User")
-     */
+    #[ORM\ManyToOne(targetEntity: 'CM\UserBundle\Entity\User')]
     private $user;
 
-    /**
-     * Chat message
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $message;
     
     /**

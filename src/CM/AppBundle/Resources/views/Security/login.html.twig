@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% if error %}
+    <div class="errors"><center>{{ error.messageKey|trans(error.messageData, 'security') }}</center></div>
+{% endif %}
+
+<form action="{{ path('fos_user_security_check') }}" method="post">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+
+    <div class="container">
+        <div id="login" class="login">
+            <div class="row">
+                <div class="col-md-12">
+                    <center><span><u>Login</u></span></center>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-xs-2">
+                    <label for="username">Username</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-xs-2">
+                    <label for="password">Password</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="password" id="password" name="_password" required="required" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-md-offset-2">
+                    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                    <label for="remember_me">Remember me</label>
+                </div>
+                <div class="col-md-2 col-md-offset-5">
+                    <input type="submit" class="btn btn-lg btn-primary" id="_submit" name="_submit" value="Log in" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginOptions">
+        <h2><u>Guest access</u></h2>
+        <a href="{{ path('cm_app_guest') }}">Play as Guest (quick and easy)</a>
+        <p><a href="{{ path('cm_user_register') }}">Create an account</a></p>
+        <p><a href="{{ path('cm_user_resetting_request') }}">Forgot your password?</a></p>
+    </div>
+</form>
+{% endblock %}

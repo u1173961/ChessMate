@@ -39,7 +39,21 @@ services:
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
         exclude: '../../src/CM/UserBundle/{Tests}'
-        
-    #fos_userbundle:
-    #    class: FOS\UserBundle\Security\UserProvider
-    #    arguments: ["@fos_user.user_manager", "@service_container"]
+
+    CM\UserBundle\Controller\:
+        resource: '../../src/CM/UserBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    CM\UserBundle\EventListener\LastActiveListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    fos_js_routing.extractor:
+        class: FOS\JsRoutingBundle\Extractor\ExposedRoutesExtractor
+        public: true
+        arguments:
+            $router: '@fos_js_routing.router'
+            $routesToExpose: []
+            $cacheDir: '/tmp'
+            $bundles: '%kernel.bundles%'

@@ -2,14 +2,12 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken,
-    Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class JSTestsController extends Controller
+class JSTestsController extends AbstractController
 {    
     public function testJSAction()
     {    	
-        return $this->render('CMAppBundle:JSTests:tests.html.twig', array());
+        return $this->render('JSTests/tests.html.twig', array());
     }
 }

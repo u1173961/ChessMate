@@ -6,7 +6,6 @@ services:
       - "${APP_PORT:-8081}:80"
     volumes:
       - .:/var/www/html
-      - vendor:/var/www/html/vendor
       - assets:/var/www/html/web/bundles
       - ./docker/parameters.yml:/var/www/html/app/config/parameters.yml:ro
     environment:
@@ -46,4 +45,3 @@ services:
 volumes:
   assets:
   database:
-  vendor:

@@ -2,20 +2,53 @@
 
 namespace CM\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller,
-    Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken,
-    Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use CM\UserBundle\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use CM\AppBundle\Entity\Game;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use CM\AppBundle\Factories\GameFactory;
+use CM\AppBundle\Factories\GameSearchFactory;
+use CM\AppBundle\Helpers\FENHelper;
+use CM\AppBundle\Helpers\HTMLHelper;
 use CM\AppBundle\Entity\ChatMessage;
-use Doctrine\ORM\EntityManager;
+use CM\AppBundle\Entity\Game;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-class GameController extends Controller
-{    
+class GameController extends AbstractController
+{
+    private $doctrine;
+    private $eventDispatcher;
+    private $requestStack;
+
+    public function __construct(ManagerRegistry $doctrine, EventDispatcherInterface $eventDispatcher, RequestStack $requestStack)
+    {
+        $this->doctrine = $doctrine;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->requestStack = $requestStack;
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return array_merge(parent::getSubscribedServices(), [
+            'exercise_html_purifier.default' => \HTMLPurifier::class,
+            'fen_helper' => FENHelper::class,
+            'game_factory' => GameFactory::class,
+            'game_search_factory' => GameSearchFactory::class,
+            'html_helper' => HTMLHelper::class,
+        ]);
+    }
+
+    private function get(string $service)
+    {
+        return $this->container->get($service);
+    }
+
     /**
      * Login as inactive guest account
      * Create's a new account if none are available
@@ -27,22 +60,23 @@ class GameController extends Controller
     	//check user is not already logged in
     	if (!$this->getUser()) {
 	     	//get inactive guest account
-	     	$userManager = $this->get('fos_user.user_manager');
-			$em = $this->getDoctrine()->getManager();
-			$user = $em->getRepository('CMUserBundle:User')->findInactiveGuest();
+			$em = $this->doctrine->getManager();
+			$user = $em->getRepository(\CM\UserBundle\Entity\User::class)->findInactiveGuest();
 			if (!$user) {
 				//create new guest accounts as needed
-				$id = $em->createQuery('SELECT MAX(u.id) FROM CMUserBundle:User u')->getSingleScalarResult() + 1;
+				$id = $em->createQuery('SELECT MAX(u.id) FROM CM\\UserBundle\\Entity\\User u')->getSingleScalarResult() + 1;
 				$name = "Guest0".$id;
-				$user = $userManager->createUser();
+				$user = new \CM\UserBundle\Entity\User();
 				$user->setUsername($name);		
 				$user->setEmail($name);
 				$user->setPassword("");
 				$user->setRegistered(false);
+				$user->setEnabled(true);
 				$user->setLastActiveTime(new \DateTime());
 				//give guest average rating
 				$user->setRating(1100);
-				$userManager->updateUser($user);
+				$em->persist($user);
+				$em->flush();
 			} else {
 				$user = $user[0];
 				$name = $user->getUsername();
@@ -51,11 +85,11 @@ class GameController extends Controller
 				$user->setCurrentGames(new ArrayCollection());
 			}
 			//set login token
-			$token = new UsernamePasswordToken($user, $user->getPassword(), "main", $user->getRoles());
+			$token = new UsernamePasswordToken($user, 'main', $user->getRoles());
 			$this->get("security.token_storage")->setToken($token);		
 			// fire login
 			$event = new InteractiveLoginEvent($request, $token);
-			$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+			$this->eventDispatcher->dispatch($event, "security.interactive_login");
     	}
     	
     	return $this->redirect($this->generateUrl('cm_start', array()));
@@ -71,7 +105,7 @@ class GameController extends Controller
 	    $user = $this->getUser();	
     	$games = $user->getCurrentGames();
     	
-        return $this->render('CMAppBundle:Game:main.html.twig', array('games' => $games, 'player' => 'x'));
+        return $this->render('Game/main.html.twig', array('games' => $games, 'player' => 'x'));
     }
     
 	/**
@@ -83,7 +117,7 @@ class GameController extends Controller
     public function newSearchAction(Request $request)
     {
     	$user = $this->getUser();
-	    $em = $this->getDoctrine()->getManager();
+	    $em = $this->doctrine->getManager();
     	//get game variables - null if match any
 	    $duration = $request->request->get('duration');
 	    $skill = $request->request->get('skill');
@@ -105,9 +139,9 @@ class GameController extends Controller
     public function matchSearchAction($searchID)
     {
     	//disconnect session
-    	$this->get('session')->save();
-	    $em = $this->getDoctrine()->getManager();
-	    $search = $em->getRepository('CMAppBundle:GameSearch')->find($searchID);
+    	$this->requestStack->getSession()->save();
+	    $em = $this->doctrine->getManager();
+	    $search = $em->getRepository(\CM\AppBundle\Entity\GameSearch::class)->find($searchID);
 	    $gameID = false;
 	    if ($search) {
 	    	$user = $this->getUser();
@@ -118,7 +152,7 @@ class GameController extends Controller
 	    	$length = $search->getLength();
 	    	$minRank = $search->getMinRank();
 	    	$maxRank = $search->getMaxRank();
-	    	$repo = $em->getRepository('CMAppBundle:GameSearch');
+	    	$repo = $em->getRepository(\CM\AppBundle\Entity\GameSearch::class);
 	    	$match = null;
 	    	$waited = 0;
 	    	while ($search && $waited < 45) {
@@ -186,8 +220,8 @@ class GameController extends Controller
     public function cancelSearchAction($searchID) {
     	$cancelled = false;
     	if ($searchID != 0) {
-		    $em = $this->getDoctrine()->getManager();
-		    $search = $em->getRepository('CMAppBundle:GameSearch')->find($searchID);
+		    $em = $this->doctrine->getManager();
+		    $search = $em->getRepository(\CM\AppBundle\Entity\GameSearch::class)->find($searchID);
 		    if ($search) {
 		    	$user = $this->getUser();
 		    	if ($search->getSearcher() != $user) {
@@ -212,8 +246,8 @@ class GameController extends Controller
     public function playAction($gameID)
     {
 	    $user = $this->getUser();	
-    	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
 	    //get player colour
@@ -231,7 +265,7 @@ class GameController extends Controller
 	    //get taken pieces
     	$taken = $this->get('html_helper')->getUnicodeTakenPieces($game->getBoard()->getTaken());
 
-	    return $this->render('CMAppBundle:Game:main.html.twig', 
+	    return $this->render('Game/main.html.twig', 
 	    		array('game' => $game,
 	    			'player' => $colour, 
 	    			'opponent' => $opponent,
@@ -255,7 +289,7 @@ class GameController extends Controller
     			'P' => 0, 'R' => 0, 'N' => 0, 'B' => 0, 'Q' => 0,
     			'p' => 0, 'r' => 0, 'n' => 0, 'b' => 0, 'q' => 0
     	));
-	    return $this->render('CMAppBundle:Game:playComputer.html.twig', 
+	    return $this->render('Game/playComputer.html.twig', 
 	    		array('skillLevel' => $skill, 'player' => 'w', 'taken' => $taken));
     }
     
@@ -281,8 +315,8 @@ class GameController extends Controller
      */
     public function joinGameAction($gameID) {
 	    $user = $this->getUser();	
-    	$em = $this->getDoctrine()->getManager();
-    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
 	    //join game
@@ -321,7 +355,7 @@ class GameController extends Controller
 	    	$em->remove($game);
 	    }
     	//remove searches
-    	$em->getRepository('CMAppBundle:GameSearch')->removeGameSearches($game);
+    	$em->getRepository(\CM\AppBundle\Entity\GameSearch::class)->removeGameSearches($game);
 	    $em->flush();
 	    
     	return $joined;    	
@@ -346,8 +380,8 @@ class GameController extends Controller
 		    $pieces = $this->get('html_helper')->getUnicodePieces();
 		} else {
 		    $user = $this->getUser();	
-	    	$em = $this->getDoctrine()->getManager();
-	    	$game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    	$em = $this->doctrine->getManager();
+	    	$game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 		    //authenticate user/game
 		    $this->checkGameValidity($game, $user);
 		    //get player colour
@@ -357,7 +391,7 @@ class GameController extends Controller
     		$pieces = $this->get('html_helper')->getUnicodePieces($board);
 		}
 
-        return $this->render('CMAppBundle:Game:board.html.twig', 
+        return $this->render('Game/board.html.twig', 
         		array('gameID' => $gameID, 'pieces' => $pieces, 'player' => $colour));	
 	}
     
@@ -404,8 +438,8 @@ class GameController extends Controller
     public function resignAction($gameID)
     {
 	    $user = $this->getUser();	
-    	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
     	$players = $game->getPlayers();
@@ -429,8 +463,8 @@ class GameController extends Controller
     {
 	    $user = $this->getUser();
     	
-    	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
     	if ($player == 'w') {
     		$pIndex = 0;
     	} else {
@@ -452,10 +486,10 @@ class GameController extends Controller
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function sendChatAction($gameID, Request $request) {
-        $msg = $this->container->get('exercise_html_purifier.default')->purify($request->request->get('msg'));
-    	$em = $this->getDoctrine()->getManager();
+        $msg = $this->get('exercise_html_purifier.default')->purify($request->request->get('msg'));
+    	$em = $this->doctrine->getManager();
     	$user = $this->getUser();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    $this->checkGameValidity($game, $user);
     	//add username to message
     	$msg = '<label>'.$user->getUsername().': </label> '.$msg;
@@ -474,8 +508,8 @@ class GameController extends Controller
     public function offerDrawAction($gameID)
     {
 	    $user = $this->getUser();	
-    	$em = $this->getDoctrine()->getManager();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+    	$em = $this->doctrine->getManager();
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    //authenticate user/game
 	    $this->checkGameValidity($game, $user);
 	    //offer draw
@@ -489,9 +523,9 @@ class GameController extends Controller
      * @param int $gameID
      */
     public function acceptDrawAction($gameID) {
-    	$em = $this->getDoctrine()->getManager();
+    	$em = $this->doctrine->getManager();
     	$user = $this->getUser();
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    $this->checkGameValidity($game, $user);
 	    $players = $game->getPlayers();
 	    $pIndex = $players->indexOf($user);
@@ -515,16 +549,16 @@ class GameController extends Controller
 	    $user = $this->getUser();
     	$changed = false;
     	//save session (allow multiple ajax calls)
-    	$this->get('session')->save();
+    	$this->requestStack->getSession()->save();
 		set_time_limit(180);
     	//get game	
-    	$em = $this->getDoctrine()->getManager();
+    	$em = $this->doctrine->getManager();
 	    $gameID = $content->gameID;
 	    $lastSeen = $content->lastChat;
 	    //check if game over already received
 	    $overReceived = $content->overReceived;  
     	$opChatty = $content->opChatty;
-	    $game = $em->getRepository('CMAppBundle:Game')->find($gameID);
+	    $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
 	    $players = $game->getPlayers();
     	$pIndex = $players->indexOf($user);
     	$opIndex = 1 - $pIndex;
@@ -540,9 +574,9 @@ class GameController extends Controller
     	//get all chat on reloads
 	    if ($game->getPlayerIsChatty($pIndex)) {
 	    	if ($lastSeen == 0) {
-	    		$chatMsgs = $em->getRepository('CMAppBundle:ChatMessage')->findAllGameChat($game);	    		
+	    		$chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findAllGameChat($game);	    		
 	    	} else {
-	    		$chatMsgs = $em->getRepository('CMAppBundle:ChatMessage')->findGamePlayerChat($opponent, $game, $lastSeen);
+	    		$chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
 	    	}
 	    } else {
 	    	$chatMsgs = array($lastSeen, array());
@@ -557,7 +591,7 @@ class GameController extends Controller
 	    	$em->refresh($game);
 	    	if ($game->getPlayerIsChatty($pIndex)) {
 	    		//get opponent's chat - own handled client-side & on reload
-	    		$chatMsgs = $em->getRepository('CMAppBundle:ChatMessage')->findGamePlayerChat($opponent, $game, $lastSeen);
+	    		$chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
 	    	}
 	    	if (!$game->over()) {
 				if ($game->getPlayerTime($opIndex) < 200) {
@@ -590,7 +624,7 @@ class GameController extends Controller
 	    		$em->refresh($p);
 	    	}
 			//re-fetch users from database to ensure updated
-			$repo = $em->getRepository('CMUserBundle:User');
+			$repo = $em->getRepository(\CM\UserBundle\Entity\User::class);
 	    	$pRating = $repo->find($players->get($pIndex)->getId())->getRating();
 	    	$opRating = $repo->find($players->get($opIndex)->getId())->getRating();
 	    	return new JsonResponse(array('change' => true, 'gameOver' => true, 'pRating' => $pRating, 'opRating' => $opRating, 'overMsg' => $message, 'chat' => $chat));

@@ -1,5 +1,28 @@
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+fos_user_security_login:
+    path: /login
+    defaults: { _controller: "CM\\AppBundle\\Controller\\SecurityController::loginAction" }
+
+fos_user_security_check:
+    path: /login_check
+
+fos_user_security_logout:
+    path: /logout
+
+cm_user_register:
+    path: /register
+    defaults: { _controller: "CM\\UserBundle\\Controller\\AccountController::registerAction" }
+
+cm_user_profile_edit:
+    path: /profile
+    defaults: { _controller: "CM\\UserBundle\\Controller\\AccountController::editProfileAction" }
+
+cm_user_resetting_request:
+    path: /resetting/request
+    defaults: { _controller: "CM\\UserBundle\\Controller\\AccountController::requestPasswordResetAction" }
+
+cm_user_resetting_reset:
+    path: /resetting/reset/{token}
+    defaults: { _controller: "CM\\UserBundle\\Controller\\AccountController::resetPasswordAction" }
 
 cm_app:
     resource: "@CMAppBundle/Resources/config/routing.yml"
@@ -7,5 +30,5 @@ cm_app:
 
 cm_app_guest:
     path:     /guest
-    defaults: { _controller: "CMAppBundle:Game:guest" }
+    defaults: { _controller: "CM\\AppBundle\\Controller\\GameController::guestAction" }
     

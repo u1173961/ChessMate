@@ -3,49 +3,29 @@
 namespace CM\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\DBAL\Types\BooleanType;
-use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="board")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'board')]
 class Board
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     protected $id;
 
-     /**
-      * @ORM\Column(type="array")
-      */
+     #[ORM\Column(type: 'array')]
      protected $castling;
 
-    /**
-     * Forsyth-Edwards Notation
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     private $fen;
     
-    /**
-     * Has pawn been swapped
-     * 
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $pawnSwapped;
 
-    /**
-     * A position vulnerable to En passant
-     * @ORM\Column(type="array", nullable=true)
-     */
+    #[ORM\Column(type: 'array', nullable: true)]
     protected $enPassant;
 
-    /**
-     * @ORM\Column(type="array")
-     */
+    #[ORM\Column(type: 'array')]
     protected $takenPieces;
 
     public function __construct()

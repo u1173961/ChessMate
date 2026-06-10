@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="login">
+            <div class="row">
+                <div class="col-md-12">
+                    <center><span><u>Edit profile</u></span></center>
+                </div>
+            </div>
+            {{ form_start(form) }}
+                {{ form_row(form.username) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.plainPassword.first) }}
+                {{ form_row(form.plainPassword.second) }}
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Save profile" />
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
