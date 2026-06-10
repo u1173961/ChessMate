@@ -37,7 +37,7 @@
         "doctrine/orm": "^2.13",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "incenteev/composer-parameter-handler": "^2.0",
-        "sensio/framework-extra-bundle": "^5.6",
+        "sensio/framework-extra-bundle": "^6.2",
         "symfony/monolog-bundle": "^3.8",
         "symfony/polyfill-apcu": "^1.0",
         "symfony/asset": "^5.4",
@@ -58,7 +58,7 @@
         "symfony/validator": "^5.4",
         "symfony/yaml": "^5.4",
         "twig/twig": "^2.16",
-		"friendsofsymfony/jsrouting-bundle": "^2.8",
+		"friendsofsymfony/jsrouting-bundle": "^3.6",
 		"exercise/htmlpurifier-bundle" : "*"
     },
     "require-dev": {
