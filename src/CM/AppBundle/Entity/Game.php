@@ -349,11 +349,11 @@ class Game
     {
         if ($this->over()) {
         	return 0;
-        } else if ($player == $this->activePlayerIndex && !is_null($this->lastMoveTime) && $this->lastMoveValidated) {
-        	return $this->playerTimes[$player] + $this->lastMoveTime - round(microtime(true) * 1000);        	
-        } else {
-        	return $this->playerTimes[$player];        	
         }
+        if ($player == $this->activePlayerIndex && !is_null($this->lastMoveTime) && $this->lastMoveValidated) {
+        	return $this->playerTimes[$player] + $this->lastMoveTime - round(microtime(true) * 1000);        	
+        }
+        return $this->playerTimes[$player]; 
     }
 
     /**

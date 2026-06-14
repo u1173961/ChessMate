@@ -67,9 +67,11 @@ class MoveController extends AbstractController
 	    //check for attempted hacks that don't affect gameplay
     	if ($player === false) {
 	    	throw new AccessDeniedException('You are not part of this game!');
-    	} else if ($game->getActivePlayerIndex() != $player) {
+    	}
+		if ($game->getActivePlayerIndex() != $player) {
 	    	throw new AccessDeniedException('It is not your turn!');
-    	} else if (!$game->getLastMoveValidated()) {
+    	}
+		if (!$game->getLastMoveValidated()) {
     		//attempt to make move without validating previous
 	    	throw new AccessDeniedException('Stop messing about!');
     	}
@@ -118,7 +120,8 @@ class MoveController extends AbstractController
 	    $player = $game->getPlayers()->indexOf($user);
     	if ($player === false) {
 	    	throw new AccessDeniedException('You are not part of this game!');
-    	} else if ($game->getActivePlayerIndex() != $player) {
+    	}
+		if ($game->getActivePlayerIndex() != $player) {
     		throw new AccessDeniedException('You may not save your own move!');
     	}
     	//get opponent's validated move
@@ -175,11 +178,14 @@ class MoveController extends AbstractController
 	    //check for attempted hacks that don't affect gameplay
     	if ($player === false) {
 	    	throw new AccessDeniedException('You are not part of this game!');
-    	} else if ($game->getLastMoveValidated()) {
+    	}
+		if ($game->getLastMoveValidated()) {
 	    	throw new AccessDeniedException('Move already validated!');
-    	} else if ($player == $mover) {
+    	}
+		if ($player == $mover) {
 	    	throw new AccessDeniedException('Stop messing about');
-    	} else if ($game->over()) {
+    	}
+		if ($game->over()) {
 	    	throw new AccessDeniedException('The game is over');		
     	}
     	$board = $game->getBoard();

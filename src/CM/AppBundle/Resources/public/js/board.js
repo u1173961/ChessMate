@@ -1099,7 +1099,8 @@ function setNormalView() {
 function getMoveableOptionalControl() {
 	if ($('div#chatBox').length) {
 		return $('div#chatBox');
-	} else if ($('div#moveableMiddle').length) {
+	}
+	if ($('div#moveableMiddle').length) {
 		return $('div#moveableMiddle');
 	}
 	return false;

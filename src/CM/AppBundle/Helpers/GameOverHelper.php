@@ -178,12 +178,11 @@ class GameOverHelper extends ValidationHelper
 			if (!$this->inCheck($opColour, $kingSquare)) {
 				//checker blockable/takeable
 				return true;
-			} else {
-				//new check created
-				//defender cannot be moved, ignore in further attempts
-				$this->board[$target[0]][$target[1]] = false;
-				$this->board[$source[0]][$source[1]] = 'x';
 			}
+			//new check created
+			//defender cannot be moved, ignore in further attempts
+			$this->board[$target[0]][$target[1]] = false;
+			$this->board[$source[0]][$source[1]] = 'x';
 		}
 		return false;
 	}

@@ -107,15 +107,20 @@ function validatePieceType(piece, colour, from, to) {
 	var piece = piece.toUpperCase();
 	if (piece == 'P') {
 		return validatePawn(colour, from, to);
-	} else if (piece == 'R') {
+	}
+	if (piece == 'R') {
 		return validateRook(from, to);
-	} else if (piece == 'N') {
+	}
+	if (piece == 'N') {
 		return validateKnight(from, to);
-	} else if (piece == 'B') {
+	}
+	if (piece == 'B') {
 		return validateBishop(from, to);
-	} else if (piece == 'Q') {
+	}
+	if (piece == 'Q') {
 		return validateQueen(from, to);	
-	} else if (piece == 'K') {
+	}
+	if (piece == 'K') {
 		return validateKing(colour, from, to);
 	}
 	return false;
@@ -183,7 +188,8 @@ function validateKing(colour, from, to) {
 	var kingSquare = getKingSquare(colour);
 	if (Math.abs(to[1] - from[1]) <= 1 && Math.abs(to[0] - from[0]) <= 1) {
 		return true;
-	} else if (castling[colour].length > 0 && to[0] == from[0] && !inCheck(getOpponentColour(colour), kingSquare)) {
+	}
+	if (castling[colour].length > 0 && to[0] == from[0] && !inCheck(getOpponentColour(colour), kingSquare)) {
 		//handle castling
 		if ((to[1] == 2 && castling[colour].indexOf(getPlayerPiece(colour, 'q')) > -1) 
 				|| (to[1] == 6 && castling[colour].indexOf(getPlayerPiece(colour, 'k')) > -1)) {
@@ -247,7 +253,8 @@ function validatePawn(colour, from, to) {
 		&& ((colour == 'w' && dir == 1) || (colour == 'b' && dir == -1)))  {
 		if (checkTakePiece(to, colour)) {
 			return true;
-		} else if (enPassant && enPassant[0] == to[0] && enPassant[1] == to[1]) {
+		}
+		if (enPassant && enPassant[0] == to[0] && enPassant[1] == to[1]) {
 			//perform En passant
 			//allow revert if in check
 			var epTaken = abstractBoard[from[0]][to[1]];
@@ -836,12 +843,11 @@ function getSquareIsReachableWithoutCausingCheck(target, colour, opColour, kingS
 		if (!inCheck(opColour, kingSquare)) {
 			//checker blockable/takeable
 			return true;
-		} else {
-			//new check created
-			//defender cannot be moved, ignore in further attempts
-			abstractBoard[target[0]][target[1]] = false;
-			abstractBoard[source[0]][source[1]] = 'x';
 		}
+		//new check created
+		//defender cannot be moved, ignore in further attempts
+		abstractBoard[target[0]][target[1]] = false;
+		abstractBoard[source[0]][source[1]] = 'x';
 	}
 	return false;
 }
