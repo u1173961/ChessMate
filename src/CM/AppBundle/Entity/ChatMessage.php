@@ -22,7 +22,7 @@ class ChatMessage
 
     #[ORM\Column(type: 'string')]
     private $message;
-    
+
     /**
      * Constructor
      */
@@ -36,7 +36,7 @@ class ChatMessage
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -46,18 +46,18 @@ class ChatMessage
     /**
      * Set game
      *
-     * @return ChatMessage 
+     * @return ChatMessage
      */
     public function setGame(Game $game)
     {
-    	$this->game = $game;
+        $this->game = $game;
         return $this;
     }
 
     /**
      * Get game
      *
-     * @return Game 
+     * @return Game
      */
     public function getGame()
     {
@@ -67,18 +67,18 @@ class ChatMessage
     /**
      * Set player
      *
-     * @return ChatMessage 
+     * @return ChatMessage
      */
     public function setPlayer(User $player)
     {
-    	$this->player = $player;
+        $this->player = $player;
         return $this;
     }
 
     /**
      * Get player
      *
-     * @return User 
+     * @return User
      */
     public function getPlayer()
     {
@@ -88,18 +88,18 @@ class ChatMessage
     /**
      * Set message
      *
-     * @return ChatMessage 
+     * @return ChatMessage
      */
     public function setMessage($msg)
     {
-    	$this->message = $msg;
+        $this->message = $msg;
         return $this;
     }
 
     /**
      * Get message
      *
-     * @return string 
+     * @return string
      */
     public function getMessage()
     {

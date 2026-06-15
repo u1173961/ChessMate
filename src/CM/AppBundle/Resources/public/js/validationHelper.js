@@ -23,12 +23,12 @@ if (typeof activePlayer === 'undefined') {
 var castled = false;
 var enPassantPerformed = false;
 var checkThreat = null;
-	
+
 /**
  * Resolve grid reference to array indices
  * @param x alphabet ref
  * @param y numeric ref
- * 
+ *
  * @return the corresponding [row,column] index in abstractBoard array
  */
 function getAbstractIndicesFromGridRef(x, y) {
@@ -39,7 +39,7 @@ function getAbstractIndicesFromGridRef(x, y) {
  * Resolve array index to grid reference
  * @param y row in abstractBoard
  * @param x column in abstractBoard
- * 
+ *
  * @return the corresponding grid reference
  */
 function getGridRefFromAbstractIndices(y, x) {
@@ -118,28 +118,28 @@ function validatePieceType(piece, colour, from, to) {
 		return validateBishop(from, to);
 	}
 	if (piece == 'Q') {
-		return validateQueen(from, to);	
+		return validateQueen(from, to);
 	}
 	if (piece == 'K') {
 		return validateKing(colour, from, to);
 	}
 	return false;
 }
-	
+
 /**
  * Validate rook movement
  * @param from	[y,x]
  * @param to	[y,x]
  */
 function validateRook(from, to) {
-	if ((from[0] == to[0] && !xAxisBlocked(from[1], to[1], from[0])) 
+	if ((from[0] == to[0] && !xAxisBlocked(from[1], to[1], from[0]))
 		|| (from[1] == to[1] && !yAxisBlocked(from[0], to[0], from[1]))) {
 		return true;
 	}
 
 	return false;
 }
-	
+
 /**
  * Validate knight movement
  * @param from	[y,x]
@@ -170,11 +170,11 @@ function validateBishop(from, to) {
  * @param to	[y,x]
  */
 function validateQueen(from, to) {
-	if ((from[0] == to[0] && !xAxisBlocked(from[1], to[1], from[0])) 
-		|| (from[1] == to[1] && !yAxisBlocked(from[0], to[0], from[1])) 
+	if ((from[0] == to[0] && !xAxisBlocked(from[1], to[1], from[0]))
+		|| (from[1] == to[1] && !yAxisBlocked(from[0], to[0], from[1]))
 		|| (onDiagonal(from, to) && !diagonalBlocked(from[1], from[0], to[1], to[0]))) {
 		return true;
-	}	
+	}
 	return false;
 }
 
@@ -191,7 +191,7 @@ function validateKing(colour, from, to) {
 	}
 	if (castling[colour].length > 0 && to[0] == from[0] && !inCheck(getOpponentColour(colour), kingSquare)) {
 		//handle castling
-		if ((to[1] == 2 && castling[colour].indexOf(getPlayerPiece(colour, 'q')) > -1) 
+		if ((to[1] == 2 && castling[colour].indexOf(getPlayerPiece(colour, 'q')) > -1)
 				|| (to[1] == 6 && castling[colour].indexOf(getPlayerPiece(colour, 'k')) > -1)) {
 			var rookFromCol = 0;
 			var start = 1;
@@ -230,7 +230,7 @@ function validateKing(colour, from, to) {
 	}
 	return false;
 }
-	
+
 /**
  * Validate pawn movement
  * @param from	[y,x]
@@ -249,7 +249,7 @@ function validatePawn(colour, from, to) {
 		if ((colour == 'w' && to[0] > from[0]) || (colour == 'b' && to[0] < from[0])) {
 			return true;
 		}
-	} else if (onDiagonal(from, to) 
+	} else if (onDiagonal(from, to)
 		&& ((colour == 'w' && dir == 1) || (colour == 'b' && dir == -1)))  {
 		if (checkTakePiece(to, colour)) {
 			return true;
@@ -267,7 +267,7 @@ function validatePawn(colour, from, to) {
 				//revert
             	updateAbstractBoard(to, from);
 				abstractBoard[to[0]][to[1]] = epTaken;
-				return false;				
+				return false;
 			}
 			enPassantPerformed = true;
 			enPassant = null;
@@ -362,7 +362,7 @@ function diagonalBlocked(fromX, fromY, toX, toY) {
  * check if target square is diagonal with source
  * @param from	[y,x]
  * @param to	[y,x]
- * 
+ *
  * @return Boolean
  */
 function onDiagonal(from, to) {
@@ -385,7 +385,7 @@ function occupiedByOwnPiece(row, column, colour) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -398,10 +398,10 @@ function occupiedByOtherPiece(row, column, colour) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
-	
+
 /**
  * Check for takeable piece
  */
@@ -434,7 +434,7 @@ function updateCastling(moved, colour, fRow, fCol) {
 					pCastling = pCastling.charAt(0);
 				} else if (fCol == 7) {
 					//castle no longer possible on king-side
-					pCastling = pCastling.charAt(1);					
+					pCastling = pCastling.charAt(1);
 				}
 			} else {
 				//castle only possible on one side
@@ -442,13 +442,13 @@ function updateCastling(moved, colour, fRow, fCol) {
 					//castle king-side possible
 					if (fCol == 7) {
 						//castle no longer possible on king-side
-						pCastling = '';					
+						pCastling = '';
 					}
 				} else {
 					//castle queen-side possible
 					if (fCol == 0) {
 						//castle no longer possible on queen-side
-						pCastling = '';	
+						pCastling = '';
 					}
 				}
 			}
@@ -464,12 +464,12 @@ function setEnPassant(moved, fRow, fCol, tRow) {
 	if (moved == 'p' && fRow == 6 && tRow == 4) {
 		enPassant = [5, fCol];
 	} else if (moved == 'P' && fRow == 1 && tRow == 3) {
-		enPassant = [2, fCol];		
+		enPassant = [2, fCol];
 	} else {
 		enPassant = null;
 	}
 }
-	
+
 /**
  * Check En passant has been performed
  */
@@ -502,32 +502,32 @@ function getKingSquare(colour) {
  * Check if king is in check
  */
 function inCheck(opColour, kingSquare) {
-	//check if in check	
-	return (inCheckOnDiagonal(opColour, kingSquare) || inCheckByKnight(opColour, kingSquare) 
-			|| inCheckOnXAxis(opColour, kingSquare) || inCheckOnYAxis(opColour, kingSquare) 
+	//check if in check
+	return (inCheckOnDiagonal(opColour, kingSquare) || inCheckByKnight(opColour, kingSquare)
+			|| inCheckOnXAxis(opColour, kingSquare) || inCheckOnYAxis(opColour, kingSquare)
 			|| inCheckByPawn(opColour, kingSquare));
 }
 
 /**
  * Check if in check on diagonal
  */
-function inCheckOnDiagonal(colour, kingSquare) {	
+function inCheckOnDiagonal(colour, kingSquare) {
 	var row = kingSquare[0];
 	var col = kingSquare[1];
-	var blocks = [false,false,false,false];	
+	var blocks = [false,false,false,false];
 	var bishop = getPlayerPiece(colour, 'b');
 	var queen = getPlayerPiece(colour, 'q');
 	for (var i = 1; i < 8; i++) {
 		var threats = [
-			getPieceAt(row+i, col-i), 
-			getPieceAt(row+i, col+i), 
-			getPieceAt(row-i, col-i), 
+			getPieceAt(row+i, col-i),
+			getPieceAt(row+i, col+i),
+			getPieceAt(row-i, col-i),
 			getPieceAt(row-i, col+i)
 		];
 		if (!blocks[0] && (threats[0] == bishop || threats[0] == queen)) {
 			checkThreat = [row+i, col-i];
 			return true;
-		} 
+		}
 		if (!blocks[1] && (threats[1] == bishop || threats[1] == queen)) {
 			checkThreat = [row+i, col+i];
 			return true;
@@ -543,7 +543,7 @@ function inCheckOnDiagonal(colour, kingSquare) {
 		//get blocking pieces
 		for (var j = 0; j < 4; j++) {
 			if (!blocks[j]) {
-				blocks[j] = threats[j];					
+				blocks[j] = threats[j];
 			}
 		}
 	}
@@ -613,35 +613,35 @@ function inCheckByKnight(colour, kingSquare) {
 	var knight = getPlayerPiece(colour, 'n');
 	if (pieceAt(y+2, x-1, knight)) {
 		checkThreat = [y+2, x-1];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y+2, x+1, knight)) {
 		checkThreat = [y+2, x+1];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y+1, x-2, knight)) {
 		checkThreat = [y+1, x-2];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y+1, x+2, knight)) {
 		checkThreat = [y+1, x+2];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y-1, x-2, knight)) {
 		checkThreat = [y-1, x-2];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y-1, x+2, knight)) {
 		checkThreat = [y-1, x+2];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y-2, x-1, knight)) {
 		checkThreat = [y-2, x-1];
-		return true;			
+		return true;
 	}
 	if (pieceAt(y-2, x+1, knight)) {
 		checkThreat = [y-2, x+1];
-		return true;			
+		return true;
 	}
 	return false;
 }
@@ -657,11 +657,11 @@ function inCheckByPawn(colour, kingSquare) {
 	var pawn = getPlayerPiece(colour, 'p');
 	if (pieceAt(kingSquare[0]+dir, kingSquare[1]-1, pawn)) {
 		checkThreat = [kingSquare[0]+dir, kingSquare[1]-1];
-		return true;			
+		return true;
 	}
 	if (pieceAt(kingSquare[0]+dir, kingSquare[1]+1, pawn)) {
 		checkThreat = [kingSquare[0]+dir, kingSquare[1]+1];
-		return true;			
+		return true;
 	}
 	return false;
 }
@@ -670,7 +670,7 @@ function inCheckByPawn(colour, kingSquare) {
 
 /**
  * Check if last move ended the game
- * @param char colour
+ * @param string colour
  * @return boolean|int
  */
 function checkGameOver(colour) {
@@ -694,7 +694,7 @@ function checkGameOver(colour) {
 		if (!inCheck(colour, reachables[i])) {
 			//put king back
 			abstractBoard[kingSquare[0]][kingSquare[1]] = king;
-			return false;			
+			return false;
 		}
 	}
 	//--> no safe squares within reach
@@ -757,7 +757,7 @@ function checkGameOver(colour) {
 			}
 		}
 	}
-	return false;	
+	return false;
 }
 
 function getBoardCopy() {
@@ -770,7 +770,7 @@ function getBoardCopy() {
 
 /**
  * Check if given colour has any pieces other than king
- * @param char colour
+ * @param string colour
  * @return bool
  */
 function getAlliesLeft(colour) {
@@ -779,16 +779,16 @@ function getAlliesLeft(colour) {
 			var piece = abstractBoard[row][col];
 			if (piece && getPieceColour(piece) == colour && piece != getPlayerPiece(colour, 'k')) {
 				return true;
-			}			
-		}		
+			}
+		}
 	}
 	return false;
 }
 
 /**
- * Get array of indices for squares reachable by king 
+ * Get array of indices for squares reachable by king
  * @param array kingSquare
- * @param char colour
+ * @param string colour
  * @return array
  */
 function getReachableSquaresForKing(kingSquare, colour) {
@@ -815,9 +815,9 @@ function getReachableSquaresForKing(kingSquare, colour) {
 		for (var col = colStart; col <= colEnd; col++) {
 			var occupant = abstractBoard[row][col];
 			if (!occupant || getPieceColour(occupant) != colour) {
-				reachables.push([row, col]);					
+				reachables.push([row, col]);
 			}
-		}			
+		}
 	}
 	return reachables;
 }
@@ -828,8 +828,8 @@ function getReachableSquaresForKing(kingSquare, colour) {
  * Changes are made to the global board and should be reverted post-execution
  * Moves must not cause new check
  * @param array target
- * @param char 	colour
- * @param char 	opColour
+ * @param string colour
+ * @param string opColour
  * @param array kingSquare
  * @return boolean
  */
@@ -858,9 +858,9 @@ function getSquareIsReachableWithoutCausingCheck(target, colour, opColour, kingS
  * @param int  from			x1, Checker's col
  * @param int  to			x2, King's col
  * @param int  row			y, Checker/King's row
- * @param char colour 		Player in check
- * @param char opColour 	Player causing check
- * 
+ * @param string colour 	Player in check
+ * @param string opColour 	Player causing check
+ *
  * @return boolean
  */
 function checkOnXAxisIsDefendable(from, to, row, colour, opColour) {
@@ -876,7 +876,7 @@ function checkOnXAxisIsDefendable(from, to, row, colour, opColour) {
 		if (getSquareIsReachableWithoutCausingCheck(blockTo, colour, opColour, kingSquare)) {
 			//checker is blockable/takeable - revert board
 			abstractBoard = board;
-			return true;				
+			return true;
 		}
 	}
 	//check not blockable - revert
@@ -888,12 +888,12 @@ function checkOnXAxisIsDefendable(from, to, row, colour, opColour) {
 /**
  * Check if check on y-axis is defendable
  * inCheck() is used to identify reachable squares
- * @param int  from		y1, Checker's row
+ * @param int  from		    y1, Checker's row
  * @param int  to			y2, King's row
  * @param int  col			x, Checker/King's col
- * @param char colour 		Player in check
- * @param char opColour 	Player causing check
- * 
+ * @param string colour 	Player in check
+ * @param string opColour 	Player causing check
+ *
  * @return boolean
  */
 function checkOnYAxisIsDefendable(from, to, col, colour, opColour) {
@@ -909,7 +909,7 @@ function checkOnYAxisIsDefendable(from, to, col, colour, opColour) {
 		if (getSquareIsReachableWithoutCausingCheck(blockTo, colour, opColour, kingSquare)) {
 			//checker is blockable/takeable - revert board
 			abstractBoard = board;
-			return true;				
+			return true;
 		}
 	}
 	//check not blockable - revert
@@ -925,9 +925,9 @@ function checkOnYAxisIsDefendable(from, to, col, colour, opColour) {
  * @param int  fromY		Checker's row
  * @param int  toX			King's col
  * @param int  toY			King's row
- * @param char colour 		Player in check
- * @param char opColour 	Player causing check
- * 
+ * @param string colour 	Player in check
+ * @param string opColour 	Player causing check
+ *
  * @return boolean
  */
 function checkOnDiagIsDefendable(fromX, fromY, toX, toY, colour, opColour) {

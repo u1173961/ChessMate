@@ -23,37 +23,37 @@ class GameSearch
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private $length;
-    
+
     #[ORM\ManyToOne(targetEntity: 'CM\UserBundle\Entity\User')]
     private $searcher;
-    
+
     #[ORM\Column(type: 'boolean')]
     private $matched;
-    
+
     #[ORM\Column(type: 'boolean')]
     private $cancelled;
 
     #[ORM\OneToOne(targetEntity: 'Game')]
     #[ORM\JoinColumn(name: 'game_id', referencedColumnName: 'id', nullable: true)]
     private $game;
-    
+
     /**
      * Constructor
      */
     public function __construct($length, $minRank, $maxRank)
     {
-    	$this->length = $length;
-    	$this->minRank = $minRank;
-    	$this->maxRank = $maxRank;
-    	$this->matched = false;
-    	$this->cancelled = false;
-    	$this->game = null;
+        $this->length = $length;
+        $this->minRank = $minRank;
+        $this->maxRank = $maxRank;
+        $this->matched = false;
+        $this->cancelled = false;
+        $this->game = null;
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -76,7 +76,7 @@ class GameSearch
     /**
      * Get minimum rank
      *
-     * @return integer 
+     * @return integer
      */
     public function getMinRank()
     {
@@ -99,7 +99,7 @@ class GameSearch
     /**
      * Get maximum rank
      *
-     * @return integer 
+     * @return integer
      */
     public function getMaxRank()
     {
@@ -122,7 +122,7 @@ class GameSearch
     /**
      * Get length
      *
-     * @return integer 
+     * @return integer
      */
     public function getLength()
     {
@@ -145,7 +145,7 @@ class GameSearch
     /**
      * Get search initiator
      *
-     * @return User 
+     * @return User
      */
     public function getSearcher()
     {
@@ -160,11 +160,11 @@ class GameSearch
      */
     public function setMatched($matched)
     {
-    	$this->matched = $matched;
-    
-    	return $this;
+        $this->matched = $matched;
+
+        return $this;
     }
-    
+
     /**
      * Check if search is matched
      *
@@ -172,7 +172,7 @@ class GameSearch
      */
     public function getMatched()
     {
-    	return $this->matched;
+        return $this->matched;
     }
 
     /**
@@ -183,11 +183,11 @@ class GameSearch
      */
     public function setCancelled($cancelled)
     {
-    	$this->cancelled = $cancelled;
-    
-    	return $this;
+        $this->cancelled = $cancelled;
+
+        return $this;
     }
-    
+
     /**
      * Check if search is cancelled
      *
@@ -195,7 +195,7 @@ class GameSearch
      */
     public function getCancelled()
     {
-    	return $this->cancelled;
+        return $this->cancelled;
     }
 
     /**
@@ -206,11 +206,11 @@ class GameSearch
      */
     public function setGame(Game $game)
     {
-    	$this->game = $game;
-    
-    	return $this;
+        $this->game = $game;
+
+        return $this;
     }
-    
+
     /**
      * Get game
      *
@@ -218,6 +218,6 @@ class GameSearch
      */
     public function getGame()
     {
-    	return $this->game;
+        return $this->game;
     }
 }

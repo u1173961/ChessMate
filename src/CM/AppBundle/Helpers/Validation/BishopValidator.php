@@ -10,17 +10,16 @@ use CM\AppBundle\Entity\Board;
  * Bishop validator
  */
 class BishopValidator extends ValidationHelper
-{		
-	/**
-	 * Validate bishop movement
-	 * @param array  $move
-	 */
-	public function validatePiece($move) {
-    	$from = $move['from'];
-    	$to = $move['to'];
-		if ($this->onDiagonal($from, $to) && !$this->diagonalBlocked($from[1], $from[0], $to[1], $to[0])) {
-			return true;
-		}
-		return false;
-	}
+{
+    /**
+     * Validate bishop movement
+     * @param array $move
+     */
+    public function validatePiece(array $move): bool
+    {
+        $from = $move['from'];
+        $to = $move['to'];
+        return $this->onDiagonal($from, $to)
+            && !$this->diagonalBlocked($from[1], $from[0], $to[1], $to[0]);
+    }
 }

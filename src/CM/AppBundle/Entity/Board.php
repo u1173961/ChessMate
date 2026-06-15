@@ -18,7 +18,7 @@ class Board
 
     #[ORM\Column(type: 'string')]
     private $fen;
-    
+
     #[ORM\Column(type: 'boolean')]
     private $pawnSwapped;
 
@@ -36,7 +36,7 @@ class Board
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -46,24 +46,24 @@ class Board
     /**
      * Set default board & unmoved pieces
      *
-     * @return array 
+     * @return array
      */
     public function setDefaults()
     {
-    	$this->fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
-    	$this->setDefaultTaken();
-    	$this->castling = array('KQ','kq');
-    	$this->enPassant = null;
-    	$this->pawnSwapped = false;
+        $this->fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+        $this->setDefaultTaken();
+        $this->castling = array('KQ','kq');
+        $this->enPassant = null;
+        $this->pawnSwapped = false;
     }
-    
+
     private function setDefaultTaken() {
-    	$this->takenPieces = array(
-    			'P' => 0, 'R' => 0, 'N' => 0, 'B' => 0, 'Q' => 0,
-    			'p' => 0, 'r' => 0, 'n' => 0, 'b' => 0, 'q' => 0
-    	);    	
+        $this->takenPieces = array(
+            'P' => 0, 'R' => 0, 'N' => 0, 'B' => 0, 'Q' => 0,
+            'p' => 0, 'r' => 0, 'n' => 0, 'b' => 0, 'q' => 0
+        );
     }
-    
+
     /**
      * Set FEN
      *
@@ -75,7 +75,7 @@ class Board
         $this->fen = $fen;
         return $this;
      }
-    
+
    /**
     * Get FEN
     *
@@ -103,7 +103,7 @@ class Board
     /**
      * Get castling options for player
      *
-     * @return array 
+     * @return array
      */
     public function getPlayerCastling($pIndex)
     {
@@ -123,9 +123,9 @@ class Board
 
         return $this;
     }
-    
+
     public function getCastling() {
-    	return array('w' => $this->castling[0], 'b' => $this->castling[1]);
+        return array('w' => $this->castling[0], 'b' => $this->castling[1]);
     }
 
     /**
@@ -144,7 +144,7 @@ class Board
     /**
      * Get taken pieces
      *
-     * @return array 
+     * @return array
      */
     public function getTaken()
     {
@@ -194,7 +194,7 @@ class Board
     /**
      * Check if piece has swapped
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPawnSwapped()
     {

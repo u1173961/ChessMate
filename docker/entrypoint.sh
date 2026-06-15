@@ -60,6 +60,7 @@ if [ "${1:-}" = "apache2-foreground" ]; then
         php bin/console doctrine:fixtures:load --env=prod --no-interaction
     fi
 
+    php bin/console assets:install web --env=prod --no-interaction
     php bin/console cache:clear --env=prod --no-warmup
     chown -R www-data:www-data vendor var/cache var/logs var/sessions
     chmod -R u+rwX,g+rwX vendor var/cache var/logs var/sessions

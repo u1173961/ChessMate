@@ -15,7 +15,7 @@ class Game
 
     #[ORM\OneToOne(targetEntity: 'Board', cascade: ['persist'])]
     private $board;
-    
+
     #[ORM\ManyToMany(targetEntity: 'CM\UserBundle\Entity\User', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'game_players')]
     #[ORM\JoinColumn(name: 'game_id', referencedColumnName: 'id')]
@@ -24,25 +24,25 @@ class Game
 
     #[ORM\Column(type: 'integer')]
     private $activePlayerIndex;
-    
+
     #[ORM\Column(type: 'array')]
     private $playersJoined;
-    
+
     #[ORM\Column(type: 'array')]
     private $chattyPlayers;
-    
+
     #[ORM\Column(type: 'bigint', nullable: true)]
     private $lastMoveTime;
 
     #[ORM\Column(type: 'array')]
     protected $lastMove;
-    
+
     #[ORM\Column(type: 'boolean')]
     private $lastMoveValidated;
 
     #[ORM\Column(type: 'integer')]
     private $length;
-    
+
     #[ORM\Column(type: 'array')]
     private $playerTimes;
 
@@ -54,7 +54,7 @@ class Game
 
     #[ORM\Column(type: 'string', nullable: true)]
     private $gameOverMessage;
-    
+
     /**
      * Constructor
      */
@@ -65,19 +65,19 @@ class Game
         $this->playersJoined = array(false,false);
         $this->playerTimes = array($length*1000, $length*1000);
         $this->length = $length;
-    	//set white as active
-    	$this->setActivePlayerIndex(0);
+        //set white as active
+        $this->setActivePlayerIndex(0);
         $this->lastMoveValidated = true;
         $this->chatLog = array();
         $this->drawOfferer = 2;
-    	//set last move by no-one to prevent superfluous check
+        //set last move by no-one to prevent superfluous check
         $this->lastMove = array('by'=> 2);
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -112,12 +112,12 @@ class Game
     /**
      * Check if both players have joined
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getJoined()
     {
         return ($this->playersJoined[0] && $this->playersJoined[1]);
-    }  
+    }
 
     /**
      * Set board
@@ -135,7 +135,7 @@ class Game
     /**
      * Get board
      *
-     * @return \CM\AppBundle\Entity\Board 
+     * @return \CM\AppBundle\Entity\Board
      */
     public function getBoard()
     {
@@ -158,7 +158,7 @@ class Game
     /**
      * Get whitePlayer
      *
-     * @return \CM\UserBundle\Entity\User 
+     * @return \CM\UserBundle\Entity\User
      */
     public function getWhitePlayer()
     {
@@ -181,7 +181,7 @@ class Game
     /**
      * Get blackPlayer
      *
-     * @return \CM\UserBundle\Entity\User 
+     * @return \CM\UserBundle\Entity\User
      */
     public function getBlackPlayer()
     {
@@ -191,43 +191,43 @@ class Game
     /**
      * Set active player index
      * @param int index
-     * 
+     *
      * @return Game
      */
     public function setActivePlayerIndex($index)
     {
         if ($index == 0 || $index == 1) {
-        	$this->activePlayerIndex = $index;
+            $this->activePlayerIndex = $index;
         }
 
         return $this;
     }
-    
+
 
     /**
      * Get active player index
      *
-     * @return \CM\UserBundle\Entity\User 
+     * @return \CM\UserBundle\Entity\User
      */
     public function getActivePlayerIndex()
     {
         return $this->activePlayerIndex;
     }
-    
+
 
     /**
      * Get inactive player index
      *
-     * @return \CM\UserBundle\Entity\User 
+     * @return \CM\UserBundle\Entity\User
      */
     public function getInactivePlayerIndex()
     {
-        return 1 - $this->activePlayerIndex;        
+        return 1 - $this->activePlayerIndex;
     }
 
     /**
      * Switch active player
-     * 
+     *
      * @return Game
      */
     public function switchActivePlayer()
@@ -235,12 +235,12 @@ class Game
         $this->activePlayerIndex = 1 - $this->activePlayerIndex;
 
         return $this;
-    }    
+    }
 
     /**
      * Get active player
      *
-     * @return \CM\UserBundle\Entity\User 
+     * @return \CM\UserBundle\Entity\User
      */
     public function getActivePlayer()
     {
@@ -273,7 +273,7 @@ class Game
     /**
      * Get players
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPlayers()
     {
@@ -296,7 +296,7 @@ class Game
     /**
      * Get length
      *
-     * @return integer 
+     * @return integer
      */
     public function getLength()
     {
@@ -319,7 +319,7 @@ class Game
     /**
      * Get last move time
      *
-     * @return integer 
+     * @return integer
      */
     public function getLastMoveTime()
     {
@@ -343,17 +343,17 @@ class Game
     /**
      * Get time left for player
      *
-     * @return int 
+     * @return int
      */
     public function getPlayerTime($player)
     {
         if ($this->over()) {
-        	return 0;
+            return 0;
         }
         if ($player == $this->activePlayerIndex && !is_null($this->lastMoveTime) && $this->lastMoveValidated) {
-        	return $this->playerTimes[$player] + $this->lastMoveTime - round(microtime(true) * 1000);        	
+            return $this->playerTimes[$player] + $this->lastMoveTime - round(microtime(true) * 1000);
         }
-        return $this->playerTimes[$player]; 
+        return $this->playerTimes[$player];
     }
 
     /**
@@ -373,30 +373,26 @@ class Game
     /**
      * Check if player has chat enabled
      *
-     * @return bool 
+     * @return bool
      */
     public function getPlayerIsChatty($player)
     {
         return $this->chattyPlayers[$player];
     }
-    
+
     /**
      * Toggle chat for player
      * @param int $player
      */
     public function togglePlayerIsChatty($player) {
-    	if ($this->chattyPlayers[$player]) {
-    		$this->chattyPlayers[$player] = false;
-    	} else {
-    		$this->chattyPlayers[$player] = true;
-    	}
+        $this->chattyPlayers[$player] = !$this->chattyPlayers[$player];
     }
 
     /**
      * Set last move, for validation
      *
      * @param array $move[by<playerIndex>, from[y,x], to[y,x], newFEN, enPassantAvailable, newPiece]
-     * 
+     *
      * @return Game
      */
     public function setLastMove(array $move)
@@ -409,7 +405,7 @@ class Game
     /**
      * Get last move, for validation
      *
-     * @return array 
+     * @return array
      */
     public function getLastMove()
     {
@@ -419,7 +415,7 @@ class Game
     /**
      * Get index of player that made last move
      *
-     * @return array 
+     * @return array
      */
     public function getLastMoveBy()
     {
@@ -442,98 +438,103 @@ class Game
     /**
      * Check if last move is validated
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getLastMoveValidated()
     {
         return $this->lastMoveValidated;
     }
-    
+
     /**
      * Check if new move is ready
      * @param int $player index
-     * 
+     *
      * @return boolean
      */
-    public function newMoveReady($player) {
-    	return $this->getLastMoveBy() != $player && !$this->getLastMoveValidated();
+    public function newMoveReady($player)
+    {
+        return $this->getLastMoveBy() != $player && !$this->getLastMoveValidated();
     }
-    
+
     /**
      * Check if game is over
      * @return boolean
      */
-    public function over() {
-    	return !is_null($this->victorIndex);
+    public function over()
+    {
+        return !is_null($this->victorIndex);
     }
-    
+
     /**
      * Set game over
      * @param int $victor index, 2 for draw
      * @param string $message game over message
      * @return boolean
      */
-    public function setGameOver($victor, $message) {
-	    //set won/lost/drawn on players
-		if (!$this->over()) {
-			//mark game as over
-			$this->setVictorIndex($victor);
-			//calculate new ratings
-			if ($victor == 2) {
-				$wResult = 0.5;
-				$lResult = 0.5;
-				$windex = 0;
-				$lIndex = 1;
-			} else {
-				$wResult = 1;
-				$lResult = 0;
-				$windex = $victor;
-				$lIndex = 1 - $victor;
-			}
-			$winner = $this->players->get($windex);
-			$wRating = $winner->getRating();
-			$wDev = $winner->getDeviation();
-			$loser = $this->players->get($lIndex);
-			$lRating = $loser->getRating();
-			$lDev = $loser->getDeviation();
-			//update ratings for registered users
-			if ($winner->getRegistered()) {
-				$winner->updateRating(array(array('opRating' => $lRating, 'opRD' => $lDev, 'result' => $wResult)));				
-			}
-			if ($loser->getRegistered()) {
-				$loser->updateRating(array(array('opRating' => $wRating, 'opRD' => $wDev, 'result' => $lResult)));				
-			}
-			//remove from user's current games
-			foreach ($this->players as $p) {
-				$p->removeCurrentGame($this);
-			}
-			$this->setGameOverMessage($message);
-		}
+    public function setGameOver($victor, $message)
+    {
+        //set won/lost/drawn on players
+        if (!$this->over()) {
+            //mark game as over
+            $this->setVictorIndex($victor);
+            //calculate new ratings
+            if ($victor == 2) {
+                $wResult = 0.5;
+                $lResult = 0.5;
+                $windex = 0;
+                $lIndex = 1;
+            } else {
+                $wResult = 1;
+                $lResult = 0;
+                $windex = $victor;
+                $lIndex = 1 - $victor;
+            }
+            $winner = $this->players->get($windex);
+            $wRating = $winner->getRating();
+            $wDev = $winner->getDeviation();
+            $loser = $this->players->get($lIndex);
+            $lRating = $loser->getRating();
+            $lDev = $loser->getDeviation();
+            //update ratings for registered users
+            if ($winner->getRegistered()) {
+                $winner->updateRating(array(array('opRating' => $lRating, 'opRD' => $lDev, 'result' => $wResult)));
+            }
+            if ($loser->getRegistered()) {
+                $loser->updateRating(array(array('opRating' => $wRating, 'opRD' => $wDev, 'result' => $lResult)));
+            }
+            //remove from user's current games
+            foreach ($this->players as $p) {
+                $p->removeCurrentGame($this);
+            }
+            $this->setGameOverMessage($message);
+        }
     }
-    
+
     /**
      * Set game over message
-     * 
+     *
      * @return Game
      */
-    public function setGameOverMessage($message) {
-    	$this->gameOverMessage = $message;
-    	return $this;
+    public function setGameOverMessage($message)
+    {
+        $this->gameOverMessage = $message;
+        return $this;
     }
-    
+
     /**
      * Get game over message
-     * 
+     *
      * @return string
      */
-    public function getGameOverMessage() {
-    	return $this->gameOverMessage;
+    public function getGameOverMessage()
+    {
+        return $this->gameOverMessage;
     }
 
     /**
      * Set index of player offering draw
      * @param int index
-     * 
+     *
      * @return Game
      */
     public function setDrawOfferer($index)
@@ -542,7 +543,7 @@ class Game
 
         return $this;
     }
-    
+
     /**
      * Get index of player offering draw
      *
@@ -556,7 +557,7 @@ class Game
     /**
      * Set victor's index, if game over
      * @param int index
-     * 
+     *
      * @return Game
      */
     public function setVictorIndex($index)
@@ -565,7 +566,7 @@ class Game
 
         return $this;
     }
-    
+
     /**
      * Get victor's index
      *
@@ -575,13 +576,14 @@ class Game
     {
         return $this->victorIndex;
     }
-    
+
     /**
      * Set rating deviations for period
      */
-    public function setStartRDs() {
-    	foreach ($this->players as $p) {
-    		$p->setStartRD();
-    	}
+    public function setStartRDs()
+    {
+        foreach ($this->players as $p) {
+            $p->setStartRD();
+        }
     }
 }

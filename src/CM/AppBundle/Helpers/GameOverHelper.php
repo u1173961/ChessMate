@@ -21,7 +21,7 @@ class GameOverHelper extends ValidationHelper
 	public function checkGameOver(Game $game, $gameOver, $gameOver2, $pIndex, EntityManager $em) {
 		$over = false;
     	if ($gameOver != $gameOver2) {
-    		//consensus differs - check for game over    	
+    		//consensus differs - check for game over
 		   	if ($pIndex === 0) {
 		   		$colour = 'b';
 		   	} else {
@@ -67,17 +67,17 @@ class GameOverHelper extends ValidationHelper
 	    	$opRating = $players->get(1 - $pIndex)->getRating();
 	    	return array('pRating' => $pRating, 'opRating' => $opRating, 'overMsg' => $over);
     	}
-    	
+
     	return false;
 	}
-	
+
 	/**
 	 * Check if last move ended the game
 	 * From the perspective of the attacking player i.e. last to move
-	 * @param char $colour
+	 * @param string $colour
 	 * @return boolean|string
 	 */
-	public function getGameOver($colour) {
+	public function getGameOver(string $colour) {
 		//get opponent's colour
 		$opColour = $this->getOpponentColour($colour);
 		//get opponent's king's square
@@ -156,15 +156,15 @@ class GameOverHelper extends ValidationHelper
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check if target square is reachable by player in check
 	 * Used for escaping check i.e. blocking/taking attacking piece.
 	 * Changes are made to the global board and should be reverted post-execution
 	 * Moves must not cause new check
 	 * @param array $target
-	 * @param char 	$colour
-	 * @param char 	$opColour
+	 * @param string $colour
+	 * @param string $opColour
 	 * @param array $kingSquare
 	 * @return boolean
 	 */
@@ -186,16 +186,16 @@ class GameOverHelper extends ValidationHelper
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Check if check on x-axis is defendable
 	 * inCheck() is used to identify reachable squares
 	 * @param int  $from		x1, Checker's col
 	 * @param int  $to			x2, King's col
 	 * @param int  $row			y, Checker/King's row
-	 * @param char $colour 		Player in check
-	 * @param char $opColour 	Player causing check
-	 * 
+	 * @param string $colour 	Player in check
+	 * @param string $opColour 	Player causing check
+	 *
 	 * @return boolean
 	 */
 	private function checkOnXAxisIsDefendable($from, $to, $row, $colour, $opColour) {
@@ -211,24 +211,24 @@ class GameOverHelper extends ValidationHelper
 			if ($this->getSquareIsReachableWithoutCausingCheck($blockTo, $colour, $opColour, $kingSquare)) {
 				//checker is blockable/takeable - revert board
 				$this->board = $board;
-				return true;				
+				return true;
 			}
 		}
 		//check not blockable - revert
 		$this->board = $board;
-	
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if check on y-axis is defendable
 	 * inCheck() is used to identify reachable squares
 	 * @param int  $from		y1, Checker's row
 	 * @param int  $to			y2, King's row
 	 * @param int  $col			x, Checker/King's col
-	 * @param char $colour 		Player in check
-	 * @param char $opColour 	Player causing check
-	 * 
+	 * @param string $colour 		Player in check
+	 * @param string $opColour 	Player causing check
+	 *
 	 * @return boolean
 	 */
 	private function checkOnYAxisIsDefendable($from, $to, $col, $colour, $opColour) {
@@ -244,15 +244,15 @@ class GameOverHelper extends ValidationHelper
 			if ($this->getSquareIsReachableWithoutCausingCheck($blockTo, $colour, $opColour, $kingSquare)) {
 				//checker is blockable/takeable - revert board
 				$this->board = $board;
-				return true;				
+				return true;
 			}
 		}
 		//check not blockable - revert
 		$this->board = $board;
-	
+
 		return false;
 	}
-	
+
 	/**
 	 * Check if check on diagonal is defendable
 	 * inCheck() is used to identify reachable squares
@@ -260,9 +260,9 @@ class GameOverHelper extends ValidationHelper
 	 * @param int  $fromY		Checker's row
 	 * @param int  $toX			King's col
 	 * @param int  $toY			King's row
-	 * @param char $colour 		Player in check
-	 * @param char $opColour 	Player causing check
-	 * 
+	 * @param string $colour 	Player in check
+	 * @param string $opColour 	Player causing check
+	 *
 	 * @return boolean
 	 */
 	private function checkOnDiagIsDefendable($fromX, $fromY, $toX, $toY, $colour, $opColour) {
@@ -292,7 +292,7 @@ class GameOverHelper extends ValidationHelper
 
     /**
      * Check if given colour has any pieces other than king
-     * @param char $colour
+     * @param string $colour
      * @return bool
      */
     private function alliesLeft($colour) {
@@ -305,11 +305,11 @@ class GameOverHelper extends ValidationHelper
 		}
 		return false;
     }
-    
+
     /**
-     * Get array of indices for squares reachable by king 
+     * Get array of indices for squares reachable by king
      * @param array $kingSquare
-     * @param char $colour
+     * @param string $colour
      * @return array
      */
     private function getReachableSquaresForKing($kingSquare, $colour) {
@@ -336,9 +336,9 @@ class GameOverHelper extends ValidationHelper
 			for ($col = $colStart; $col <= $colEnd; $col++) {
 				$occupant = $this->board[$row][$col];
 				if (!$occupant || $this->getPieceColour($occupant) != $colour) {
-					$reachables[] = array($row, $col);					
+					$reachables[] = array($row, $col);
 				}
-			}			
+			}
 		}
     	return $reachables;
     }
