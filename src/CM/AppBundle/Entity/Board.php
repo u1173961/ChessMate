@@ -167,20 +167,6 @@ class Board
     }
 
     /**
-     * Set Piece
-     *
-     * @param array $square [y,x]
-     * @param string $piece
-     * @return Board
-     */
-    public function setPiece(array $square, $piece)
-    {
-        $this->board[$square[0]][$square[1]] = $piece;
-
-        return $this;
-    }
-
-    /**
      * Flag piece as swapped
      *
      * @param boolean $pawnSwapped
