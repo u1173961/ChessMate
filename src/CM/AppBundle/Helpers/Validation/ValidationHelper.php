@@ -23,9 +23,9 @@ abstract class ValidationHelper
      * @param array $move [from, to, pieceType, pieceColour]
      * @param Game $game The game
      *
-     * @return Game
+     * @return array
      */
-    public function validateMove(array $move, Game $game, array $board)
+    public function validateMove(array $move, Game $game, array $board): array
     {
         $this->setGlobals($game, $board);
         //check piece matches origin
