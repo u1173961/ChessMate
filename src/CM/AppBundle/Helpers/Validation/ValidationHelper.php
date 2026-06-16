@@ -28,6 +28,8 @@ abstract class ValidationHelper
     public function validateMove(array $move, Game $game, array $board): array
     {
         $this->setGlobals($game, $board);
+        $validResponse = ['valid' => true];
+        $invalidResponse = ['valid' => false];
         //check piece matches origin
         //and target square is not occupied by own piece
         $colour = $this->getPieceColour($move['piece']);
@@ -38,7 +40,7 @@ abstract class ValidationHelper
                 && $this->getPieceColour($this->board[$move['to'][0]][$move['to'][1]]) == $colour
             )
         ) {
-            return array('valid' => false);
+            return $invalidResponse;
         }
         //validate piece
         $valid = $this->validatePiece($move);
@@ -47,30 +49,30 @@ abstract class ValidationHelper
             $this->setEnPassant($move['piece'], $move['from'][0], $move['from'][1], $move['to'][0]);
             //check changes
             if ($move['enPassant'] != $this->enPassant) {
-                return array('valid' => false);
+                return $invalidResponse;
             }
             //get opponent colour
             $opColour = $this->getOpponentColour($colour);
             //if in check, invalidate move
             if ($this->inCheck($opColour, $this->getKingSquare($colour))) {
-                return array('valid' => false);
+                return $invalidResponse;
             }
             //check changes to castling
             if ($move['castling'] != $this->castling) {
-                return array('valid' => false);
+                return $invalidResponse;
             }
             //check changes to board
             if ($move['newBoard'] != $this->board) {
-                return array('valid' => false);
+                return $invalidResponse;
             }
             //add/remove En passant
             $this->game->getBoard()->setEnPassant($this->enPassant);
             //flag pawn as swapped/reset
             $this->game->getBoard()->setPawnSwapped($this->pieceSwapped);
-            return array('valid' => true);
+            return $validResponse;
         }
 
-        return array('valid' => false);
+        return $invalidResponse;
     }
 
     /**

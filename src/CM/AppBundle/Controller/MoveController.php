@@ -12,6 +12,7 @@ use CM\AppBundle\Helpers\Validation\PawnValidator;
 use CM\AppBundle\Helpers\Validation\QueenValidator;
 use CM\AppBundle\Helpers\Validation\RookValidator;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,14 +51,14 @@ class MoveController extends AbstractController
      * If validity is not confirmed by opponent, server-side validation is conducted in subsequent call
      *
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function sendMoveAction(Request $request)
     {
         $content = json_decode($request->getContent());
         //find game
         $em = $this->doctrine->getManager();
-        $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($content->gameID);
+        $game = $em->getRepository(Game::class)->find($content->gameID);
         if ($game->over()) {
             return new JsonResponse(array('sent' => false));
         }
@@ -101,10 +102,10 @@ class MoveController extends AbstractController
     }
 
     /**
-     * Save move if validated by opponent]
+     * Save move if validated by opponent
      * @param int $gameID
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function saveMoveAction($gameID, Request $request)
     {
@@ -113,7 +114,7 @@ class MoveController extends AbstractController
         $user = $this->getUser();
         //find game
         $em = $this->doctrine->getManager();
-        $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
+        $game = $em->getRepository(Game::class)->find($gameID);
         //switch active player
         $game->switchActivePlayer();
         //make sure valid user for game
@@ -141,9 +142,9 @@ class MoveController extends AbstractController
      * Save move
      * @param Game $game
      * @param array $move
-     * @param unknown $em
+     * @param ObjectManager $em
      */
-    private function saveMove(Game $game, array $move, $em)
+    private function saveMove(Game $game, array $move, ObjectManager $em)
     {
         //update game state
         $board = $game->getBoard();
@@ -162,14 +163,14 @@ class MoveController extends AbstractController
      * Moves are validated client-side
      * If consensus on validity differs between players, the cheat is exposed
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
-    public function findCheatAction($gameID)
+    public function findCheatAction(int $gameID)
     {
         $user = $this->getUser();
         //find game
         $em = $this->doctrine->getManager();
-        $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
+        $game = $em->getRepository(Game::class)->find($gameID);
         //get user
         $player = $game->getPlayers()->indexOf($user);
         //get player that made move

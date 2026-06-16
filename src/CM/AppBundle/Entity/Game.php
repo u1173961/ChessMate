@@ -122,10 +122,10 @@ class Game
     /**
      * Set board
      *
-     * @param \CM\AppBundle\Entity\Board $board
+     * @param Board|null $board
      * @return Game
      */
-    public function setBoard(\CM\AppBundle\Entity\Board $board = null)
+    public function setBoard(?Board $board = null)
     {
         $this->board = $board;
 
@@ -135,7 +135,7 @@ class Game
     /**
      * Get board
      *
-     * @return \CM\AppBundle\Entity\Board
+     * @return Board
      */
     public function getBoard()
     {
@@ -145,10 +145,10 @@ class Game
     /**
      * Set whitePlayer
      *
-     * @param \CM\UserBundle\Entity\User $whitePlayer
+     * @param \CM\UserBundle\Entity\User|null $whitePlayer
      * @return Game
      */
-    public function setWhitePlayer(\CM\UserBundle\Entity\User $whitePlayer = null)
+    public function setWhitePlayer(?\CM\UserBundle\Entity\User $whitePlayer = null)
     {
         $this->players->set(0, $whitePlayer);
 

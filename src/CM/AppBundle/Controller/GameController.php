@@ -8,6 +8,7 @@ use CM\AppBundle\Helpers\FENHelper;
 use CM\AppBundle\Helpers\HTMLHelper;
 use CM\AppBundle\Entity\ChatMessage;
 use CM\AppBundle\Entity\Game;
+use CM\UserBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
@@ -64,12 +65,12 @@ class GameController extends AbstractController
         if (!$this->getUser()) {
             //get inactive guest account
             $em = $this->doctrine->getManager();
-            $user = $em->getRepository(\CM\UserBundle\Entity\User::class)->findInactiveGuest();
+            $user = $em->getRepository(User::class)->findInactiveGuest();
             if (!$user) {
                 //create new guest accounts as needed
                 $id = $em->createQuery('SELECT MAX(u.id) FROM CM\\UserBundle\\Entity\\User u')->getSingleScalarResult() + 1;
                 $name = "Guest0" . $id;
-                $user = new \CM\UserBundle\Entity\User();
+                $user = new User();
                 $user->setUsername($name);
                 $user->setEmail($name);
                 $user->setPassword("");
@@ -105,6 +106,9 @@ class GameController extends AbstractController
      */
     public function startAction()
     {
+        /**
+         * @var User
+         */
         $user = $this->getUser();
         $games = $user->getCurrentGames();
 
@@ -304,18 +308,16 @@ class GameController extends AbstractController
 
     /**
      * Get time string from seconds mm:ss
-     * @param unknown $seconds
+     * @param int $seconds
      * @return string
      */
-    private function getMinutesTimeString($seconds)
+    private function getMinutesTimeString(int $seconds)
     {
         $s = $seconds % 60;
-        $minutes = ($seconds - $s) / 60;
         if ($s < 10) {
             $s .= '0';
         }
-
-        return $minutes . ':' . $s;
+        return (($seconds - $s) / 60) . ':' . $s;
     }
 
     /**
@@ -580,7 +582,7 @@ class GameController extends AbstractController
         //check if game over already received
         $overReceived = $content->overReceived;
         $opChatty = $content->opChatty;
-        $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
+        $game = $em->getRepository(Game::class)->find($gameID);
         $players = $game->getPlayers();
         $pIndex = $players->indexOf($user);
         $opIndex = 1 - $pIndex;
@@ -596,9 +598,9 @@ class GameController extends AbstractController
         //get all chat on reloads
         if ($game->getPlayerIsChatty($pIndex)) {
             if ($lastSeen == 0) {
-                $chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findAllGameChat($game);
+                $chatMsgs = $em->getRepository(ChatMessage::class)->findAllGameChat($game);
             } else {
-                $chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
+                $chatMsgs = $em->getRepository(ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
             }
         } else {
             $chatMsgs = array($lastSeen, array());
@@ -617,7 +619,7 @@ class GameController extends AbstractController
             $em->refresh($game);
             if ($game->getPlayerIsChatty($pIndex)) {
                 //get opponent's chat - own handled client-side & on reload
-                $chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
+                $chatMsgs = $em->getRepository(ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
             }
             if (!$game->over() && $game->getPlayerTime($opIndex) < 200) {
                 $game->setGameOver($pIndex, 'Game Over: ' . $opponent->getUsername() . ' is out of time.');
@@ -648,7 +650,7 @@ class GameController extends AbstractController
                 $em->refresh($p);
             }
             //re-fetch users from database to ensure updated
-            $repo = $em->getRepository(\CM\UserBundle\Entity\User::class);
+            $repo = $em->getRepository(User::class);
             $pRating = $repo->find($players->get($pIndex)->getId())->getRating();
             $opRating = $repo->find($players->get($opIndex)->getId())->getRating();
 
