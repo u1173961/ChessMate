@@ -63,7 +63,7 @@ class Game
         $this->players = new \Doctrine\Common\Collections\ArrayCollection();
         $this->board = $board;
         $this->playersJoined = array(false,false);
-        $this->playerTimes = array($length*1000, $length*1000);
+        $this->playerTimes = array($length * 1000, $length * 1000);
         $this->length = $length;
         //set white as active
         $this->setActivePlayerIndex(0);
@@ -71,7 +71,7 @@ class Game
         $this->chatLog = array();
         $this->drawOfferer = 2;
         //set last move by no-one to prevent superfluous check
-        $this->lastMove = array('by'=> 2);
+        $this->lastMove = array('by' => 2);
     }
 
     /**
@@ -173,7 +173,7 @@ class Game
      */
     public function setBlackPlayer(\CM\UserBundle\Entity\User $blackPlayer)
     {
-       $this->players->set(1, $blackPlayer);
+        $this->players->set(1, $blackPlayer);
 
         return $this;
     }
@@ -384,7 +384,8 @@ class Game
      * Toggle chat for player
      * @param int $player
      */
-    public function togglePlayerIsChatty($player) {
+    public function togglePlayerIsChatty($player)
+    {
         $this->chattyPlayers[$player] = !$this->chattyPlayers[$player];
     }
 
@@ -430,7 +431,7 @@ class Game
      */
     public function setLastMoveValidated($validated)
     {
-       $this->lastMoveValidated = $validated;
+        $this->lastMoveValidated = $validated;
 
         return $this;
     }

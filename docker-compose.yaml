@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/var/www/html
       - assets:/var/www/html/web/bundles
-      - ./docker/parameters.yml:/var/www/html/app/config/parameters.yml:ro
+      - ./docker/parameters.yml:/var/www/html/app/config/parameters.yml.dist
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 3306

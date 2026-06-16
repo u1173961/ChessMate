@@ -57,7 +57,8 @@ class Board
         $this->pawnSwapped = false;
     }
 
-    private function setDefaultTaken() {
+    private function setDefaultTaken()
+    {
         $this->takenPieces = array(
             'P' => 0, 'R' => 0, 'N' => 0, 'B' => 0, 'Q' => 0,
             'p' => 0, 'r' => 0, 'n' => 0, 'b' => 0, 'q' => 0
@@ -70,11 +71,11 @@ class Board
      * @param string $fen
      * @return Board
      */
-     public function setFEN($fen)
-     {
+    public function setFEN($fen)
+    {
         $this->fen = $fen;
         return $this;
-     }
+    }
 
    /**
     * Get FEN
@@ -124,7 +125,8 @@ class Board
         return $this;
     }
 
-    public function getCastling() {
+    public function getCastling()
+    {
         return array('w' => $this->castling[0], 'b' => $this->castling[1]);
     }
 

@@ -140,7 +140,8 @@ class PhpIniRequirement extends Requirement
             $fulfilled = call_user_func($evaluation, $cfgValue);
         } else {
             if (null === $testMessage) {
-                $testMessage = sprintf('%s %s be %s in php.ini',
+                $testMessage = sprintf(
+                    '%s %s be %s in php.ini',
                     $cfgName,
                     $optional ? 'should' : 'must',
                     $evaluation ? 'enabled' : 'disabled'
@@ -148,7 +149,8 @@ class PhpIniRequirement extends Requirement
             }
 
             if (null === $helpHtml) {
-                $helpHtml = sprintf('Set <strong>%s</strong> to <strong>%s</strong> in php.ini<a href="#phpini">*</a>.',
+                $helpHtml = sprintf(
+                    'Set <strong>%s</strong> to <strong>%s</strong> in php.ini<a href="#phpini">*</a>.',
                     $cfgName,
                     $evaluation ? 'on' : 'off'
                 );
@@ -403,9 +405,12 @@ class SymfonyRequirements extends RequirementCollection
             $this->addRequirement(
                 version_compare($installedPhpVersion, $requiredPhpVersion, '>='),
                 sprintf('PHP version must be at least %s (%s installed)', $requiredPhpVersion, $installedPhpVersion),
-                sprintf('You are running PHP version "<strong>%s</strong>", but Symfony needs at least PHP "<strong>%s</strong>" to run.
+                sprintf(
+                    'You are running PHP version "<strong>%s</strong>", but Symfony needs at least PHP "<strong>%s</strong>" to run.
                 Before using Symfony, upgrade your PHP installation, preferably to the latest version.',
-                    $installedPhpVersion, $requiredPhpVersion),
+                    $installedPhpVersion,
+                    $requiredPhpVersion
+                ),
                 sprintf('Install PHP %s or newer (installed version is %s)', $requiredPhpVersion, $installedPhpVersion)
             );
         }
@@ -417,13 +422,13 @@ class SymfonyRequirements extends RequirementCollection
         );
 
         $this->addRequirement(
-            is_dir(__DIR__.'/../vendor/composer'),
+            is_dir(__DIR__ . '/../vendor/composer'),
             'Vendor libraries must be installed',
-            'Vendor libraries are missing. Install composer following instructions from <a href="http://getcomposer.org/">http://getcomposer.org/</a>. '.
+            'Vendor libraries are missing. Install composer following instructions from <a href="http://getcomposer.org/">http://getcomposer.org/</a>. ' .
                 'Then run "<strong>php composer.phar install</strong>" to install them.'
         );
 
-        $cacheDir = is_dir(__DIR__.'/../var/cache') ? __DIR__.'/../var/cache' : __DIR__.'/cache';
+        $cacheDir = is_dir(__DIR__ . '/../var/cache') ? __DIR__ . '/../var/cache' : __DIR__ . '/cache';
 
         $this->addRequirement(
             is_writable($cacheDir),
@@ -431,7 +436,7 @@ class SymfonyRequirements extends RequirementCollection
             'Change the permissions of either "<strong>app/cache/</strong>" or  "<strong>var/cache/</strong>" directory so that the web server can write into it.'
         );
 
-        $logsDir = is_dir(__DIR__.'/../var/logs') ? __DIR__.'/../var/logs' : __DIR__.'/logs';
+        $logsDir = is_dir(__DIR__ . '/../var/logs') ? __DIR__ . '/../var/logs' : __DIR__ . '/logs';
 
         $this->addRequirement(
             is_writable($logsDir),
@@ -441,7 +446,9 @@ class SymfonyRequirements extends RequirementCollection
 
         if (version_compare($installedPhpVersion, '7.0.0', '<')) {
             $this->addPhpIniRequirement(
-                'date.timezone', true, false,
+                'date.timezone',
+                true,
+                false,
                 'date.timezone setting must be set',
                 'Set the "<strong>date.timezone</strong>" setting in php.ini<a href="#phpini">*</a> (like Europe/Paris).'
             );
@@ -528,11 +535,15 @@ class SymfonyRequirements extends RequirementCollection
 
         if (extension_loaded('xdebug')) {
             $this->addPhpIniRequirement(
-                'xdebug.show_exception_trace', false, true
+                'xdebug.show_exception_trace',
+                false,
+                true
             );
 
             $this->addPhpIniRequirement(
-                'xdebug.scream', false, true
+                'xdebug.scream',
+                false,
+                true
             );
 
             $this->addPhpIniRecommendation(
@@ -564,13 +575,13 @@ class SymfonyRequirements extends RequirementCollection
 
         /* optional recommendations follow */
 
-        if (file_exists(__DIR__.'/../vendor/composer')) {
-            require_once __DIR__.'/../vendor/autoload.php';
+        if (file_exists(__DIR__ . '/../vendor/composer')) {
+            require_once __DIR__ . '/../vendor/autoload.php';
 
             try {
                 $r = new ReflectionClass('Sensio\Bundle\DistributionBundle\SensioDistributionBundle');
 
-                $contents = file_get_contents(dirname($r->getFileName()).'/Resources/skeleton/app/SymfonyRequirements.php');
+                $contents = file_get_contents(dirname($r->getFileName()) . '/Resources/skeleton/app/SymfonyRequirements.php');
             } catch (ReflectionException $e) {
                 $contents = '';
             }
@@ -798,7 +809,7 @@ class SymfonyRequirements extends RequirementCollection
      */
     protected function getPhpRequiredVersion()
     {
-        if (!file_exists($path = __DIR__.'/../composer.lock')) {
+        if (!file_exists($path = __DIR__ . '/../composer.lock')) {
             return false;
         }
 

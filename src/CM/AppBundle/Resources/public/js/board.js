@@ -1,26 +1,26 @@
-$(document).ready( function() {
+$(document).ready(function () {
     //scale board
     handleResizes();
     $('div.board').removeClass('hidden');
-    $(window).resize( function() {
+    $(window).resize(function () {
         handleResizes();
     });
 
     setMovement();
     //override position of loading dialog
     $('#joiningGameDialog').dialog({
-         position: {
-             my: "center center",
-             at: "center center",
-             of: ".container-fluid"
-         },
+        position: {
+            my: "center center",
+            at: "center center",
+            of: ".container-fluid"
+        },
     });
     $('#gameOverDialog').dialog({
-         position: {
-             my: "center center",
-             at: "center center",
-             of: ".container-fluid"
-         },
+        position: {
+            my: "center center",
+            at: "center center",
+            of: ".container-fluid"
+        },
     });
 
     /**
@@ -38,37 +38,37 @@ $(document).ready( function() {
         }
     }
 
-    $('.choosablePiece').click(function() {
+    $('.choosablePiece').click(function () {
         swapPawn(this.id);
     });
 
-    $('#resign').click(function(e) {
+    $('#resign').click(function (e) {
         e.preventDefault();
         if (!gameOver) {
             $.post($(this).attr('href'));
         }
     });
 
-    $('#offerDraw').click(function(e) {
+    $('#offerDraw').click(function (e) {
         e.preventDefault();
         if (!gameOver) {
             $.post($(this).attr('href'));
         }
     });
 
-    $('#acceptDraw').click(function(e) {
+    $('#acceptDraw').click(function (e) {
         e.preventDefault();
         if (!gameOver) {
             acceptDraw($(this).attr('href'));
         }
     });
 
-    $('#acceptGameOver').click(function(e) {
+    $('#acceptGameOver').click(function (e) {
         $('#gameOverDialog').dialog("close");
     });
 
     //toggle chat
-    $('a#toggleChat').on('click', function(e) {
+    $('a#toggleChat').on('click', function (e) {
         e.preventDefault();
         var chat = $('div#chatBox');
         if (chat.hasClass('hidden')) {
@@ -86,25 +86,25 @@ $(document).ready( function() {
     });
 
     //listener for sent chat
-    $('form#chatSend').on('submit', function(e) {
+    $('form#chatSend').on('submit', function (e) {
         e.preventDefault();
         var msg = $('input#chatMsg').val().trim();
         var url = $(this).attr('action');
         $.ajax({
             type: "POST",
             url: url,
-            data: {'msg': '<span class="purple">'+msg+'</span><br>'},
-            success: function(data) {
+            data: {'msg': '<span class="purple">' + msg + '</span><br>'},
+            success: function (data) {
                 lastChatSeen = data['chatID'];
             }
         });
         //get username
         var user = $('span#pName2').html().split(':');
         //add to own window
-        $('div#chatLog').append('<label>'+user[0].trim()+':&nbsp;</label><span class="blue">'+msg+'</span><br>');
+        $('div#chatLog').append('<label>' + user[0].trim() + ':&nbsp;</label><span class="blue">' + msg + '</span><br>');
         //always scroll to bottom
         var scroll = $('div#chatDisplay');
-        scroll.scrollTop(scroll.scrollTop()+300);
+        scroll.scrollTop(scroll.scrollTop() + 300);
         $('input#chatMsg').val('');
     });
 });
@@ -120,13 +120,14 @@ var opTime = 0;
 var gFrom = [];
 var lastChatSeen = 0;
 
-function setMovement() {
+function setMovement()
+{
     /**
      * Make pieces draggable
      */
     $('.ui-draggable').draggable({
         containment : '.board',
-        revert: function() {
+        revert: function () {
             //validate based on droppable.drop
             if ($(this).hasClass('invalid')) {
                 $(this).removeClass('invalid');
@@ -135,13 +136,13 @@ function setMovement() {
         },
         helper: "clone",
         appendTo: ".board",
-        start: function(event, ui) {
+        start: function (event, ui) {
             //remove any highlight
             $(this).closest('div.square').stop(true,true);
             selectedPiece = null;
             return $(event.target).fadeTo(0, 0);
         },
-        stop: function(event, ui) {
+        stop: function (event, ui) {
             //check for game over (for non-games/computer opponent)
             if ($('.board').attr('id').charAt(7) == 'x' && !newPiece) {
                 var over = checkGameOver(getPieceColour(event.target.id[0]));
@@ -163,7 +164,7 @@ function setMovement() {
     });
 
     //highlight own pieces on click
-    $('.ui-draggable').on('click', function(e) {
+    $('.ui-draggable').on('click', function (e) {
         removeMoveHighlights();
         //check player's turn and piece (if actual game)
         var piece = this.id.charAt(0);
@@ -190,7 +191,7 @@ function setMovement() {
         }
     });
     //handle point and click movement
-    $('.square').on('click', function(e) {
+    $('.square').on('click', function (e) {
         if (selectedPiece && selectedPiece.hasClass('piece') && selectedPiece.closest('div.square').attr('id') != this.id) {
             selectedPiece.closest('div.square').stop(true,true);
             validatePointAndClick(selectedPiece, selectedPiece.closest('div.square').attr('id'), this.id);
@@ -202,12 +203,13 @@ function setMovement() {
 /**
  * Join game/check opponent has joined
  */
-function joinGame(gameID) {
+function joinGame(gameID)
+{
     //show loading dialog
     $('#joiningGameDialog').dialog("open");
     var loading = 0;
-    var joining = setInterval(function() {
-        if(loading < 3) {
+    var joining = setInterval(function () {
+        if (loading < 3) {
             $('#joiningGameDialog span').append('.');
             loading++;
         } else {
@@ -219,7 +221,7 @@ function joinGame(gameID) {
     $.ajax({
         type: "POST",
         url: Routing.generate('cm_join_game', { gameID: gameID }),
-        success: function(data) {
+        success: function (data) {
             //close loading dialog
             clearInterval(joining);
             $('#joiningGameDialog').dialog("close");
@@ -239,9 +241,10 @@ function joinGame(gameID) {
 /**
  * Game initialisation for load/reload
  */
-function performOnLoadActions(gameID) {
-    opTime = getSecondsLeft($('#tLeft1'))*1000;
-    pTime = getSecondsLeft($('#tLeft2'))*1000;
+function performOnLoadActions(gameID)
+{
+    opTime = getSecondsLeft($('#tLeft1')) * 1000;
+    pTime = getSecondsLeft($('#tLeft2')) * 1000;
     //if not players turn
     if ((activePlayer === 0 && $('.board').attr('id').charAt(5) == 'b')
             || (activePlayer === 1 && $('.board').attr('id').charAt(5) == 'w')) {
@@ -259,37 +262,39 @@ function performOnLoadActions(gameID) {
 /**
  * Switch active player/timer
  */
-function switchPlayer() {
+function switchPlayer()
+{
     clearInterval(tInterval);
     if ($('#tLeft1').hasClass('red')) {
         $('#tLeft1').removeClass('red');
-        startTimer($('#tLeft2'), pTime+100);
+        startTimer($('#tLeft2'), pTime + 100);
         playersTurn = true;
     } else {
         playersTurn = false;
-        setTimeout(function() {
+        setTimeout(function () {
             $('#tLeft2').removeClass('red');
         }, 100);
-        startTimer($('#tLeft1'), opTime+200);
+        startTimer($('#tLeft1'), opTime + 200);
     }
 }
 
 /**
  * Start given timer
  */
-function startTimer(timer, actualTimeLeft) {
+function startTimer(timer, actualTimeLeft)
+{
     timer.addClass('red');
     var time = timer.text().split(':');
     var mins = time[0];
     var secs = time[1];
-    var tSpeed = actualTimeLeft/getSecondsLeft(timer);
+    var tSpeed = actualTimeLeft / getSecondsLeft(timer);
     //use Date() for more accurate time-keeping
     var start = new Date().getTime();
     var elapsed;
     //track milliseconds
     var ms = 0;
     //synch timer every 100ms
-    tInterval = setInterval(function() {
+    tInterval = setInterval(function () {
         elapsed = new Date().getTime() - start;
         if (elapsed + ms >= tSpeed) {
             ms = elapsed - 1000;
@@ -297,7 +302,7 @@ function startTimer(timer, actualTimeLeft) {
             time = tick(mins, secs);
             mins = time[0];
             secs = time[1];
-            timer.text(mins+':'+secs);
+            timer.text(mins + ':' + secs);
         }
     }, 100);
 }
@@ -305,7 +310,8 @@ function startTimer(timer, actualTimeLeft) {
 /**
  * Get next second in countdown
  */
-function tick(mins, secs) {
+function tick(mins, secs)
+{
     if (secs == '00') {
         if (mins == '0') {
             //end game
@@ -323,17 +329,19 @@ function tick(mins, secs) {
     return [mins, secs];
 }
 
-function getSecondsLeft(timer) {
+function getSecondsLeft(timer)
+{
     var time = timer.text().split(':');
     var mins = time[0];
     var secs = time[1];
-    return parseInt(mins*60, 10)+parseInt(secs, 10);
+    return parseInt(mins * 60, 10) + parseInt(secs, 10);
 }
 
 /**
  * Validate drag & drop move
  */
-function validateDragAndDrop(event, ui) {
+function validateDragAndDrop(event, ui)
+{
     //get moved piece
     var piece = ui.draggable.attr('id').charAt(0);
     var colour = getPieceColour(piece);
@@ -378,7 +386,8 @@ function validateDragAndDrop(event, ui) {
  * @param array to grid-ref
  * @param bool
  */
-function validatePointAndClick(moved, gridFrom, gridTo) {
+function validatePointAndClick(moved, gridFrom, gridTo)
+{
     var piece = moved.attr('id').charAt(0);
     var colour = getPieceColour(piece);
     //check player's turn and piece (if actual game)
@@ -404,10 +413,10 @@ function validatePointAndClick(moved, gridFrom, gridTo) {
     }
     //make move
     moved.position({
-        of: 'div#'+gridTo
+        of: 'div#' + gridTo
     });
     //center piece
-    $('div#'+gridTo).append(moved.css('position','static'));
+    $('div#' + gridTo).append(moved.css('position','static'));
     //check for game over (for non-games/computer opponent)
     if ($('.board').attr('id').charAt(7) == 'x' && !newPiece) {
         var over = checkGameOver(colour);
@@ -431,7 +440,8 @@ function validatePointAndClick(moved, gridFrom, gridTo) {
  * @param array to grid-ref
  * @param bool|string swapped has pawn been swapped
  */
-function checkMoveByOpponent(from, to, swapped, enPassant, newCastling, newFEN) {
+function checkMoveByOpponent(from, to, swapped, enPassant, newCastling, newFEN)
+{
     var gridFrom = getGridRefFromAbstractIndices(from[0], from[1]);
     var gridTo = getGridRefFromAbstractIndices(to[0], to[1]);
     //get new board
@@ -455,12 +465,13 @@ function checkMoveByOpponent(from, to, swapped, enPassant, newCastling, newFEN) 
 
     return false;
 }
-function makeOpponentMove(piece, gridFrom, gridTo, swapped) {
+function makeOpponentMove(piece, gridFrom, gridTo, swapped)
+{
     piece.position({
-        of: 'div#'+gridTo
+        of: 'div#' + gridTo
     });
     //center piece
-    $('div#'+gridTo).append(piece.css('position','static'));
+    $('div#' + gridTo).append(piece.css('position','static'));
     //highlight
     highlightMove(gridFrom, gridTo);
     //perform pawn swap
@@ -468,16 +479,18 @@ function makeOpponentMove(piece, gridFrom, gridTo, swapped) {
         //get new id
         var num = getNewPieceNumber(swapped);
         //change piece
-        piece.html($('#pick_'+swapped).html());
+        piece.html($('#pick_' + swapped).html());
         //set new id
-        piece.attr('id', swapped+'_'+num);
+        piece.attr('id', swapped + '_' + num);
     }
 }
-function highlightMove(gridFrom, gridTo) {
-    $('div#'+gridFrom).addClass('startPos');
-    $('div#'+gridTo).addClass('endPos');
+function highlightMove(gridFrom, gridTo)
+{
+    $('div#' + gridFrom).addClass('startPos');
+    $('div#' + gridTo).addClass('endPos');
 }
-function removeMoveHighlights() {
+function removeMoveHighlights()
+{
     $('div.startPos').removeClass('startPos')
     $('div.endPos').removeClass('endPos')
 }
@@ -486,7 +499,8 @@ function removeMoveHighlights() {
  * Validate move made by opponent
  * If invalid, one of the players has cheated
  */
-function validateMoveIn(piece, colour, from, to, newPiece, newEP, newCastling, newBoard) {
+function validateMoveIn(piece, colour, from, to, newPiece, newEP, newCastling, newBoard)
+{
     //check opponent's piece
     if (colour == $('.board').attr('id').charAt(5)) {
         return false;
@@ -530,14 +544,15 @@ function validateMoveIn(piece, colour, from, to, newPiece, newEP, newCastling, n
 /**
  * Validate move
  */
-function validateMove(piece, colour, from, to, takenSide) {
+function validateMove(piece, colour, from, to, takenSide)
+{
     //check if target is occupied by own piece
     if (occupiedByOwnPiece(to[0], to[1], colour)) {
         return false;
     }
     //validate move
     var valid = validatePieceType(piece, colour, from, to);
-    if(valid) {
+    if (valid) {
         if (checkEnPassantPerformed(to)) {
             takePiece(getGridRefFromAbstractIndices(from[0],to[1]), takenSide);
         } else {
@@ -555,10 +570,10 @@ function validateMove(piece, colour, from, to, takenSide) {
                 if (inCheck(getOpponentColour(colour), kingSquare)) {
                     //highlight king briefly
                     var king = getOccupant(getGridRefFromAbstractIndices(kingSquare[0], kingSquare[1]));
-                    var highlight = setInterval(function() {
+                    var highlight = setInterval(function () {
                         king.effect("highlight", {color:"#ff3333"}, 250);
                     }, 500);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         clearInterval(highlight);
                     }, 2500);
                     //revert board
@@ -588,7 +603,8 @@ function validateMove(piece, colour, from, to, takenSide) {
  * @param colour
  * @returns
  */
-function checkPieceAndTurnForPlayer(colour) {
+function checkPieceAndTurnForPlayer(colour)
+{
     //check player's turn and piece (if actual game)
     if (gameOver || !playersTurn || ($('.board').attr('id').charAt(5) != 'x'
         && colour != $('.board').attr('id').charAt(5))) {
@@ -604,7 +620,8 @@ function checkPieceAndTurnForPlayer(colour) {
  * @param toY
  * @return Boolean
  */
-function pawnHasReachedOtherSide(piece, colour, toY) {
+function pawnHasReachedOtherSide(piece, colour, toY)
+{
     if (piece.toUpperCase() == 'P' && ((colour == 'w' && toY == 7) || (colour == 'b' && toY == 0))) {
         return true;
     }
@@ -617,12 +634,13 @@ function pawnHasReachedOtherSide(piece, colour, toY) {
  * @param to [y,x]
  * @param colour the piece's colour
  */
-function moveCastle(to, colour) {
+function moveCastle(to, colour)
+{
     to[0] = parseInt(to[0], '10')
     if (to[1] == 2) {
-        $('#d_'+(to[0]+1)).append($('#'+getPlayerPiece(colour, 'r')+'_'+to[0]+'0'));
+        $('#d_' + (to[0] + 1)).append($('#' + getPlayerPiece(colour, 'r') + '_' + to[0] + '0'));
     } else {
-        $('#f_'+(to[0]+1)).append($('#'+getPlayerPiece(colour, 'r')+'_'+to[0]+'7'));
+        $('#f_' + (to[0] + 1)).append($('#' + getPlayerPiece(colour, 'r') + '_' + to[0] + '7'));
     }
     castled = false;
 }
@@ -630,13 +648,14 @@ function moveCastle(to, colour) {
 /**
  * Find cheat, if validity consensus differs
  */
-function findCheat() {
+function findCheat()
+{
     //get game id
     var game = $('.board').attr('id').split('_');
     $.ajax({
         type: "POST",
         url: Routing.generate('cm_find_cheat', { gameID: game[2] }),
-        success: function(data) {
+        success: function (data) {
             //re-open listener
             listen(game[2]);
         }
@@ -646,7 +665,8 @@ function findCheat() {
 /**
  * Accept draw
  */
-function acceptDraw(url) {
+function acceptDraw(url)
+{
     $.ajax({
         type: "POST",
         url: url
@@ -659,7 +679,8 @@ function acceptDraw(url) {
  * @param over
  * @return String
  */
-function getGameOverMessage(over) {
+function getGameOverMessage(over)
+{
     var message = '';
     if (over !== false) {
         message = 'Game Over: ';
@@ -681,7 +702,8 @@ function getGameOverMessage(over) {
  * @param array to [y,x]
  * @param string colour
  */
-function sendMove(from, to, colour) {
+function sendMove(from, to, colour)
+{
     //check if move ended game
     var over = false;
     var message = '';
@@ -716,7 +738,8 @@ function sendMove(from, to, colour) {
  * Save opponent's move
  * @param bool|int over 1=drawn, 2=stalemate, 3=checkmate
  */
-function saveMove(over) {
+function saveMove(over)
+{
     //get game id
     var game = $('.board').attr('id').split('_');
     //save move
@@ -726,7 +749,7 @@ function saveMove(over) {
         dataType: 'json',
         contentType: 'application/json',
         data: JSON.stringify({'gameOver': over}),
-        success: function(data) {
+        success: function (data) {
             //re-open listener
             listen(game[2]);
         }
@@ -736,22 +759,24 @@ function saveMove(over) {
 /**
  * Open piece-chooser dialog
  */
-function openPieceChooser(colour) {
-    $('#choosePiece_'+colour).dialog("open");
+function openPieceChooser(colour)
+{
+    $('#choosePiece_' + colour).dialog("open");
 }
 
 /**
  * Get new piece number, for html id
  * @param newPiece
  */
-function getNewPieceNumber(newPiece) {
+function getNewPieceNumber(newPiece)
+{
     //get new id
     var num = 1;
     //check for conflict
-    var conflict = $('#'+newPiece+'_'+num);
+    var conflict = $('#' + newPiece + '_' + num);
     while (conflict.length) {
         num++;
-        conflict = $('#'+newPiece+'_'+num);
+        conflict = $('#' + newPiece + '_' + num);
     }
     return num;
 }
@@ -760,7 +785,8 @@ var newPiece = false;
 /**
  * Swap pawn on selection
  */
-function swapPawn(pieceID) {
+function swapPawn(pieceID)
+{
     //get selected piece
     var piece = pieceID.charAt(5);
     var colour = getPieceColour(piece);
@@ -778,13 +804,13 @@ function swapPawn(pieceID) {
     //update real board
     var pawn = getOccupant(getGridRefFromAbstractIndices(endRow, pawnCol));
     //change piece
-    pawn.html($('#'+pieceID).html());
+    pawn.html($('#' + pieceID).html());
     //set new id
-    pawn.attr('id', newPiece+'_'+num);
+    pawn.attr('id', newPiece + '_' + num);
     //close piece-chooser
-    $('#choosePiece_'+colour).dialog("close");
+    $('#choosePiece_' + colour).dialog("close");
     //ajax move if real game
-    if ($('.board').attr('id').charAt(7) != 'x'&& !gameOver) {
+    if ($('.board').attr('id').charAt(7) != 'x' && !gameOver) {
         //send move for validation
         sendMove(gFrom, [endRow, pawnCol], colour);
     } else if (typeof computerOpponent !== 'undefined') {
@@ -796,7 +822,8 @@ function swapPawn(pieceID) {
 /**
  * Get board square's abstracted index in array
  */
-function getAbstractedSquareIndex(squareID) {
+function getAbstractedSquareIndex(squareID)
+{
     //get grid reference
     var square = squareID.split('_');
     //convert to array indices
@@ -807,7 +834,8 @@ function getAbstractedSquareIndex(squareID) {
  * Check for takeable piece and remove if found
  * Given square must already be checked for own piece
  */
-function checkAndTakePiece(square, wonOrLost) {
+function checkAndTakePiece(square, wonOrLost)
+{
     if (!vacant(square[0],square[1])) {
         takePiece(getGridRefFromAbstractIndices(square[0],square[1]), wonOrLost);
     }
@@ -816,20 +844,21 @@ function checkAndTakePiece(square, wonOrLost) {
 /**
  * Remove piece, from given square, and move to side
  */
-function takePiece(toSquare, wonOrLost) {
+function takePiece(toSquare, wonOrLost)
+{
     //get taken piece
     var taken = getOccupant(toSquare);
-    var newID = ' div#'+taken.attr('id').charAt(0)+'_t';
+    var newID = ' div#' + taken.attr('id').charAt(0) + '_t';
     taken.remove();
-    if ($(newID+' sub.subscript').length) {
-        var newT = $('div#pieces'+wonOrLost+newID);
+    if ($(newID + ' sub.subscript').length) {
+        var newT = $('div#pieces' + wonOrLost + newID);
         if (newT.hasClass('hidden')) {
             newT.removeClass('hidden');
-        } else if ($(newID+' sub.subscript:first').html().trim() != '') {
+        } else if ($(newID + ' sub.subscript:first').html().trim() != '') {
             //increment count
-            $(newID+' sub.subscript:first').html(parseInt($(newID+' sub.subscript:first').html(), 10)+1)
+            $(newID + ' sub.subscript:first').html(parseInt($(newID + ' sub.subscript:first').html(), 10) + 1)
         } else {
-            $(newID+' sub.subscript:first').html(2);
+            $(newID + ' sub.subscript:first').html(2);
         }
     }
 }
@@ -837,8 +866,9 @@ function takePiece(toSquare, wonOrLost) {
 /**
  * Get occupant of given square
  */
-function getOccupant(squareID) {
-    return $('#'+ squareID).children('div.piece');
+function getOccupant(squareID)
+{
+    return $('#' + squareID).children('div.piece');
 }
 
 /**
@@ -846,7 +876,8 @@ function getOccupant(squareID) {
  * @param gameID
  * @param gameOverReceived
  */
-function listen(gameID, delay) {
+function listen(gameID, delay)
+{
     delay = delay || 100;
     $.ajax({
         type: "POST",
@@ -854,7 +885,7 @@ function listen(gameID, delay) {
         dataType: 'json',
         contentType: 'application/json',
         data: JSON.stringify({'gameID': gameID, 'opChatty': opChatty, 'lastChat': lastChatSeen, 'overReceived': gameOver}),
-        success: function(data) {
+        success: function (data) {
             if (data['change']) {
                 //display any chat messages
                 handleChat(data['chat']);
@@ -872,7 +903,7 @@ function listen(gameID, delay) {
                         //show draw offered options
                         $('#drawOffered').removeClass('hidden');
                         //hide in 10 seconds if not accepted
-                        setTimeout(function(){
+                        setTimeout(function () {
                             if (!$('#drawOffered').hasClass('hidden')) {
                                 $('#drawOffered').addClass('hidden');
                             }
@@ -884,10 +915,10 @@ function listen(gameID, delay) {
                 listen(gameID);
             }
         },
-        error: function(data) {
+        error: function (data) {
             //exponentially increase time between attempts
-            setInterval(function(){
-                listen(gameID, delay*10);
+            setInterval(function () {
+                listen(gameID, delay * 10);
             }, delay);
         }
     });
@@ -900,12 +931,13 @@ function listen(gameID, delay) {
  * @param int opRating
  * @param string overMsg
  */
-function updateGameOver(pRating, opRating, overMsg) {
+function updateGameOver(pRating, opRating, overMsg)
+{
     gameOver = true;
     showRatingDifferences(pRating, opRating);
     //update ratings
-    $('label#rating1').html('('+opRating+')');
-    $('label#rating2').html('('+pRating+')');
+    $('label#rating1').html('(' + opRating + ')');
+    $('label#rating2').html('(' + pRating + ')');
     //hide resign/offer draw
     if (!$('a#offerDraw').hasClass('hidden')) {
         $('a#offerDraw').addClass('hidden');
@@ -923,7 +955,8 @@ function updateGameOver(pRating, opRating, overMsg) {
 /**
  * Show rating changes in chat box
  */
-function showRatingDifferences(pRating, opRating) {
+function showRatingDifferences(pRating, opRating)
+{
     var pDisplay = $('label#rating2');
     var opDisplay = $('label#rating1');
     var oldPR = pDisplay.html().substr(1, pDisplay.html().length - 2);
@@ -931,36 +964,37 @@ function showRatingDifferences(pRating, opRating) {
     var pChange = parseInt(pRating, 10) - parseInt(oldPR, 10);
     var pColour = 'red';
     if (pChange > -1) {
-        pChange = '+'+pChange;
+        pChange = '+' + pChange;
         pColour = 'blue';
     }
     var opChange = parseInt(opRating, 10) - parseInt(oldOpR, 10);
     var opColour = 'red';
     if (opChange > -1) {
-        opChange = '+'+opChange;
+        opChange = '+' + opChange;
         opColour = 'blue';
     }
     //get usernames
     var player = $('span#pName2').html().split(':');
     var opponent = $('span#pName1').html().split(':');
     $('div#chatLog').append('<label>Game Over: &nbsp;</label>');
-    $('div#chatLog').append('<label>'+opponent[0]+'</label><span class="'+opColour+'"> '+opChange+'</span>');
-    $('div#chatLog').append('<label>, &nbsp; '+player[0]+'</label><span class="'+pColour+'"> '+pChange+'</span><br>');
+    $('div#chatLog').append('<label>' + opponent[0] + '</label><span class="' + opColour + '"> ' + opChange + '</span>');
+    $('div#chatLog').append('<label>, &nbsp; ' + player[0] + '</label><span class="' + pColour + '"> ' + pChange + '</span><br>');
 }
 
 /**
  * Handle chat messages/toggle
  * @param data ajax response
  */
-function handleChat(chat) {
+function handleChat(chat)
+{
     if (chat['msgs'][0] > lastChatSeen) {
         lastChatSeen = chat['msgs'][0];
-        for(var i = 0; i < chat['msgs'][1].length; i++) {
+        for (var i = 0; i < chat['msgs'][1].length; i++) {
             $('div#chatLog').append(chat['msgs'][1][i].trim());
         }
         //always scroll to bottom
         var scroll = $('div#chatDisplay');
-        scroll.scrollTop(scroll.scrollTop()+300);
+        scroll.scrollTop(scroll.scrollTop() + 300);
     }
     //check for chat toggled
     if (chat['toggled']) {
@@ -971,12 +1005,14 @@ function handleChat(chat) {
  * Scale board to screen size and shift controls layout
  * @returns
  */
-function handleResizes() {
+function handleResizes()
+{
     adjustLayout();
     scaleBoard();
     fixjQueryDialog();
 }
-function adjustLayout() {
+function adjustLayout()
+{
     var winWidth = $(window).width();
     if (!$('.boardButton').length) {
         if ($('div.boardHolder').width() < 538 && winWidth > 684) {
@@ -988,30 +1024,33 @@ function adjustLayout() {
         }
     }
 }
-function scaleBoard() {
+function scaleBoard()
+{
     var pieceSize = 75;
-    var offset = $('div#timer1.moved').length ? $('div#timer1.moved').height()*2 : 25;
+    var offset = $('div#timer1.moved').length ? $('div#timer1.moved').height() * 2 : 25;
     var newSize = $(window).height() - offset;
-    var xSpace = $('div.boardHolder').width() - (getPixelValueFromCSS('padding-left', 'div.wrapper')*2);
+    var xSpace = $('div.boardHolder').width() - (getPixelValueFromCSS('padding-left', 'div.wrapper') * 2);
     newSize = newSize > xSpace ? xSpace : newSize;
-    newSize = Math.min(800, Math.round(newSize/8)*8);
-    $('div.board').css('width', newSize+'px');
-    $('div.board').css('height', newSize+'px');
-    pieceSize = Math.round(pieceSize*(newSize/680));
-    $('div.board div.piece').css('font-size', pieceSize+'px');
+    newSize = Math.min(800, Math.round(newSize / 8) * 8);
+    $('div.board').css('width', newSize + 'px');
+    $('div.board').css('height', newSize + 'px');
+    pieceSize = Math.round(pieceSize * (newSize / 680));
+    $('div.board div.piece').css('font-size', pieceSize + 'px');
     if ($('.boardButton').length) {
-        $('.boardButton').css('width', (newSize+5)+'px');
+        $('.boardButton').css('width', (newSize + 5) + 'px');
     }
 }
-function fixjQueryDialog() {
+function fixjQueryDialog()
+{
     //fix jquery dialog if showing
     var dialog = $('.ui-dialog.ui-widget:visible');
     if (dialog.length) {
-        dialog.css('left', Math.round((winWidth - dialog.width())/2)+'px');
-        dialog.css('top', Math.round($('div.boardHolder').offset().top + 50)+'px');
+        dialog.css('left', Math.round((winWidth - dialog.width()) / 2) + 'px');
+        dialog.css('top', Math.round($('div.boardHolder').offset().top + 50) + 'px');
     }
 }
-function setSmallView() {
+function setSmallView()
+{
     //restore
     var timer1 = $('div#timer1');
     if (timer1.hasClass('moved')) {
@@ -1041,7 +1080,8 @@ function setSmallView() {
         }
     }
 }
-function setMobileView() {
+function setMobileView()
+{
     //restore
     var chatOrSlider = getMoveableOptionalControl();
     if (chatOrSlider.length) {
@@ -1067,7 +1107,8 @@ function setMobileView() {
         $('div#piecesLost').after(piecesWon);
     }
 }
-function setNormalView() {
+function setNormalView()
+{
     //restore
     var chatOrSlider = getMoveableOptionalControl();
     if (chatOrSlider.length) {
@@ -1096,7 +1137,8 @@ function setNormalView() {
         $('div#piecesWon').after(timer2);
     }
 }
-function getMoveableOptionalControl() {
+function getMoveableOptionalControl()
+{
     if ($('div#chatBox').length) {
         return $('div#chatBox');
     }

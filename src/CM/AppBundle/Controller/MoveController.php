@@ -76,7 +76,7 @@ class MoveController extends AbstractController
             throw new AccessDeniedException('Stop messing about!');
         }
         $moveTime = round(microtime(true) * 1000);
-        $game->setPlayerTime($player, $game->getPlayerTime($player)+100);
+        $game->setPlayerTime($player, $game->getPlayerTime($player) + 100);
         $game->setLastMoveTime($moveTime);
         //get game over - if opponent disagrees, validate server-side
         $gameOver = $content->gameOver;
@@ -121,7 +121,7 @@ class MoveController extends AbstractController
         $player = $game->getPlayers()->indexOf($user);
         if ($player === false) {
             throw new AccessDeniedException('You are not part of this game!');
-        } else if ($game->getActivePlayerIndex() != $player) {
+        } elseif ($game->getActivePlayerIndex() != $player) {
             throw new AccessDeniedException('You may not save your own move!');
         }
         //get opponent's validated move
@@ -201,7 +201,7 @@ class MoveController extends AbstractController
         $piece = $absBoard[$from[0]][$from[1]];
         if (!$piece) {
             //cheat = player that made move
-            $game->setGameOver($shaker, 'Game Aborted: '.$game->getPlayers()->get($mover)->getUsername().' has cheated.');
+            $game->setGameOver($shaker, 'Game Aborted: ' . $game->getPlayers()->get($mover)->getUsername() . ' has cheated.');
         } else {
             //get move details
             $move = array(
@@ -216,20 +216,20 @@ class MoveController extends AbstractController
             );
             //make sure right colour moved
             if ($move['colour'] == 'w' and $mover == 1 || $move['colour'] == 'b' and $mover == 0) {
-                $game->setGameOver($shaker, 'Game Aborted: '.$game->getPlayers()->get($mover)->getUsername().' has cheated.');
+                $game->setGameOver($shaker, 'Game Aborted: ' . $game->getPlayers()->get($mover)->getUsername() . ' has cheated.');
             } else {
                 //get piece validator
-                $validator = $this->get(strtolower($move['piece']).'_validator');
+                $validator = $this->get(strtolower($move['piece']) . '_validator');
                 //validate move
                 $valid = $validator->validateMove($move, $game, $absBoard);
                 if ($valid['valid']) {
                     //cheater = player that questioned validity
-                    $game->setGameOver($mover, 'Game Aborted: '.$game->getPlayers()->get($shaker)->getUsername().' has cheated.');
+                    $game->setGameOver($mover, 'Game Aborted: ' . $game->getPlayers()->get($shaker)->getUsername() . ' has cheated.');
                     //save validated move
                     $this->saveMove($game, $attempted, $em);
                 } else {
                     //cheat = inactive player i.e. player that made move
-                    $game->setGameOver($shaker, 'Game Aborted: '.$game->getPlayers()->get($mover)->getUsername().' has cheated.');
+                    $game->setGameOver($shaker, 'Game Aborted: ' . $game->getPlayers()->get($mover)->getUsername() . ' has cheated.');
                 }
             }
         }

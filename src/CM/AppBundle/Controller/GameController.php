@@ -68,7 +68,7 @@ class GameController extends AbstractController
             if (!$user) {
                 //create new guest accounts as needed
                 $id = $em->createQuery('SELECT MAX(u.id) FROM CM\\UserBundle\\Entity\\User u')->getSingleScalarResult() + 1;
-                $name = "Guest0".$id;
+                $name = "Guest0" . $id;
                 $user = new \CM\UserBundle\Entity\User();
                 $user->setUsername($name);
                 $user->setEmail($name);
@@ -262,8 +262,8 @@ class GameController extends AbstractController
         $pIndex = $game->getPlayers()->indexOf($user);
         $opIndex = 1 - $pIndex;
         //get time left
-        $userTime = $this->getMinutesTimeString(floor($game->getPlayerTime($pIndex)/100/10));
-        $opTime = $this->getMinutesTimeString(floor($game->getPlayerTime($opIndex)/100/10));
+        $userTime = $this->getMinutesTimeString(floor($game->getPlayerTime($pIndex) / 100 / 10));
+        $opTime = $this->getMinutesTimeString(floor($game->getPlayerTime($opIndex) / 100 / 10));
         $pChatty = $game->getPlayerIsChatty($pIndex);
         $opChatty = $game->getPlayerIsChatty($opIndex);
         //get opponent
@@ -361,7 +361,7 @@ class GameController extends AbstractController
             //update rating deviation
             $game->setStartRDs();
             //set time
-            $game->setLastMoveTime(round(microtime(true) * 1000)+300);
+            $game->setLastMoveTime(round(microtime(true) * 1000) + 300);
         } else {
             //cancel game
             $em->remove($game);
@@ -386,7 +386,7 @@ class GameController extends AbstractController
             $colour = 'x';
             //get default pieces
             $pieces = $this->get('html_helper')->getUnicodePieces();
-        } else if ($gameID == 'w' || $gameID == 'b') {
+        } elseif ($gameID == 'w' || $gameID == 'b') {
             //get black/white orientation
             $colour = $gameID;
             $gameID = 'x';
@@ -463,7 +463,7 @@ class GameController extends AbstractController
         $opIndex = 1 - $pIndex;
         //resign
         if (!$game->over()) {
-            $game->setGameOver($opIndex, 'Game Over: '.$user->getUsername().' has resigned');
+            $game->setGameOver($opIndex, 'Game Over: ' . $user->getUsername() . ' has resigned');
             $em->flush();
         }
         return new JsonResponse();
@@ -510,7 +510,7 @@ class GameController extends AbstractController
         $game = $em->getRepository(\CM\AppBundle\Entity\Game::class)->find($gameID);
         $this->checkGameValidity($game, $user);
         //add username to message
-        $msg = '<label>'.$user->getUsername().': </label> '.$msg;
+        $msg = '<label>' . $user->getUsername() . ': </label> ' . $msg;
         $chat = new ChatMessage($game, $user, $msg);
         $em->persist($chat);
         $em->flush();
@@ -550,7 +550,7 @@ class GameController extends AbstractController
         $players = $game->getPlayers();
         $pIndex = $players->indexOf($user);
         //check draw was offered by opponent - set on receipt
-        if ($game->getDrawOfferer() != $pIndex+2) {
+        if ($game->getDrawOfferer() != $pIndex + 2) {
             throw new AccessDeniedException('You may not accept your own offer!');
         }
         //accept draw
@@ -587,10 +587,10 @@ class GameController extends AbstractController
         $opponent = $players->get($opIndex);
         //check opponent has time left
         if ($game->getPlayerTime($opIndex) < 200) {
-            $game->setGameOver($pIndex, 'Game Over: '.$opponent->getUsername().' is out of time.');
+            $game->setGameOver($pIndex, 'Game Over: ' . $opponent->getUsername() . ' is out of time.');
             $em->flush();
         } else {
-            //check opponent has moved within reasonable amount of time	TODO: fix
+            //check opponent has moved within reasonable amount of time TODO: fix
             //$game = $this->checkFairPlay($game, $pIndex, $em);
         }
         //get all chat on reloads
@@ -620,7 +620,7 @@ class GameController extends AbstractController
                 $chatMsgs = $em->getRepository(\CM\AppBundle\Entity\ChatMessage::class)->findGamePlayerChat($opponent, $game, $lastSeen);
             }
             if (!$game->over() && $game->getPlayerTime($opIndex) < 200) {
-                $game->setGameOver($pIndex, 'Game Over: '.$opponent->getUsername().' is out of time.');
+                $game->setGameOver($pIndex, 'Game Over: ' . $opponent->getUsername() . ' is out of time.');
                 $em->flush();
                 $em->refresh($game);
             }
@@ -633,9 +633,9 @@ class GameController extends AbstractController
             //chat toggled
             $chatToggled = true;
             if ($opChatty) {
-                $chatMsgs[1][] = '<span class="red">'.$opponent->getUsername().' has disabled chat.</span><br>';
+                $chatMsgs[1][] = '<span class="red">' . $opponent->getUsername() . ' has disabled chat.</span><br>';
             } else {
-                $chatMsgs[1][] = '<span class="green">'.$opponent->getUsername().' has enabled chat.</span><br>';
+                $chatMsgs[1][] = '<span class="green">' . $opponent->getUsername() . ' has enabled chat.</span><br>';
             }
         }
         $chat = array('msgs' => $chatMsgs, 'toggled' => $chatToggled);
@@ -658,7 +658,7 @@ class GameController extends AbstractController
         //check for draw offered
         if ($game->getDrawOfferer() == $opIndex) {
             $drawOffered = true;
-            $game->setDrawOfferer($pIndex+2);
+            $game->setDrawOfferer($pIndex + 2);
             $em->flush();
             $changed = true;
         } else {
@@ -673,7 +673,7 @@ class GameController extends AbstractController
             $response['pTimeLeft'] = $game->getPlayerTime($pIndex);
             $response['opTimeLeft'] = $game->getPlayerTime($opIndex);
             return new JsonResponse($response);
-        } else if (count($chatMsgs[1]) > 0) {
+        } elseif (count($chatMsgs[1]) > 0) {
             $changed = true;
         }
 
@@ -714,21 +714,21 @@ class GameController extends AbstractController
         if (!$game->getLastMoveValidated()) {
             //user has moved/is waiting
             if ((round(microtime(true) * 1000) - $game->getLastMoveTime()) > 60) {
-                $game->setGameOver($pIndex, "Game Aborted: ".$opponent->getUsername()." has disconnected");
+                $game->setGameOver($pIndex, "Game Aborted: " . $opponent->getUsername() . " has disconnected");
                 $em->flush();
             }
-        } else if ($game->getActivePlayerIndex() != $pIndex) {
+        } elseif ($game->getActivePlayerIndex() != $pIndex) {
             //user has moved/is waiting
             $gameLength = $game->getLength();
             if ($gameLength < 601) {
                 $timeOut = 5;
-            } else if ($gameLength < 1801) {
+            } elseif ($gameLength < 1801) {
                 $timeOut = 6;
             } else {
                 $timeOut = 11;
             }
-            if ($opponent->getLastActiveTime() < new \DateTime($timeOut.' minutes ago')) {
-                $game->setGameOver($pIndex, "Game Aborted: ".$opponent->getUsername()." has disconnected");
+            if ($opponent->getLastActiveTime() < new \DateTime($timeOut . ' minutes ago')) {
+                $game->setGameOver($pIndex, "Game Aborted: " . $opponent->getUsername() . " has disconnected");
                 $em->flush();
             }
         }

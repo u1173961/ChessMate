@@ -7,13 +7,14 @@ if [ "${1:-}" = "apache2-foreground" ]; then
     chmod -R u+rwX,g+rwX vendor var/cache var/logs var/sessions web/bundles
 
     if [ ! -f vendor/autoload.php ]; then
-        echo "Installing PHP dependencies..."
-        composer install \
-            --no-interaction \
-            --prefer-dist \
-            --no-progress \
-            --optimize-autoloader
+        git config --global --add safe.directory /var/www/html
     fi
+    echo "Installing PHP dependencies..."
+    composer install \
+        --no-interaction \
+        --prefer-dist \
+        --no-progress \
+        --optimize-autoloader
 
     echo "Waiting for the database..."
     attempts=0

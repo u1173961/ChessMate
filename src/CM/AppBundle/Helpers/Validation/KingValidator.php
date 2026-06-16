@@ -30,10 +30,12 @@ class KingValidator extends ValidationHelper
         if (!$castling || $to[0] !== $from[0] || $this->inCheck($colour, $move['from'])) {
             return false;
         }
-        if (!(
+        if (
+            !(
             ($to[1] == 2 && $this->canCastleQueenSide($castling, $colour))
             || ($to[1] == 6 && $this->canCastleKingSide($castling, $colour))
-        )) {
+            )
+        ) {
             return false;
         }
 

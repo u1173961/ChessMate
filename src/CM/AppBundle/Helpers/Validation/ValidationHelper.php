@@ -3,7 +3,7 @@
 namespace CM\AppBundle\Helpers\Validation;
 
 use CM\AppBundle\Entity\Game;
-use \Exception;
+use Exception;
 
 /**
  * Move validator
@@ -31,7 +31,8 @@ abstract class ValidationHelper
         //check piece matches origin
         //and target square is not occupied by own piece
         $colour = $this->getPieceColour($move['piece']);
-        if ($this->board[$move['from'][0]][$move['from'][1]] != $move['piece']
+        if (
+            $this->board[$move['from'][0]][$move['from'][1]] != $move['piece']
             || (
                 $this->board[$move['to'][0]][$move['to'][1]]
                 && $this->getPieceColour($this->board[$move['to'][0]][$move['to'][1]]) == $colour
@@ -138,7 +139,7 @@ abstract class ValidationHelper
     {
         if ($moved == 'p' && $fRow == 6 && $tRow == 4) {
             $this->enPassant = array(5, $fCol);
-        } else if ($moved == 'P' && $fRow == 1 && $tRow == 3) {
+        } elseif ($moved == 'P' && $fRow == 1 && $tRow == 3) {
             $this->enPassant = array(2, $fCol);
         } else {
             $this->enPassant = null;
@@ -195,26 +196,26 @@ abstract class ValidationHelper
         $queen = $this->getPlayerPiece($opColour, 'q');
         for ($i = 1; $i < 8; $i++) {
             $threats = [
-                $this->getPieceAt($row+$i, $col-$i),
-                $this->getPieceAt($row+$i, $col+$i),
-                $this->getPieceAt($row-$i, $col-$i),
-                $this->getPieceAt($row-$i, $col+$i)
+                $this->getPieceAt($row + $i, $col - $i),
+                $this->getPieceAt($row + $i, $col + $i),
+                $this->getPieceAt($row - $i, $col - $i),
+                $this->getPieceAt($row - $i, $col + $i)
 
             ];
             if (!$blocks[0] && ($threats[0] == $bishop || $threats[0] == $queen)) {
-                $this->checkThreat = array($row+$i, $col-$i);
+                $this->checkThreat = array($row + $i, $col - $i);
                 return true;
             }
             if (!$blocks[1] && ($threats[1] == $bishop || $threats[1] == $queen)) {
-                $this->checkThreat = array($row+$i, $col+$i);
+                $this->checkThreat = array($row + $i, $col + $i);
                 return true;
             }
             if (!$blocks[2] && ($threats[2] == $bishop || $threats[2] == $queen)) {
-                $this->checkThreat = array($row-$i, $col-$i);
+                $this->checkThreat = array($row - $i, $col - $i);
                 return true;
             }
             if (!$blocks[3] && ($threats[3] == $bishop || $threats[3] == $queen)) {
-                $this->checkThreat = array($row-$i, $col+$i);
+                $this->checkThreat = array($row - $i, $col + $i);
                 return true;
             }
             //get blocking pieces
@@ -239,7 +240,7 @@ abstract class ValidationHelper
         $rook = $this->getPlayerPiece($opColour, 'r');
         $queen = $this->getPlayerPiece($opColour, 'q');
         //radiate out (for checkmates)
-        for ($col = $kingSquare[1]-1; $col >= 0; $col--) {
+        for ($col = $kingSquare[1] - 1; $col >= 0; $col--) {
             if ($this->board[$row][$col] == $rook || $this->board[$row][$col] == $queen) {
                 if (!$this->xAxisBlocked($kingSquare[1], $col, $row)) {
                     $this->checkThreat = array($row, $col);
@@ -247,7 +248,7 @@ abstract class ValidationHelper
                 }
             }
         }
-        for ($col = $kingSquare[1]+1; $col < 8; $col++) {
+        for ($col = $kingSquare[1] + 1; $col < 8; $col++) {
             if ($this->board[$row][$col] == $rook || $this->board[$row][$col] == $queen) {
                 if (!$this->xAxisBlocked($kingSquare[1], $col, $row)) {
                     $this->checkThreat = array($row, $col);
@@ -270,7 +271,7 @@ abstract class ValidationHelper
         $rook = $this->getPlayerPiece($opColour, 'r');
         $queen = $this->getPlayerPiece($opColour, 'q');
         //radiate out
-        for ($row = $kingSquare[0]-1; $row >= 0; $row--) {
+        for ($row = $kingSquare[0] - 1; $row >= 0; $row--) {
             if ($this->board[$row][$col] == $rook || $this->board[$row][$col] == $queen) {
                 if (!$this->yAxisBlocked($kingSquare[0], $row, $col)) {
                     $this->checkThreat = array($row, $col);
@@ -278,7 +279,7 @@ abstract class ValidationHelper
                 }
             }
         }
-        for ($row = $kingSquare[0]+1; $row < 8; $row++) {
+        for ($row = $kingSquare[0] + 1; $row < 8; $row++) {
             if ($this->board[$row][$col] == $rook || $this->board[$row][$col] == $queen) {
                 if (!$this->yAxisBlocked($kingSquare[0], $row, $col)) {
                     $this->checkThreat = array($row, $col);
@@ -300,36 +301,36 @@ abstract class ValidationHelper
         $x = $kingSquare[1];
         $y = $kingSquare[0];
         $knight = $this->getPlayerPiece($opColour, 'n');
-        if ($this->pieceAt($y+2, $x-1, $knight)) {
-            $this->checkThreat = array($y+2, $x-1);
+        if ($this->pieceAt($y + 2, $x - 1, $knight)) {
+            $this->checkThreat = array($y + 2, $x - 1);
             return true;
         }
-        if ($this->pieceAt($y+2, $x+1, $knight)) {
-            $this->checkThreat = array($y+2, $x+1);
+        if ($this->pieceAt($y + 2, $x + 1, $knight)) {
+            $this->checkThreat = array($y + 2, $x + 1);
             return true;
         }
-        if ($this->pieceAt($y+1, $x-2, $knight)) {
-            $this->checkThreat = array($y+1, $x-2);
+        if ($this->pieceAt($y + 1, $x - 2, $knight)) {
+            $this->checkThreat = array($y + 1, $x - 2);
             return true;
         }
-        if ($this->pieceAt($y+1, $x+2, $knight)) {
-            $this->checkThreat = array($y+1, $x+2);
+        if ($this->pieceAt($y + 1, $x + 2, $knight)) {
+            $this->checkThreat = array($y + 1, $x + 2);
             return true;
         }
-        if ($this->pieceAt($y-1, $x-2, $knight)) {
-            $this->checkThreat = array($y-1, $x-2);
+        if ($this->pieceAt($y - 1, $x - 2, $knight)) {
+            $this->checkThreat = array($y - 1, $x - 2);
             return true;
         }
-        if ($this->pieceAt($y-1, $x+2, $knight)) {
-            $this->checkThreat = array($y-1, $x+2);
+        if ($this->pieceAt($y - 1, $x + 2, $knight)) {
+            $this->checkThreat = array($y - 1, $x + 2);
             return true;
         }
-        if ($this->pieceAt($y-2, $x-1, $knight)) {
-            $this->checkThreat = array($y-2, $x-1);
+        if ($this->pieceAt($y - 2, $x - 1, $knight)) {
+            $this->checkThreat = array($y - 2, $x - 1);
             return true;
         }
-        if ($this->pieceAt($y-2, $x+1, $knight)) {
-            $this->checkThreat = array($y-2, $x+1);
+        if ($this->pieceAt($y - 2, $x + 1, $knight)) {
+            $this->checkThreat = array($y - 2, $x + 1);
             return true;
         }
         return false;
@@ -348,12 +349,12 @@ abstract class ValidationHelper
         if ($opColour == 'w') {
             $dir = -1;
         }
-        if ($this->pieceAt($kingSquare[0]+$dir, $kingSquare[1]-1, $pawn)) {
-            $this->checkThreat = array($kingSquare[0]+$dir, $kingSquare[1]-1);
+        if ($this->pieceAt($kingSquare[0] + $dir, $kingSquare[1] - 1, $pawn)) {
+            $this->checkThreat = array($kingSquare[0] + $dir, $kingSquare[1] - 1);
             return true;
         }
-        if ($this->pieceAt($kingSquare[0]+$dir, $kingSquare[1]+1, $pawn)) {
-            $this->checkThreat = array($kingSquare[0]+$dir, $kingSquare[1]+1);
+        if ($this->pieceAt($kingSquare[0] + $dir, $kingSquare[1] + 1, $pawn)) {
+            $this->checkThreat = array($kingSquare[0] + $dir, $kingSquare[1] + 1);
             return true;
         }
         return false;
@@ -419,9 +420,9 @@ abstract class ValidationHelper
 
     /**
      * Check if x-axis squares are blocked
-     * @param int $from	x1
-     * @param int $to	x2
-     * @param int $row	y
+     * @param int $from x1
+     * @param int $to   x2
+     * @param int $row  y
      * @return bool
      */
     protected function xAxisBlocked(int $from, int $to, int $row): bool
@@ -431,7 +432,7 @@ abstract class ValidationHelper
         $x = ($to - $from) / $range;
         //check squares inbetween are empty
         for ($i = 1; $i < $range; $i++) {
-            if ($this->board[$row][$from + ($i*$x)]) {
+            if ($this->board[$row][$from + ($i * $x)]) {
                 return true;
             }
         }
@@ -441,9 +442,9 @@ abstract class ValidationHelper
 
     /**
      * Check if y-axis squares are blocked
-     * @param int $from		y1
-     * @param int $to		y2
-     * @param int $column	x
+     * @param int $from     y1
+     * @param int $to       y2
+     * @param int $column   x
      * @return bool
      */
     protected function yAxisBlocked(int $from, int $to, int $column): bool
@@ -481,7 +482,7 @@ abstract class ValidationHelper
         $yDir = ($toY - $fromY) / $range;
         //check squares inbetween are empty
         for ($i = 1; $i < $range; $i++) {
-            if ($this->board[$fromY + ($i*$yDir)][$fromX + ($i*$xDir)]) {
+            if ($this->board[$fromY + ($i * $yDir)][$fromX + ($i * $xDir)]) {
                 return true;
             }
         }
@@ -492,7 +493,7 @@ abstract class ValidationHelper
     /**
      * check if target square is diagonal with source
      * @param array $from [y,x]
-     * @param array $to	[y,x]
+     * @param array $to [y,x]
      *
      * @return bool
      */

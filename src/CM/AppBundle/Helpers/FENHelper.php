@@ -6,8 +6,8 @@ namespace CM\AppBundle\Helpers;
  * Manipulate FEN strings
  * and translate to/from array representation of board
  */
-class FENHelper {
-
+class FENHelper
+{
     private $startFEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
 
     /**
@@ -15,7 +15,8 @@ class FENHelper {
      * @param array $board
      * @return string
      */
-    public function getFENFromBoard(array $board) {
+    public function getFENFromBoard(array $board)
+    {
         $fen = array();
         for ($i = 7; $i > -1; $i--) {
             //get row
@@ -26,10 +27,10 @@ class FENHelper {
                 if ($row[$j]) {
                     $entry = $row[$j];
                     if ($count != 0) {
-                        $entry = $count.$entry;
+                        $entry = $count . $entry;
                         $count = 0;
                     }
-                    $fenRow = $fenRow.$entry;
+                    $fenRow = $fenRow . $entry;
                 } else {
                     $count++;
                     if ($j == 7 && $count != 0) {
@@ -47,7 +48,8 @@ class FENHelper {
      * @param string $fen
      * @return array
      */
-    public function getBoardFromFEN($fen) {
+    public function getBoardFromFEN($fen)
+    {
         if ($fen == $this->startFEN) {
             return $this->getDefaultBoard();
         }
@@ -64,12 +66,12 @@ class FENHelper {
                     $entry = $row[$j];
                     if (is_numeric($entry)) {
                         for ($k = 0; $k < $entry; $k++) {
-                            $board[7 - $i][$j+$offset] = false;
+                            $board[7 - $i][$j + $offset] = false;
                             $offset++;
                         }
                         $offset--;
                     } else {
-                        $board[7 - $i][$j+$offset] = $entry;
+                        $board[7 - $i][$j + $offset] = $entry;
                     }
                 }
             }
@@ -83,12 +85,13 @@ class FENHelper {
      * @param int $col array index
      * @return int
      */
-    public function getFenIndex(string $row, int $col) {
+    public function getFenIndex(string $row, int $col)
+    {
         $count = 0;
         for ($i = 0; $i < strlen($row); $i++) {
             if ($count == $col) {
                 return $i;
-            } else if (is_numeric($row[$i])) {
+            } elseif (is_numeric($row[$i])) {
                 $count += $row[$i];
                 if ($count > $col) {
                     break;
@@ -107,14 +110,16 @@ class FENHelper {
      * @param int col
      * @return char
      */
-    public function getPieceFromFEN($fen, $row, $col) {
+    public function getPieceFromFEN($fen, $row, $col)
+    {
         $split = explode('/', $fen);
         $fRow = $split[7 - $row];
         $fCol = $this->getFenIndex($fRow, $col);
         return $fRow[$fCol];
     }
 
-    private function getDefaultBoard() {
+    private function getDefaultBoard()
+    {
         return array(
             array('R','N','B','Q','K','B','N','R'),
             array('P','P','P','P','P','P','P','P'),

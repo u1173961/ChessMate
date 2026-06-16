@@ -13,7 +13,8 @@ var fullMoves = '1';
  * @param array board
  * @returns string
  */
-function getFENFromBoard(board) {
+function getFENFromBoard(board)
+{
     var fen = [];
     for (var i = 7; i > -1; i--) {
         //get row
@@ -45,7 +46,8 @@ function getFENFromBoard(board) {
  * @param fen
  * @returns array
  */
-function getBoardFromFEN(fen) {
+function getBoardFromFEN(fen)
+{
     var split = fen.split('/');
     var board = [[],[],[],[],[],[],[],[]];
     for (var i = 7; i > -1; i--) {
@@ -59,12 +61,12 @@ function getBoardFromFEN(fen) {
                 var entry = row.charAt(j);
                 if (entry % 1 === 0) {
                     for (var k = 0; k < entry; k++) {
-                        board[7 - i][j+offset] = false;
+                        board[7 - i][j + offset] = false;
                         offset++;
                     }
                     offset--;
                 } else {
-                    board[7 - i][j+offset] = entry;
+                    board[7 - i][j + offset] = entry;
                 }
             }
         }
@@ -78,7 +80,8 @@ function getBoardFromFEN(fen) {
  * @param col array index
  * @returns int
  */
-function getFenIndex(row, col) {
+function getFenIndex(row, col)
+{
     var count = 0;
     for (var i = 0; i < row.length; i++) {
         if (count == col) {
@@ -101,7 +104,8 @@ function getFenIndex(row, col) {
  * @param col FEN index
  * @returns String
  */
-function updateFRowFEN(row, col) {
+function updateFRowFEN(row, col)
+{
     //check if adjacent columns contain counts/empties or pieces
     if (col == 0) {
         //edge piece
@@ -119,16 +123,16 @@ function updateFRowFEN(row, col) {
         }
     } else if (col > 0 && row.charAt(col - 1) % 1 === 0 && col < row.length && row.charAt(col + 1) % 1 === 0) {
         //counts on both sides
-        row = row.substr(0, col - 1) + (parseInt(row.charAt(col - 1), 10) + parseInt(row.charAt(col + 1), 10) + 1) + row.substr(col+2, row.length - col - 1);
+        row = row.substr(0, col - 1) + (parseInt(row.charAt(col - 1), 10) + parseInt(row.charAt(col + 1), 10) + 1) + row.substr(col + 2, row.length - col - 1);
     } else if (col > 0 && row.charAt(col - 1) % 1 === 0) {
         //count on left side
-        row = row.substr(0, col - 1) + (parseInt(row.charAt(col - 1), 10) + 1) + row.substr(col+1, row.length - col);
+        row = row.substr(0, col - 1) + (parseInt(row.charAt(col - 1), 10) + 1) + row.substr(col + 1, row.length - col);
     } else if (col < row.length && row.charAt(col + 1) % 1 === 0) {
         //count on right side
-        row = row.substr(0, col) + (parseInt(row.charAt(col + 1), 10) + 1) + row.substr(col+2, row.length - col - 1);
+        row = row.substr(0, col) + (parseInt(row.charAt(col + 1), 10) + 1) + row.substr(col + 2, row.length - col - 1);
     } else {
         //pieces both sides
-        row = row.substr(0, col) + '1' + row.substr(col+1, row.length - 1);
+        row = row.substr(0, col) + '1' + row.substr(col + 1, row.length - 1);
     }
     return row;
 }
@@ -141,7 +145,8 @@ function updateFRowFEN(row, col) {
  * @param moved the moved piece
  * @returns String
  */
-function updateTRowFEN(row, fenCol, col, moved) {
+function updateTRowFEN(row, fenCol, col, moved)
+{
     var square = row.charAt(fenCol);
     //check if to square is empty i.e. numeric
     var before = '';
@@ -174,7 +179,7 @@ function updateTRowFEN(row, fenCol, col, moved) {
             row = row.substr(0, fenCol) + before + moved + after + row.substr(fenCol + 1, row.length - 1);
         }
     } else {
-        row = row.substr(0, fenCol) + moved + row.substr(fenCol+1, row.length - 1);
+        row = row.substr(0, fenCol) + moved + row.substr(fenCol + 1, row.length - 1);
     }
     return row;
 }
@@ -186,7 +191,8 @@ function updateTRowFEN(row, fenCol, col, moved) {
  * @param col
  * @returns
  */
-function getPieceFromFEN(fen, row, col) {
+function getPieceFromFEN(fen, row, col)
+{
     var split = fen.split('/');
     var fRow = split[7 - row];
     var fCol = getFenIndex(fRow, col);
@@ -199,7 +205,8 @@ function getPieceFromFEN(fen, row, col) {
  * @param newPiece the new piece
  * @param position [row, col]
  */
-function swapPieceInFEN(fen, newPiece, position) {
+function swapPieceInFEN(fen, newPiece, position)
+{
     var split = fen.split('/');
     var row = split[7 - position[0]];
     var col = getFenIndex(row, position[1]);
@@ -211,14 +218,16 @@ function swapPieceInFEN(fen, newPiece, position) {
  * Get castling FEN
  * @return String
  */
-function getCastlingFEN() {
-    var fen = castling['w']+castling['b'];
+function getCastlingFEN()
+{
+    var fen = castling['w'] + castling['b'];
     if (fen.length > 0) {
         return fen;
     }
     return '-';
 }
 
-function getFEN(fen, activeColour, castling, ep, halfMoves, fullMoves) {
+function getFEN(fen, activeColour, castling, ep, halfMoves, fullMoves)
+{
     return fen + ' ' + activeColour + ' ' + castling + ' ' + ep + ' ' + halfMoves + ' ' + fullMoves;
 }

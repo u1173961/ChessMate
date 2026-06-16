@@ -1,556 +1,556 @@
 @CHARSET "ISO-8859-1";
 
 html body {
-	background: linear-gradient(#6881E6,#ffffff) no-repeat;
-	height:100%;
+    background: linear-gradient(#6881E6,#ffffff) no-repeat;
+    height:100%;
     line-height: 1.4;
     color: #111;
 }
 
 table {
-	width:100%;
+    width:100%;
 }
 
 @media screen and (max-width: 1200px) {
     html body {
-    	font-size: 14px;
+        font-size: 14px;
     }
-	h1 {
-		font-size:2em !important;
-	}
-	h2 {
-		font-size:1.5em !important;
-	}
-	div#newGameOptions {
-		font-size: 1em !important;
-	}
+    h1 {
+        font-size:2em !important;
+    }
+    h2 {
+        font-size:1.5em !important;
+    }
+    div#newGameOptions {
+        font-size: 1em !important;
+    }
 
-	div.board {
-		font-size: 0.85em;
-	}
+    div.board {
+        font-size: 0.85em;
+    }
 
-	div#chatBox {
-		height: 14em !important;
-		margin-bottom: 20px;
-	}
+    div#chatBox {
+        height: 14em !important;
+        margin-bottom: 20px;
+    }
 }
 
 @media all and (min-width: 1200px) {
-	div.wrapper div.timer {
-		margin-top: -10px;
-	}
+    div.wrapper div.timer {
+        margin-top: -10px;
+    }
 }
 
-@media all and (min-width: 1200px) and (max-width: 1350px) {	
-	div#chatBox {
-		height:14em !important;
-	}	
-	div#chatDisplay{
-		height:57.3% !important;
-	}
+@media all and (min-width: 1200px) and (max-width: 1350px) {
+    div#chatBox {
+        height:14em !important;
+    }
+    div#chatDisplay{
+        height:57.3% !important;
+    }
 }
 
 @media all and (min-width: 501px) and (max-width: 1200px) {
-	div.boardHolder.inGame {
-		width: 55% !important;
-	}
-	div.gameControls {
-		width: 44% !important;
-	}
+    div.boardHolder.inGame {
+        width: 55% !important;
+    }
+    div.gameControls {
+        width: 44% !important;
+    }
 }
 @media all and (min-width: 900px) and (max-width: 1050px) {
-	div#chatBox {
-	    height: 10em !important;
-		margin-bottom: 45px;
-	}
+    div#chatBox {
+        height: 10em !important;
+        margin-bottom: 45px;
+    }
 }
 @media all and (min-width: 851px) and (max-width: 990px) {
-	div.piecesWonLost {
-	    min-height: 13em !important;
-	}
-	div.gameControls {
-		margin-top: -10px;
-	}
-	div.wrapper div#chatBox, div.wrapper div#sliderContainer {
-		margin: 0;
-	}
-	div.wrapper div.separator.hidden {
-		display: block !important;
-		margin: 20px 0;
-	}
-	div.wrapper div#userOptions div {
-	    text-align: left;
-	}
+    div.piecesWonLost {
+        min-height: 13em !important;
+    }
+    div.gameControls {
+        margin-top: -10px;
+    }
+    div.wrapper div#chatBox, div.wrapper div#sliderContainer {
+        margin: 0;
+    }
+    div.wrapper div.separator.hidden {
+        display: block !important;
+        margin: 20px 0;
+    }
+    div.wrapper div#userOptions div {
+        text-align: left;
+    }
 }
 @media all and (min-width: 700px) and (max-width: 850px) {
-	div.piecesWonLost {
-	    min-height: 12.5em !important;
-	}
-	div.gameControls {
-		margin-top: -15px;
-	}
-	div.wrapper div#chatBox, div.wrapper div#sliderContainer {
-		margin: 0;
-	}
-	div.wrapper div.separator.hidden {
-		display: block !important;
-		margin: 3px 0;
-	}
-	div.wrapper div#userOptions div {
-	    text-align: left;
-	}
-	div.wrapper div.piecesWonLost div.piece {
-		font-size: 4em;
-	}
+    div.piecesWonLost {
+        min-height: 12.5em !important;
+    }
+    div.gameControls {
+        margin-top: -15px;
+    }
+    div.wrapper div#chatBox, div.wrapper div#sliderContainer {
+        margin: 0;
+    }
+    div.wrapper div.separator.hidden {
+        display: block !important;
+        margin: 3px 0;
+    }
+    div.wrapper div#userOptions div {
+        text-align: left;
+    }
+    div.wrapper div.piecesWonLost div.piece {
+        font-size: 4em;
+    }
 }
 
 @media screen and (min-width: 800px) {
-	div#userOptions {
-		margin-top: 5%;
-	}
+    div#userOptions {
+        margin-top: 5%;
+    }
 }
 
 @media screen and (max-width: 900px) {
-	div#userOptions {
-		margin-top: 5%;
-	}
+    div#userOptions {
+        margin-top: 5%;
+    }
 
-	div.board {
-		font-size: 1em;
-	}
+    div.board {
+        font-size: 1em;
+    }
 
-	div#chatBox {
-		height: 18em !important;
-	}	
+    div#chatBox {
+        height: 18em !important;
+    }
 }
 
 @media screen and (max-width: 800px) {
     html body {
-    	font-size: 12px;
-		line-height: 1.2;
+        font-size: 12px;
+        line-height: 1.2;
     }
-	h1, h2 {
-		font-size:1.8em !important;
-	}
-	div#newGameOptions {
-		font-size: 1.2em !important;
-	}
+    h1, h2 {
+        font-size:1.8em !important;
+    }
+    div#newGameOptions {
+        font-size: 1.2em !important;
+    }
 
-	div.board {
-		font-size: 1.4em;
-	}
+    div.board {
+        font-size: 1.4em;
+    }
 }
 @media screen and (max-width: 699px) {
-	div.boardHolder.inGame {
-		width: 100% !important;
-	}
-	div.gameControls {
-		width: 100% !important;
-	}
-	div.wrapper div.piecesWonLost {
-	    min-height: 15em !important;
-    	margin: 10px 0px;
-	}
-	div.wrapper div#chatBox, div.wrapper div#sliderContainer, div.wrapper div#timer2 {
-		margin: 0;
-	}
-	div.timer h1 {
-		font-size: 30px !important; 
-	}
-	div.wrapper div#userOptions div {
-	    text-align: left;
-	}
-	div.wrapper div.piecesWonLost div.piece {
-		font-size: 6em;
-	}
+    div.boardHolder.inGame {
+        width: 100% !important;
+    }
+    div.gameControls {
+        width: 100% !important;
+    }
+    div.wrapper div.piecesWonLost {
+        min-height: 15em !important;
+        margin: 10px 0px;
+    }
+    div.wrapper div#chatBox, div.wrapper div#sliderContainer, div.wrapper div#timer2 {
+        margin: 0;
+    }
+    div.timer h1 {
+        font-size: 30px !important;
+    }
+    div.wrapper div#userOptions div {
+        text-align: left;
+    }
+    div.wrapper div.piecesWonLost div.piece {
+        font-size: 6em;
+    }
 }
 
 @media screen and (max-width: 700px) {
     html body {
-    	font-size: 12px;
+        font-size: 12px;
     }
-	h1, h2 {
-		font-size:1.8em !important;
-	}
-	div#newGameOptions {
-		font-size: 1.2em !important;
-	}
+    h1, h2 {
+        font-size:1.8em !important;
+    }
+    div#newGameOptions {
+        font-size: 1.2em !important;
+    }
 
-	div.board {
-		font-size: 1em;
-	}
+    div.board {
+        font-size: 1em;
+    }
 }
 
 @media all and (max-width: 500px) {
     html body {
-    	font-size: 10px;
+        font-size: 10px;
     }
-	div.wrapper div.container-fluid {
-	    padding-left: 5px;
-	    padding-right: 5px;
-	}
-	div.wrapper div.row {
-	    margin-right: -5px;
-	}
-	div#newGameOptions {
-		font-size: 1.4em !important;
-	}
+    div.wrapper div.container-fluid {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    div.wrapper div.row {
+        margin-right: -5px;
+    }
+    div#newGameOptions {
+        font-size: 1.4em !important;
+    }
 
-	div.board {
-		font-size: 1em;
-	}
-	.nonMobile {
-		display: none;
-	}
+    div.board {
+        font-size: 1em;
+    }
+    .nonMobile {
+        display: none;
+    }
 }
 
 @media all and (max-width: 360px) {
-	div#newGameOptions {
-		font-size: 1.4em !important;
-	}
-	
-	div.board {
-		font-size: 1em;
-		margin-left: 5px;
-	}
-	div.wrapper div.boardHolder.inGame {
-	    margin-left: 5px;
-	}
-	
-	a.btn.boardButton {
-		margin-left: 6px;
-	}
-	div.wrapper div.row {
-	    margin-right: -8px;
-	}
+    div#newGameOptions {
+        font-size: 1.4em !important;
+    }
+
+    div.board {
+        font-size: 1em;
+        margin-left: 5px;
+    }
+    div.wrapper div.boardHolder.inGame {
+        margin-left: 5px;
+    }
+
+    a.btn.boardButton {
+        margin-left: 6px;
+    }
+    div.wrapper div.row {
+        margin-right: -8px;
+    }
 }
 
 div#header {
-	font-size:4em;
-	font-weight: bold;
-	color: #113;
-	padding: 1% 1% 1% 0;
+    font-size:4em;
+    font-weight: bold;
+    color: #113;
+    padding: 1% 1% 1% 0;
 }
 .sideTitle {
-	padding-left: 5px;
+    padding-left: 5px;
 }
 
 img#logo {
-	height:2em;
+    height:2em;
 }
 
 #logo_td {
-	width:12%;
+    width:12%;
 }
 
 div.errors {
-	font-size:2em;
-	color: #ff0000;	
+    font-size:2em;
+    color: #ff0000;
 }
 
 div.ui-dialog {
-	cursor: pointer;
-	display: none;	
+    cursor: pointer;
+    display: none;
 }
 
 .red {
-	color: #ff0000;	
+    color: #ff0000;
 }
 .green {
-	color: #00ff00;	
+    color: #00ff00;
 }
 .blue {
-	color: #0000ff;	
+    color: #0000ff;
 }
 .purple {
-	color: #c657da;
+    color: #c657da;
 }
 
 div#newGameOptions {
-	background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
-	font-size: 1.2em;
-	cursor:default;
+    background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
+    font-size: 1.2em;
+    cursor:default;
 }
 div#newGameOptions input[type='radio'][name='duration'] {
-	margin-left:5%;
+    margin-left:5%;
 }
 div#newGameOptions input, div#newGameOptions label {
-	cursor:pointer;
+    cursor:pointer;
 }
 
 div#newGameOptions h2 {
-	color: #2E2EFE;
+    color: #2E2EFE;
 }
 
 div#newGameOptions input[type="submit"] {
-	width:100%;
-	margin-top: 3%;
+    width:100%;
+    margin-top: 3%;
 }
 
 div#newGameOptions a {
-	width:100%;
-	margin-top: 3%;
+    width:100%;
+    margin-top: 3%;
 }
 
 div#findingGameDialog {
-	cursor:default;
+    cursor:default;
 }
 
 div#userOptions div {
     text-align: right;
 }
 a.btn.boardButton {
-	width: 680px;
-	max-width: 100%;
-	padding: 18px;
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+    width: 680px;
+    max-width: 100%;
+    padding: 18px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 a#startGame {
 }
 a#showCurrentGames {
-	font-size: 2em;
-	padding: 14px;
+    font-size: 2em;
+    padding: 14px;
 }
 div.boardHolder {
-	margin-bottom: 10px;
-	width: 100%;
+    margin-bottom: 10px;
+    width: 100%;
 }
 div.boardHolder.inGame {
-	width: 50%;
-	float: left;
+    width: 50%;
+    float: left;
 }
 div.gameControls {
-	width: 49%;
-	display: inline-block;
-	margin-top: -5px;
+    width: 49%;
+    display: inline-block;
+    margin-top: -5px;
 }
 div.board {
-	width: 680px;
-	max-width: 100%;
-	height: 680px;
-	outline: 1px solid #bdb7b7;
-	margin: 3px auto;
-	cursor: pointer;
+    width: 680px;
+    max-width: 100%;
+    height: 680px;
+    outline: 1px solid #bdb7b7;
+    margin: 3px auto;
+    cursor: pointer;
 }
-div.square {  
-	float: left;
+div.square {
+    float: left;
     height: 12.5%;
     width: 12.5%;
 }
 div.square.startPos {
-	border: 1px solid #f7953c;
+    border: 1px solid #f7953c;
 }
 div.square.endPos {
-	border: 1px solid #2ce00c;
+    border: 1px solid #2ce00c;
 }
 .clipped {
-    overflow: hidden;	
+    overflow: hidden;
 }
 
 div.light {
-	background: #ffffff;
+    background: #ffffff;
 }
 
 div.dark {
-	background: #bdb7b7;
+    background: #bdb7b7;
 }
 
 div.piece {
-	font-size: 5em;
-	text-align: center;
-	margin-bottom: -2%;
+    font-size: 5em;
+    text-align: center;
+    margin-bottom: -2%;
 }
 
 div.piecesWonLost {
-	background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
-	min-height: 10em;
-	outline: 1px solid #bdb7b7;
-	font-size: 0.8em;
-	overflow: hidden;
+    background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
+    min-height: 10em;
+    outline: 1px solid #bdb7b7;
+    font-size: 0.8em;
+    overflow: hidden;
 }
 
 div.piecesWonLost div.piece {
-	min-width:19%;
-	display:inline-block;
-	font-size: 5em;
+    min-width:19%;
+    display:inline-block;
+    font-size: 5em;
 }
 
 div#separator {
-	background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
-	width:100%;
-	padding:2px;
-	margin-bottom: 8px;
+    background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
+    width:100%;
+    padding:2px;
+    margin-bottom: 8px;
 }
 div.separator {
-	background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
-	width:100%;
-	padding:2px;
-	margin-bottom: 8px;
+    background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
+    width:100%;
+    padding:2px;
+    margin-bottom: 8px;
 }
 
 sub.subscript {
-	font-size:0.4em;
-	margin-left:-10px;
+    font-size:0.4em;
+    margin-left:-10px;
 }
 
 div.timer {
-	margin-top: -2.5%;
+    margin-top: -2.5%;
 }
 
 div#gameOverDialog  {
-	cursor: default;
+    cursor: default;
 }
 
 div#gameOverDialog  a {
-	color: #0000ff;
+    color: #0000ff;
 }
 
 div#midGame {
-	margin: 0% 3%;	
+    margin: 0% 3%;
 }
 
 div#midGameOptions {
-	margin-left:1%;
-	margin-right:1%;
-	margin-top:3%;
-	margin-bottom:3%;
+    margin-left:1%;
+    margin-right:1%;
+    margin-top:3%;
+    margin-bottom:3%;
 }
 
 div#midGameOptions a {
-	width:100%;
+    width:100%;
 }
 
 div#chatBox {
-	margin-top: 3%;
-	height: 18em;
-	background: #ffffff;
-	border: 1px solid #bdb7b7;
+    margin-top: 3%;
+    height: 18em;
+    background: #ffffff;
+    border: 1px solid #bdb7b7;
 }
 
 div#chatTitle {
-	background: #CCCCE7;
-	font-size:1.2em;
+    background: #CCCCE7;
+    font-size:1.2em;
 }
 
 div#chatDisplay {
-	height: 67.3%;
-	border: 1px inset #CCCCE7;
-	margin-left: 0.5%;
-	margin-top: 0.5%;
-	margin-bottom: 0.9%;
-	width: 99%;	
+    height: 67.3%;
+    border: 1px inset #CCCCE7;
+    margin-left: 0.5%;
+    margin-top: 0.5%;
+    margin-bottom: 0.9%;
+    width: 99%;
     overflow-y: scroll;
 }
 
 div#chatBox table {
-	max-width: 100%;
+    max-width: 100%;
 }
 
 div#chatLog {
-	font-size:1.5em;
+    font-size:1.5em;
 }
 
 div#chatInput {
-	background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
-	margin-left: 0.5%;
-	width: 99%;
-	height:3em;
-	border: 1px outset #CCCCE7;
+    background: radial-gradient(#CCCCE7, #ffffff) no-repeat;
+    margin-left: 0.5%;
+    width: 99%;
+    height:3em;
+    border: 1px outset #CCCCE7;
 }
 
 div#chatInput input {
-	width: 84%;
-	height: 1.9em;
-	font-size: 1.3em;
+    width: 84%;
+    height: 1.9em;
+    font-size: 1.3em;
 }
 
 div#drawOffered {
-	font-size: 3em;	
+    font-size: 3em;
 }
 
 div#chatInput input[type="submit"] {
-	width: 12.8%;
-	font-size: 1.2em;
-	margin-left: 1.5%;
-	height: 2em;
-	padding: 0.5% 0 0;
+    width: 12.8%;
+    font-size: 1.2em;
+    margin-left: 1.5%;
+    height: 2em;
+    padding: 0.5% 0 0;
 }
 
 div#difficultySlider {
-	margin: 1%;
-	margin-bottom: 3%;
-	padding: 1.4%;
-	background: #f0f8ff;
-	border: 1px inset #000000;
+    margin: 1%;
+    margin-bottom: 3%;
+    padding: 1.4%;
+    background: #f0f8ff;
+    border: 1px inset #000000;
 }
 div#difficultySlider .ui-slider-handle {
-	padding: 2%;
-	background: #5d8aa8;
+    padding: 2%;
+    background: #5d8aa8;
 }
 
 div.login {
-	background: radial-gradient(#CCCCE7, #5884b0) no-repeat;
-	font-size:1.5em;
-	margin-left:auto;
-	margin-right:auto;
+    background: radial-gradient(#CCCCE7, #5884b0) no-repeat;
+    font-size:1.5em;
+    margin-left:auto;
+    margin-right:auto;
     border-radius: 10px;
-	font-weight:strong;
-	padding: 0.6em;
+    font-weight:strong;
+    padding: 0.6em;
 }
 
 div.login input[type=text], div.login input[type=email], div.login input[type=password] {
-	margin-top: 0.2%;
-	margin-bottom: 0.8%;
+    margin-top: 0.2%;
+    margin-bottom: 0.8%;
 }
 
 div.login li {
-	font-size:1em;
-	color: #ff0000;
+    font-size:1em;
+    color: #ff0000;
 }
 
 div#loginOptions {
-	margin-left: 7px;
+    margin-left: 7px;
 }
 
 div#loginOptions a {
-	font-size:1.5em;
+    font-size:1.5em;
 }
 
 div#login input[type=text], div#login input[type=email], div#login input[type=password] {
-	width:100%;
+    width:100%;
 }
 
 div#login input[type=text], div#login input[type=email], div#login input[type=password] {
-	width:100%;
+    width:100%;
 }
 
 div#login input[type=submit] {
     width:100%;
 }
 
-div#login label[for=remember_me], #remember_me {	
-	display:inline;
+div#login label[for=remember_me], #remember_me {
+    display:inline;
 }
 
 div#register input[type=text], div#register input[type=email], div#register input[type=password] {
-	width:90%;
+    width:90%;
 }
 
 div#register label, div#login label, div.profile {
-	width:100%;
-	text-align:right;
+    width:100%;
+    text-align:right;
 }
 
 div.profile input[type=text], div.profile input[type=email], div.profile input[type=password] {
-	width:100%;
+    width:100%;
 }
 
 div#register input[type=submit] {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 div#reset input[type=text], div#reset input[type=email], div#reset input[type=password] {
-	width:68%;
+    width:68%;
 }
