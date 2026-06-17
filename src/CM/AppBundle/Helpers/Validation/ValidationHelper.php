@@ -45,11 +45,16 @@ abstract class ValidationHelper
         //validate piece
         $valid = $this->validatePiece($move);
         if ($valid) {
+            $this->applyMoveToBoard($move);
             //update En passant
             $this->setEnPassant($move['piece'], $move['from'][0], $move['from'][1], $move['to'][0]);
             //check changes
             if ($move['enPassant'] != $this->enPassant) {
                 return $invalidResponse;
+            }
+            //update castling availability
+            if (in_array($move['piece'], ['k', 'K', 'r', 'R'])) {
+                $this->updateCastling($move['piece'], $colour, $move['from'][0], $move['from'][1]);
             }
             //get opponent colour
             $opColour = $this->getOpponentColour($colour);
@@ -88,6 +93,76 @@ abstract class ValidationHelper
     {
         $this->game = $game;
         $this->board = $board;
+        $this->enPassant = null;
+        $this->castling = [
+            'w' => $game->getBoard()->getPlayerCastling(0),
+            'b' => $game->getBoard()->getPlayerCastling(1),
+        ];
+        $this->pieceSwapped = false;
+        $this->checkThreat = null;
+    }
+
+    /**
+     * Apply the validated move to the internal board before state checks.
+     * @param array $move
+     * @return void
+     */
+    protected function applyMoveToBoard(array $move): void
+    {
+        $from = $move['from'];
+        $to = $move['to'];
+        $piece = $move['piece'];
+        $colour = $this->getPieceColour($piece);
+
+        if (
+            strtoupper($piece) == 'P'
+            && (($colour == 'w' && $to[0] == 7) || ($colour == 'b' && $to[0] == 0))
+        ) {
+            $this->board[$to[0]][$to[1]] = $move['newPiece'];
+            $this->board[$from[0]][$from[1]] = false;
+            $this->pieceSwapped = true;
+            return;
+        }
+
+        $this->updateAbstractBoard($from, $to);
+    }
+
+    /**
+     * Update castling availability for player.
+     * @param string $moved
+     * @param string $colour
+     * @param int $fRow
+     * @param int $fCol
+     * @return void
+     */
+    protected function updateCastling(string $moved, string $colour, int $fRow, int $fCol): void
+    {
+        if ($pCastling = $this->castling[$colour]) {
+            if ($moved == 'k' || $moved == 'K') {
+                $pCastling = '';
+            } elseif (
+                ($fCol === 0 || $fCol === 7)
+                && (
+                    ($moved == 'r' && $fRow === 7)
+                    || ($moved == 'R' && $fRow === 0)
+                )
+            ) {
+                if (\strlen($pCastling) > 1) {
+                    //castle possible on both sides
+                    $pCastling = $pCastling[$fCol === 0 ? 0 : 1];
+                } elseif ($pCastling == 'K' || $pCastling == 'k') {
+                    //castle king-side possible
+                    if ($fCol === 7) {
+                        //castle no longer possible
+                        $pCastling = '';
+                    }
+                } elseif ($fCol === 0) {
+                    //queen-side castle no longer possible
+                    $pCastling = '';
+                }
+            }
+            $this->castling[$colour] = $pCastling;
+        }
     }
 
     /**

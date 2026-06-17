@@ -27,7 +27,8 @@ class KingValidator extends ValidationHelper
 
         //handle castling
         $castling = $this->game->getBoard()->getPlayerCastling($this->getPlayerIndex($colour));
-        if (!$castling || $to[0] !== $from[0] || $this->inCheck($colour, $move['from'])) {
+        $opColour = $this->getOpponentColour($colour);
+        if (!$castling || $to[0] !== $from[0] || $this->inCheck($opColour, $move['from'])) {
             return false;
         }
         if (
@@ -39,15 +40,20 @@ class KingValidator extends ValidationHelper
             return false;
         }
 
-        $rookFromCol = 0;
-        $start = 1;
-        $end = 4;
-        $rookToCol = 3;
-        if ($to[1] == 6) {
-            $rookFromCol = 7;
-            $start = 5;
-            $end = 7;
-            $rookToCol = 5;
+        $rookFromCol = 7;
+        $start = 5;
+        $end = 7;
+        $rookToCol = 5;
+        if ($to[1] == 2) {
+            //long castle
+            if (!$this->vacant($from[0], 1)) {
+                //extra square rook travels is occupied
+                return false;
+            }
+            $rookFromCol = 0;
+            $start = 2;
+            $end = 4;
+            $rookToCol = 3;
         }
 
         //check intermittent points are vacant
@@ -58,7 +64,7 @@ class KingValidator extends ValidationHelper
             // if in check at intermittent points, return false
             $nextSpace = [$from[0], $i];
             $this->updateAbstractBoard($from, $nextSpace);
-            if ($this->inCheck($colour, $move['from'])) {
+            if ($this->inCheck($opColour, $nextSpace)) {
                 //put king back in place
                 $this->updateAbstractBoard($nextSpace, $from);
                 return false;

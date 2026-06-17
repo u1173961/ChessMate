@@ -204,16 +204,21 @@ function validateKing(colour, from, to)
     if (castling[colour].length > 0 && to[0] == from[0] && !inCheck(getOpponentColour(colour), kingSquare)) {
         //handle castling
         if ((to[1] == 2 && castling[colour].indexOf(getPlayerPiece(colour, 'q')) > -1)
-                || (to[1] == 6 && castling[colour].indexOf(getPlayerPiece(colour, 'k')) > -1)) {
-            var rookFromCol = 0;
-            var start = 1;
-            var end = 4;
-            var rookToCol = 3;
-            if (to[1] == 6) {
-                rookFromCol = 7;
-                start = 5;
-                end = 7;
-                rookToCol = 5;
+            || (to[1] == 6 && castling[colour].indexOf(getPlayerPiece(colour, 'k')) > -1)) {
+            var rookFromCol = 7;
+            var start = 5;
+            var end = 7;
+            var rookToCol = 5;
+            if (to[1] == 2) {
+                //long castle
+                if (!vacant(from[0], 1)) {
+                    //extra square rook travels is occupied
+                    return false;
+                }
+                rookFromCol = 0;
+                start = 2;
+                end = 4;
+                rookToCol = 3;
             }
             //check intermittent points are vacant
             for (var i = start; i < end; i++) {
@@ -233,7 +238,7 @@ function validateKing(colour, from, to)
                 //put king back in place
                 updateAbstractBoard(nextSpace, from);
             }
-            //update abstract board
+            //move rook
             updateAbstractBoard([from[0], rookFromCol], [to[0], rookToCol]);
             //flag castled - prevent recheck of inCheck()
             castled = true;
@@ -447,35 +452,29 @@ function updateCastling(moved, colour, fRow, fCol)
     if (pCastling.length > 0) {
         if (moved == 'k' || moved == 'K') {
             pCastling = '';
-        } else if ((moved == 'r' && fRow == 7) || (moved == 'R' && fRow == 0)) {
+        } else if (
+            (fCol == 0 || fCol == 7)
+            && (
+                (moved == 'r' && fRow == 7)
+                || (moved == 'R' && fRow == 0)
+            )
+        ) {
             if (pCastling.length > 1) {
                 //castle possible on both sides
-                if (fCol == 0) {
-                    //castle no longer possible on queen-side
-                    pCastling = pCastling.charAt(0);
-                } else if (fCol == 7) {
-                    //castle no longer possible on king-side
-                    pCastling = pCastling.charAt(1);
+                pCastling = pCastling.charAt(fCol == 0 ? 0 : 1);
+            } else if (pCastling == 'K' || pCastling == 'k') {
+                //castle king-side possible
+                if (fCol == 7) {
+                    //castle no longer possible
+                    pCastling = '';
                 }
-            } else {
-                //castle only possible on one side
-                if (pCastling == 'K' || pCastling == 'k') {
-                    //castle king-side possible
-                    if (fCol == 7) {
-                        //castle no longer possible on king-side
-                        pCastling = '';
-                    }
-                } else {
-                    //castle queen-side possible
-                    if (fCol == 0) {
-                        //castle no longer possible on queen-side
-                        pCastling = '';
-                    }
-                }
+            } else if (fCol == 0) {
+                //queen-side castle no longer possible
+                pCastling = '';
             }
         }
+        castling[colour] = pCastling;
     }
-    castling[colour] = pCastling;
 }
 
 /**
