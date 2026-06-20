@@ -498,10 +498,18 @@ class Game
             $lDev = $loser->getDeviation();
             //update ratings for registered users
             if ($winner->getRegistered()) {
-                $winner->updateRating(array(array('opRating' => $lRating, 'opRD' => $lDev, 'result' => $wResult)));
+                $winner->updateRating(
+                    array(
+                        array('opRating' => $lRating, 'opRD' => $lDev, 'result' => $wResult)
+                    )
+                );
             }
             if ($loser->getRegistered()) {
-                $loser->updateRating(array(array('opRating' => $wRating, 'opRD' => $wDev, 'result' => $lResult)));
+                $loser->updateRating(
+                    array(
+                        array('opRating' => $wRating, 'opRD' => $wDev, 'result' => $lResult)
+                    )
+                );
             }
             //remove from user's current games
             foreach ($this->players as $p) {
