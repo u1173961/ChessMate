@@ -4,64 +4,66 @@
     {{ parent() }}
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 {% endblock %}
-        
+
 {% block body %}
-	<div id="separator"></div>
-	{% set gameID = null %}
-	<div class="row">
-	    <div class="boardHolder inGame">
-		    {{ render(controller('CM\\AppBundle\\Controller\\GameController::showBoardAction', { 'gameID': gameID })) }}
-		</div>
-		<div class="gameControls">
-			<div id="midGame">
-				<div class="row">
-				    <div class="col-md-12">
-					    <center><u><strong><h1>Unrated Game</h1></strong></u></center>
-					</div>
-				</div>
-				<div id="timer1" class="row timer">
-					<div class="col-md-12">
-						{% if skillLevel == 1 %}
-							{% set cSkill = 'Easy' %}
-						{% elseif skillLevel == 3 %}
-							{% set cSkill = 'Hard' %}
-						{% else %}
-							{% set cSkill = 'Average' %}
-						{% endif %}
-						<h1><span>Stockfish </span><label id="diffLabel">({{ cSkill }})</label>: &nbsp;</h1>
-					</div>
-				</div>
-				{{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Lost'}) }}
-				<div id="moveableMiddle" class="row">
-    				<div id="midGameOptions" class="row">
-    					<div class="col-md-4">
-    				    	<a id="restart" class="btn btn-large btn-warning">Restart</a>
-    					</div>
-    					<div class="col-md-4">
-    				    	<a href="{{ path('cm_start', {}) }}" class="btn btn-large btn-danger">Quit</a>
-    					</div>
-    					<div class="col-md-4">
-    				    	<a id="switchSides" class="btn btn-large btn-success">Switch Sides</a>
-    					</div>
-    				</div>
-    				<div id="sliderContainer" class="row">
-    					<div class="col-md-12">
-    						<center><h2><u>Difficulty</u></h2></center>
-    						<label>1</label><label style="text-align:right; width: 98%;">10</label>
-    						<div id="difficultySlider"></div>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="separator hidden"></div>
-				{{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Won'}) }}
-				<div id="timer2" class="row timer">
-					<div class="col-md-12">
-						<h1><span>{{ app.user.username }} </span><label>({{ app.user.rating }})</label></h1>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div id="separator"></div>
+    {% set gameID = null %}
+    <div class="row">
+        <div class="boardHolder inGame">
+            {{ render(controller('CM\\AppBundle\\Controller\\GameController::showBoardAction', { 'gameID': gameID })) }}
+        </div>
+        <div class="gameControls">
+            <div id="midGame">
+                <div class="row">
+                    <div class="col-md-12">
+                        <center><u><strong><h1>Unrated Game</h1></strong></u></center>
+                    </div>
+                </div>
+                <div id="timer1" class="row timer">
+                    <div class="col-md-12">
+                        {% if skillLevel == 0 %}
+                            {% set cSkill = 'Beginner' %}
+                        {% elseif skillLevel == 1 %}
+                            {% set cSkill = 'Easy' %}
+                        {% elseif skillLevel == 3 %}
+                            {% set cSkill = 'Hard' %}
+                        {% else %}
+                            {% set cSkill = 'Average' %}
+                        {% endif %}
+                        <h1><span>Stockfish </span><label id="diffLabel">({{ cSkill }})</label>: &nbsp;</h1>
+                    </div>
+                </div>
+                {{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Lost'}) }}
+                <div id="moveableMiddle" class="row">
+                    <div id="midGameOptions" class="row">
+                        <div class="col-md-4">
+                            <a id="restart" class="btn btn-large btn-warning">Restart</a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ path('cm_start', {}) }}" class="btn btn-large btn-danger">Quit</a>
+                        </div>
+                        <div class="col-md-4">
+                            <a id="switchSides" class="btn btn-large btn-success">Switch Sides</a>
+                        </div>
+                    </div>
+                    <div id="sliderContainer" class="row">
+                        <div class="col-md-12">
+                            <center><h2><u>Difficulty</u></h2></center>
+                            <label>Beginner</label><label style="float:right;">Very Hard</label>
+                            <div id="difficultySlider"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="separator hidden"></div>
+                {{ include('Game/piecesWonOrLost.html.twig', { 'wonLost': 'Won'}) }}
+                <div id="timer2" class="row timer">
+                    <div class="col-md-12">
+                        <h1><span>{{ app.user.username }} </span><label>({{ app.user.rating }})</label></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -69,18 +71,18 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script type="text/javascript">
-		var gameOver = false
-		var computerOpponent = true;
-		var difficulty = {{ skillLevel }};
-    	//load computer opponent in separate thread
-    	var worker;
-	    $(document).ready(function(){
-		    //stockfish.js is an emscripten c++ to javascript port
-	    	worker = new Worker('{{ asset('bundles/cmapp/js/Stockfish/stockfish.js') }}');
-	    });
+        var gameOver = false
+        var computerOpponent = true;
+        var difficulty = {{ skillLevel }};
+        //load computer opponent in separate thread
+        var worker;
+        $(document).ready(function(){
+            //stockfish.js is an emscripten c++ to javascript port
+            worker = new Worker('{{ asset('bundles/cmapp/js/Stockfish/stockfish.js') }}');
+        });
     </script>
     <script type="text/javascript" src="{{ asset('bundles/cmapp/js/board.js') }}"></script>
-	<script src="{{ asset('bundles/cmapp/js/fenHelper.js') }}"></script>
+    <script src="{{ asset('bundles/cmapp/js/fenHelper.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/cmapp/js/computer.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/cmapp/js/validationHelper.js') }}"></script>
 {% endblock %}

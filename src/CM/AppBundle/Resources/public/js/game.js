@@ -5,6 +5,8 @@ $(document).ready(function () {
      */
     $("input:radio[name='opponent']").on('change', function () {
         if (this.value == 1) {
+            $('.computerSkillOnly').addClass('hidden');
+            $('#skill1').prop('checked', true);
             $("label[for='skill1']").html('Best Match');
             $("label[for='skill2']").html('Lesser');
             $("label[for='skill3']").html('Greater');
@@ -15,6 +17,8 @@ $(document).ready(function () {
             $('#minsPerPlayer').removeClass('hidden');
             $('#findGame').text('Find Match');
         } else {
+            $('.computerSkillOnly').removeClass('hidden');
+            $('#skill0').prop('checked', true);
             $("label[for='skill1']").html('Easy');
             $("label[for='skill2']").html('Moderate');
             $("label[for='skill3']").html('Difficult');

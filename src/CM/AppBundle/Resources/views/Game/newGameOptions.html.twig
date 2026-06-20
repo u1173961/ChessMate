@@ -1,47 +1,51 @@
 <div id="newGameOptions" class="ui-dialog closeable">
-	<form id="newSearchForm"
+    <form id="newSearchForm"
           action="{{ path('cm_new_search', {})}}"
           method="POST"
           data-match-url-template="{{ path('cm_match_search', {'searchID': 'SEARCH_ID'}) }}">
-		<center><h1><u>Start Game</u></h1></center>
-		<h2>Opponent:</h2>
-		<input id="op1" type="radio" name="opponent" value=1 checked>&nbsp;<label for="op1">Human</label>
-		<input id="op2" type="radio" name="opponent" value=2>&nbsp;<label for="op2">Computer</label>
-    	{% if not app.user.registered %}
-    		{% set skillHidden = 'hidden' %}
-    	{% else %}
-    		{% set skillHidden = 'visible' %}
-    	{% endif %}
-		<div id="skillLevel" class="{{ skillHidden }}">
-			<h2>Skill Level:</h2>
-			<input id="skill1" type="radio" name="skill" value=1 checked>&nbsp;<label for="skill1">Best Match</label>
-			<br>
-			<input id="skill2" type="radio" name="skill" value=2>&nbsp;<label for="skill2">Lesser</label>
-			<input id="skill3" type="radio" name="skill" value=3>&nbsp;<label for="skill3">Greater</label>
-		</div>
-		<div id="minsPerPlayer">
-			<h2>Minutes per player:</h2>
-    		<input id="dur1" type="radio" name="duration" value=180>&nbsp;<label for="dur1">3</label>
-    		<input id="dur2" type="radio" name="duration" value=600 checked>&nbsp;<label for="dur2">10</label>
-    		<input id="dur3" type="radio" name="duration" value=1800>&nbsp;<label for="dur3">30</label>
-    		<br>
-    		<input id="dur4" type="radio" name="duration" value=300>&nbsp;<label for="dur4">5</label>
-    		<input id="dur5" type="radio" name="duration" value=1200>&nbsp;<label for="dur5">20</label>
-    		<input id="dur6" type="radio" name="duration" value=3600>&nbsp;<label for="dur6">60</label>
-    	</div>
-	    <center><a id="findGame" class="btn btn-large btn-primary">Find Match</a></center>
-	</form>
+        <center><h1><u>Start Game</u></h1></center>
+        <h2>Opponent:</h2>
+        <input id="op1" type="radio" name="opponent" value=1 checked>&nbsp;<label for="op1">Human</label>
+        <input id="op2" type="radio" name="opponent" value=2>&nbsp;<label for="op2">Computer</label>
+        {% if not app.user.registered %}
+            {% set skillHidden = 'hidden' %}
+        {% else %}
+            {% set skillHidden = 'visible' %}
+        {% endif %}
+        <div id="skillLevel" class="{{ skillHidden }}">
+            <h2>Skill Level:</h2>
+            <span class="computerSkillOnly hidden">
+                <input id="skill0" type="radio" name="skill" value=0>&nbsp;<label for="skill0">Beginner</label>
+                <br>
+            </span>
+            <input id="skill1" type="radio" name="skill" value=1 checked>&nbsp;<label for="skill1">Best Match</label>
+            <br>
+            <input id="skill2" type="radio" name="skill" value=2>&nbsp;<label for="skill2">Lesser</label>
+            <input id="skill3" type="radio" name="skill" value=3>&nbsp;<label for="skill3">Greater</label>
+        </div>
+        <div id="minsPerPlayer">
+            <h2>Minutes per player:</h2>
+            <input id="dur1" type="radio" name="duration" value=180>&nbsp;<label for="dur1">3</label>
+            <input id="dur2" type="radio" name="duration" value=600 checked>&nbsp;<label for="dur2">10</label>
+            <input id="dur3" type="radio" name="duration" value=1800>&nbsp;<label for="dur3">30</label>
+            <br>
+            <input id="dur4" type="radio" name="duration" value=300>&nbsp;<label for="dur4">5</label>
+            <input id="dur5" type="radio" name="duration" value=1200>&nbsp;<label for="dur5">20</label>
+            <input id="dur6" type="radio" name="duration" value=3600>&nbsp;<label for="dur6">60</label>
+        </div>
+        <center><a id="findGame" class="btn btn-large btn-primary">Find Match</a></center>
+    </form>
 </div>
 
 <div id="findingGameDialog" class="ui-dialog">
-	<h2>Finding game<span id="loadingDots"></span></h2>
-	<br>
-	<center>
-		<a id="cancelSearch"
+    <h2>Finding game<span id="loadingDots"></span></h2>
+    <br>
+    <center>
+        <a id="cancelSearch"
            href="{{ path('cm_cancel_search', {'searchID': 0}) }}"
            data-url-template="{{ path('cm_cancel_search', {'searchID': 'SEARCH_ID'}) }}"
            class="btn btn-large btn-danger">Cancel</a>
-		<a id="relaxSearch" class="btn btn-large btn-warning">Relax search</a>
-		<a id="playComputer" href="{{ path('cm_play_computer', {}) }}" class="btn btn-large btn-primary">Play computer</a>
-	</center>
+        <a id="relaxSearch" class="btn btn-large btn-warning">Relax search</a>
+        <a id="playComputer" href="{{ path('cm_play_computer', {}) }}" class="btn btn-large btn-primary">Play computer</a>
+    </center>
 </div>

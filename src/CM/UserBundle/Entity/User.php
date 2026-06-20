@@ -411,7 +411,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $pp = time() - $this->lastPlayedTime;
         $t = floor($pp / self::PERIOD_MINS);
         $oldRD = $this->deviation;
-        $this->deviation = min(sqrt(($oldRD * $oldRD) + (self::CONSTANT * self::CONSTANT * $t)), 350);
+        $this->deviation = min(sqrt(($oldRD ** 2) + ((self::CONSTANT ** 2) * $t)), 350);
 
         return $this;
     }
