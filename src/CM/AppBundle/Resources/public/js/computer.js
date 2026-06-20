@@ -1,13 +1,18 @@
 //difficulty
 var searchDepth = 6;
+var beginnerMode = false;
+var beginnerMoves = {};
+var beginnerMoveCount = 8;
 
 $(document).ready(function () {
     if (typeof worker !== 'undefined') {
         worker.addEventListener('message', function (e) {
-            if (e.data.substr(0, 8) == 'bestmove') {
+            if (beginnerMode && e.data.substr(0, 4) == 'info') {
+                collectBeginnerMove(e.data);
+            } else if (e.data.substr(0, 8) == 'bestmove') {
                 //get move
                 var msg = e.data.split(' ');
-                performComputerMove(msg[1]);
+                performComputerMove(beginnerMode ? chooseBeginnerMove(msg[1]) : msg[1]);
             }
         }, false);
     }
@@ -40,7 +45,9 @@ $(document).ready(function () {
     //set player default white
     $('.board').attr('id', 'game_w_x');
     //set skill level
-    if (difficulty == 1) {
+    if (difficulty == 0) {
+        setDifficulty(0);
+    } else if (difficulty == 1) {
         setDifficulty(2);
     } else if (difficulty == 3) {
         setDifficulty(7);
@@ -50,9 +57,9 @@ $(document).ready(function () {
 
     //change skill level
     $('#difficultySlider').slider({
-        min: 1,
+        min: 0,
         max: 10,
-        value: (searchDepth + 1) / 2,
+        value: beginnerMode ? 0 : (searchDepth + 1) / 2,
         animate: 'fast',
         slide: function ( event, ui ) {
             setDifficulty(ui.value);
@@ -79,7 +86,10 @@ $(document).ready(function () {
 function setDifficulty(skill)
 {
     var diff;
-    if (skill == 1) {
+    beginnerMode = skill == 0;
+    if (beginnerMode) {
+        diff = 'Beginner';
+    } else if (skill == 1) {
         diff = 'Very Easy';
     } else if (skill < 4) {
         diff = 'Easy';
@@ -91,7 +101,42 @@ function setDifficulty(skill)
         diff = 'Very Hard';
     }
     $('#diffLabel').html('(' + diff + ')');
-    searchDepth = Math.min((skill * 2) - 1, 19);
+    searchDepth = beginnerMode ? 2 : Math.min((skill * 2) - 1, 19);
+}
+
+/**
+ * Store Stockfish's current principal variation for a MultiPV rank.
+ *
+ * @param message UCI info response
+ */
+function collectBeginnerMove(message)
+{
+    var match = message.match(/\bmultipv\s+(\d+).*?\bpv\s+([a-h][1-8][a-h][1-8][qrbn]?)/);
+    if (match) {
+        beginnerMoves[parseInt(match[1], 10)] = match[2];
+    }
+}
+
+/**
+ * Prefer weaker legal candidates while retaining bestmove as a fallback.
+ *
+ * @param bestMove Stockfish's best move
+ * @returns string
+ */
+function chooseBeginnerMove(bestMove)
+{
+    var candidates = Object.keys(beginnerMoves).sort(function (a, b) {
+        return parseInt(a, 10) - parseInt(b, 10);
+    }).map(function (rank) {
+        return beginnerMoves[rank];
+    });
+
+    if (candidates.length < 2) {
+        return bestMove;
+    }
+
+    var weakerHalf = candidates.slice(Math.floor(candidates.length / 2));
+    return weakerHalf[Math.floor(Math.random() * weakerHalf.length)];
 }
 
 /**
@@ -102,8 +147,10 @@ function setDifficulty(skill)
 function switchToComputerOpponent(from, to)
 {
     playersTurn = false;
+    beginnerMoves = {};
     updateFENSuffixes(activeColour, from[0], from[1], to[0]);
     fen = updateFEN(fen, from, to);
+    worker.postMessage('setoption name MultiPV value ' + (beginnerMode ? beginnerMoveCount : 1));
     worker.postMessage('position fen ' + getFEN(fen, activeColour, getCastlingFEN(), ep, halfMoves, fullMoves));
     worker.postMessage('go depth ' + searchDepth);
 }
