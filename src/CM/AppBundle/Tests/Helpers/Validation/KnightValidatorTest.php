@@ -2,6 +2,7 @@
 
 namespace CM\AppBundle\Tests\Helpers\Validation;
 
+use CM\AppBundle\Entity\Board;
 use CM\AppBundle\Helpers\Validation\KnightValidator;
 
 class KnightValidatorTest extends \PHPUnit\Framework\TestCase
@@ -15,6 +16,7 @@ class KnightValidatorTest extends \PHPUnit\Framework\TestCase
         $this->helper = new KnightValidator();
         $this->game = $this->getMockBuilder('CM\AppBundle\Entity\Game')
                             ->disableOriginalConstructor()->getMock();
+        $this->game->method('getBoard')->willReturn(new Board());
     }
 
     public function testMoves()

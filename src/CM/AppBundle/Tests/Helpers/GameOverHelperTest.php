@@ -2,6 +2,7 @@
 
 namespace CM\AppBundle\Tests\Helpers;
 
+use CM\AppBundle\Entity\Board;
 use CM\AppBundle\Helpers\GameOverHelper;
 
 class GameOverHelperTest extends \PHPUnit\Framework\TestCase
@@ -14,6 +15,7 @@ class GameOverHelperTest extends \PHPUnit\Framework\TestCase
         $this->helper = new GameOverHelper();
         $this->game = $this->getMockBuilder('CM\AppBundle\Entity\Game')
                             ->disableOriginalConstructor()->getMock();
+        $this->game->method('getBoard')->willReturn(new Board());
     }
 
     public function testCheckmate1()
